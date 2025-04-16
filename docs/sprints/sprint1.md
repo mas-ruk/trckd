@@ -1,14 +1,16 @@
 # Sprint 1 - 14/04 - 20/04
 
 ## 🎯 Sprint Goal
-- Gain familiarity with the process of working with GitHub. 
-- Write user stories on what we want to be able to do.
+- Gain familiarity with using Github collaboratively (branches, issues, PRs)
+- Define core user stories based on the project spec
+- Set up initial project folder structure and base Flask app.
+- Plan out core features: data entry, visualisation, sharing
 
 ## 👥 Team Members
-| Name | GitHub Username | Tasks Assigned |
 
 ## 📋 Tasks Breakdown
-| Task | Issue | Status | Assignee |
+Task | Issue | Status | Assignee
+Setup repo, write initial README, format Sprint docs,  | #1 | ✅ In Progress | @mas-ruk
 
 ## ✅ Done This Sprint
 
