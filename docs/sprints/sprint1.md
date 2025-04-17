@@ -9,8 +9,10 @@
 ## 👥 Team Members
 
 ## 📋 Tasks Breakdown
-Task | Issue | Status | Assignee
-Setup repo, write initial README, format Sprint docs,  | #1 | ✅ In Progress | @mas-ruk
+| Task                                      | Issue | Status         | Assignee   |
+|-------------------------------------------|-------|----------------|------------|
+| Setup repo, write initial README, format Sprint docs | #1    | ✅ In Progress | @mas-ruk   |
+
 
 ## ✅ Done This Sprint
 
