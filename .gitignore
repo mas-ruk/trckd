@@ -1,0 +1,12 @@
+# Ignore Python virtual environments
+venv/
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# IDE/editor settings (optional, but useful)
+.vscode/
+*.swp
+.DS_Store
