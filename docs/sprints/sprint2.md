@@ -1,15 +1,16 @@
 # Sprint 2 - 21/04 - 27/04 (Mid Semester Break)
 
 ## 🎯 Sprint Goal
-- 
+- Have a rough interface of all views done (HTML, basic CSS)
+- Everyone can run the virtual environment and replicate requirements
+- Issues opened and assigned for user stories
 
 ## 📋 Tasks Breakdown
 | Task                                      | Issue | Status         | Assignee   |
 |-------------------------------------------|-------|----------------|------------|
-| Setup repo, write initial README, format Sprint docs | #1    | ✅ Done | @mas-ruk   |
+
 
 ## ✅ Done This Sprint
-
 
 ## ⚠️ Blockers
 - i.e. what is causing us struggle
