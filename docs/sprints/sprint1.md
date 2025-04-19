@@ -6,15 +6,16 @@
 - Set up initial project folder structure and base Flask app.
 - Plan out core features: data entry, visualisation, sharing
 
-## 👥 Team Members
-
 ## 📋 Tasks Breakdown
 | Task                                      | Issue | Status         | Assignee   |
 |-------------------------------------------|-------|----------------|------------|
-| Setup repo, write initial README, format Sprint docs | #1    | ✅ In Progress | @mas-ruk   |
+| Setup repo, write initial README, format Sprint docs | #1    | ✅ Done | @mas-ruk   |
+| Create issues for everyone's respective barebones HTML |  N/A   | 🔨 In Progress | all  |
+| Review user stories, edit and add any that are missing | #2 | 🔨 In Progress | all |
 
 
 ## ✅ Done This Sprint
+- Setup repo, written initial README, format Sprint docs
 
 ## ⚠️ Blockers
 - i.e. what is causing us struggle
