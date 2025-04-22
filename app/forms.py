@@ -1,0 +1,1 @@
+#File for specifying forms templates. See the Flask Server-Side Rendering lecture.
