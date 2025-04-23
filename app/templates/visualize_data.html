@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <title>Visualize Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/visualize_data.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>My Magic: The Gathering Collection</h1>
+
+        <!-- Filter Box -->
+        <section class="filters-box">
+            <h2>Filters</h2>
+            <form>
+                <input type="text" placeholder="Search by name...">
+
+                <select>
+                    <option value="">Type</option>
+                    <option value="creature">Creature</option>
+                    <option value="spell">Spell</option>
+                </select>
+
+                <select>
+                    <option value="">Colour</option>
+                    <option value="red">Red</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                    <option value="black">Black</option>
+                </select>
+
+                <button type="submit">Apply Filters</button>
+            </form>
+        </section>
+
+        <!-- Cards Display -->
+        <section class="card-display">
+            <div class="card">
+                <div class="card-image">Card Image</div>
+                <h3>Card Name</h3>
+                <p>Type: Creature</p>
+                <p>Colour: Green</p>
+                <p>Rarity: Rare</p>
+                <p>Qty: 1</p>
+                <div class="card-actions">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </div>
+                <div class="card">
+                    <div class="card-image">Card Image</div>
+                    <h3>Card Name</h3>
+                    <p>Type: Creature</p>
+                    <p>Colour: Red</p>
+                    <p>Rarity: Rare</p>
+                    <p>Qty: 1</p>
+                    <div class="card-actions">
+                        <button>Edit</button>
+                        <button>Delete</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-image">Card Image</div>
+                        <h3>Card Name</h3>
+                        <p>Type: Creature</p>
+                        <p>Colour: Blue</p>
+                        <p>Rarity: Rare</p>
+                        <p>Qty: 1</p>
+                        <div class="card-actions">
+                            <button>Edit</button>
+                            <button>Delete</button>
+                        </div>
+                        <div class="card">
+                            <div class="card-image">Card Image</div>
+                            <h3>Card Name</h3>
+                            <p>Type: Creature</p>
+                            <p>Colour: Black</p>
+                            <p>Rarity: Rare</p>
+                            <p>Qty: 1</p>
+                            <div class="card-actions">
+                                <button>Edit</button>
+                                <button>Delete</button>
+                            </div>
+            </div>
+
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-box">
+            <h2>Collection Stats</h2>
+            <div class="chart-placeholder">[Chart goes here]</div>
+        </section>
+    </div>
+</body>
+</html>
