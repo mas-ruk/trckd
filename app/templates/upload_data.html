@@ -5,42 +5,56 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title> trckd - Uploading... </title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
         <style>
             .bg-purple-dark {
                 background-color: #2f243a;
+            }
+
+            .bg-purple-black {
+                background-color: #121212;
+            }
+            .sidebar {
+                border-top-right-radius: 15px;
+                border-bottom-right-radius: 15px;
             }
         </style>
     </head>
 
     <body>
-        <div class="container-fluid"> 
-            <div class="row">
+        <div class="d-flex flex-column min-vh-100 bg-purple-black"> 
+            <div class="row flex-grow-1 w-100 m-0">
                 <!-- Sidebar -->
-                <div class="col-md-3 col-lg-2 bg-purple-dark text-white sidebar p-3 min-vh-100"> 
-                    <h4 style="font-weight: bold;"> Sidebar </h4>
+                <div class="col-md-3 col-lg-2 bg-purple-dark text-white sidebar p-3 d-flex flex-column"> 
+                    <h4 style="font-weight: bold;"> trckd </h4>
+                    <hr>
 
                     <!-- List items -->
                     <ul class="nav flex-column">
-                        <li class="nav-item"> <a href="#" class="nav-link text-white">Home</a> </li>
-                        <li class="nav-item"> <a href="#" class="nav-link text-white">Upload Cards</a> </li>
-                        <li class="nav-item"> <a href="#" class="nav-link text-white">My Collection</a> </li>
+                        <li class="nav-item"> <a href="#" class="nav-link text-white fw-semibold"> <i class="bi bi-house me-2"></i> Home</a> </li>
+                        <li class="nav-item"> <a href="#" class="nav-link text-white fw-semibold"> <i class="bi bi-plus me-2"></i> Add Cards</a> </li>
+                        <li class="nav-item"> <a href="#" class="nav-link text-white fw-semibold"> <i class="bi bi-box2-fill me-2"></i> My Collection</a> </li>
                     </ul> 
                 </div>
 
                 <!-- Content -->
-                <div class="col-9 min-vh-100">
-                    <h1 style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Add your cards! </h1>
+                <div class="col-md-9 col-lg-10 bg-purple-black text-white d-flex flex-column">
+                    <h1 style="font-weight: bold; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Add your cards! </h1>
                     <hr>
-                    <h2 style="padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;">Choose your adding method</h2>
+                    <h3 style="font-weight: bold; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Choose your fighter! </h3>
 
                     <div class="row">
+                        <!-- Search cards by name container -->
                         <div class="col-md-6 mb-4">
-                            <div class="p-3 border rounded shadow-sm">
-                                <h5 style="font-weight: bold;"> Search by name & filter </h5>
+                            <div class="p-3 rounded shadow-sm bg-purple-dark">
+                                <h5 style="font-weight: bold; padding-bottom: 5px;"> Search by name and filter </h5>
+                                <hr>
+                                <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/08/magic-bad-cards-feature.jpg" class="mb-2 rounded" style="max-width:100%; height:auto">
                             </div>
                         </div>
+                        <!-- Upload cards by csv container -->
                         <div class="col-md-6 mb-4">
-                            <div class="p-3 border rounded shadow-sm">
+                            <div class="p-3 rounded shadow-sm bg-purple-dark">
                                 <h5 style="font-weight: bold;"> Upload cards using a CSV file </h5>
                             </div>
                         </div>
