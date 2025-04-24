@@ -1,0 +1,13 @@
+body {
+    background-color: firebrick;
+}
+
+.btn {
+    background-color: crimson;
+    border-color: white;
+}
+
+.homepage-img {
+    width: 75%;
+    height: 75%;
+}

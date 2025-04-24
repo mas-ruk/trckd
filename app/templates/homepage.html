@@ -6,17 +6,23 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Import Bootstrap 4 -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="..\static\styles\login.css">
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     </head>
     <body>
+        <div class="container-fluid">
+            <h1 class="bg-dark text-white p-3">trckd - A Magic: The Gathering Collection App</h1>
+            <div class="row align-items-center">
+                <p class="col-4 border bg-light p-3"><b>trckd</b> is a web-based application that serves as a collecting tool for the popular trading card game <b>Magic: The Gathering</b>, published by Wizards of the Coast. It provides the ability to upload cards from your collection, sort them and then visualiase data about your entire library. Login or register below to get started.</p>
+                <img class="col-8 p-3 homepage-img" src="https://dnm.nflximg.net/api/v6/BvVbc2Wxr2w6QuoANoSpJKEIWjQ/AAAAQWCQSRUcuxcg36x-fAfduhyZgCN1mHUBMGq0OEDmIQM8NU-xKpoWNjs2QxnrzxDYjDlqqhl9ftxXCoYbruqQFFFhkvQd3eABBb-v2z9_FTNAxHVcY-oGgc58sqdUTMf5YrQUMdlRjZrtq7tDB5j6uVR6bFA.jpg?r=91f">
+            </div>
+        </div>
         <div class="container">
-            <h1>trckd - A Magic: The Gathering Collection App</h1>
-            <p><b>trckd</b> is a web-based application that serves as a collecting tool for the popular trading card game <b>Magic: The Gathering</b>, published by Wizards of the Coast. It provides the ability to upload cards from your collection, sort them and then visualiase data about your entire library. Login or register below to get started.</p>
-            <div class="row">
-                <div class="col-6 border p-3">
-                    <h2>Login</h2>
+            <div class="row align-items-center">
+                <div class="col-5 border p-3 bg-light">
+                    <h2 class="bg-secondary p-1">Login</h2>
                     <form>
                         <div class="form-group">
                             <label for="login_email">Email:</label>
@@ -32,8 +38,9 @@
                         <button type="submit" class="btn btn-primary">Login</button>
                     </form>
                 </div>
-                <div class="col-6 border p-3">
-                    <h2>Register</h2>
+                <div class="col-2 text-center" style="font-size: 30px;"><b>OR</b></div>
+                <div class="col-5 border p-3 bg-light">
+                    <h2 class="bg-secondary p-1">Register</h2>
                     <form>
                         <div class="form-group">
                             <label for="register_email">Email:</label>
