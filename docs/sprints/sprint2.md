@@ -8,7 +8,12 @@
 ## 📋 Tasks Breakdown
 | Task                                      | Issue | Status         | Assignee   |
 |-------------------------------------------|-------|----------------|------------|
-
+| Create rough HTML & CSS structure for the upload view | #8    | 🟡 In Progress | @mas-ruk|
+| Create rough HTML & CSS structure for the visual data view | #7    | 🟡 In Progress | @saniya14-sketch|
+| Create rough HTML & CSS structure for the introduction & login view | #6    | 🟡 In Progress | @KingTako44 |
+| Verify virtual environment works across team machines | #3     | 🔲 To Do       | ALL           |
+| Create and open issues for each user story | #2     | 🔲 To Do        |           |
+| Assign each user story to a team member | #2     | 🔲 To Do        |            |
 
 ## ✅ Done This Sprint
 
