@@ -5,35 +5,87 @@
   <title>Share Your Cards</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Bootstrap CSS CDN -->
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Font Awesome (for icons) -->
+  <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  
+
   <style>
     body {
-      background-color: #f3f4f6;
       font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: white;
     }
-    .card-box {
-      background: white;
-      border-radius: 1rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    .card-img {
-      height: 120px;
-      object-fit: contain;
-      margin-right: 1rem;
-    }
+
     .form-section {
-      background: #fff;
+      background-color: #1c1c1e;
       padding: 2rem;
       border-radius: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
+
+    .card-box {
+      background: #3c2c4e;
+      border: 1px solid #6b5c7d;
+      border-radius: 1rem;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card-box:hover {
+      transform: scale(1.01);
+      box-shadow: 0 0 10px #9f7aea;
+    }
+
+    .card-img {
+      width: 100px;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      background: white;
+      padding: 5px;
+      margin-right: 1.5rem;
+      cursor: pointer;
+    }
+
+    .card-text {
+      color: white;
+      line-height: 1.4;
+    }
+
+    .form-label,
+    .form-check-label,
+    .form-select,
+    .form-select option {
+      color: white;
+    }
+
+    .form-select {
+      background-color: #2f243a;
+      border: 1px solid #4a3d56;
+    }
+
+    .btn-primary {
+      background-color: #6a4dad;
+      border-color: #6a4dad;
+    }
+
+    .btn-primary:hover {
+      background-color: #7c5ed1;
+      border-color: #7c5ed1;
+    }
+
+    /* Modal image sizing */
+    .modal-img {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+    }
+
   </style>
 </head>
 <body>
@@ -43,34 +95,36 @@
 
     <form id="shareForm" class="form-section">
 
-      <!-- Card Selection -->
       <h5 class="mb-3"><i class="fas fa-clone"></i> Select Cards to Share</h5>
 
       <!-- Card 1 -->
-      <div class="d-flex align-items-center card-box">
+      <div class="card-box">
         <input class="form-check-input me-3" type="checkbox" id="card1" value="card1">
-        <img src="https://images.ygoprodeck.com/images/cards/46986414.jpg" class="card-img" alt="Dark Magician">
-        <label class="form-check-label" for="card1">
-          <strong>Dark Magician</strong> <br><small>Ultra Rare – Yugioh</small>
-        </label>
+        <img src="https://images.ygoprodeck.com/images/cards/46986414.jpg" class="card-img" alt="Dark Magician" data-img="https://images.ygoprodeck.com/images/cards/46986414.jpg">
+        <div class="card-text">
+          <strong>Dark Magician</strong><br>
+          <small>Ultra Rare – Yugioh</small>
+        </div>
       </div>
 
       <!-- Card 2 -->
-      <div class="d-flex align-items-center card-box">
+      <div class="card-box">
         <input class="form-check-input me-3" type="checkbox" id="card2" value="card2">
-        <img src="https://images.ygoprodeck.com/images/cards/89631139.jpg" class="card-img" alt="Blue Eyes">
-        <label class="form-check-label" for="card2">
-          <strong>Blue-Eyes White Dragon</strong> <br><small>Common – Yugioh</small>
-        </label>
+        <img src="https://images.ygoprodeck.com/images/cards/89631139.jpg" class="card-img" alt="Blue Eyes" data-img="https://images.ygoprodeck.com/images/cards/89631139.jpg">
+        <div class="card-text">
+          <strong>Blue-Eyes White Dragon</strong><br>
+          <small>Common – Yugioh</small>
+        </div>
       </div>
 
       <!-- Card 3 -->
-      <div class="d-flex align-items-center card-box">
+      <div class="card-box">
         <input class="form-check-input me-3" type="checkbox" id="card3" value="card3">
-        <img src="https://images.pokemontcg.io/base1/4_hires.png" class="card-img" alt="Charizard">
-        <label class="form-check-label" for="card3">
-          <strong>Charizard</strong> <br><small>Holo – Pokémon</small>
-        </label>
+        <img src="https://images.pokemontcg.io/base1/4_hires.png" class="card-img" alt="Charizard" data-img="https://images.pokemontcg.io/base1/4_hires.png">
+        <div class="card-text">
+          <strong>Charizard</strong><br>
+          <small>Holo – Pokémon</small>
+        </div>
       </div>
 
       <!-- User Dropdown -->
@@ -84,13 +138,46 @@
         </select>
       </div>
 
-      <!-- Submit Button -->
+      <!-- Share Button -->
       <div class="text-center">
-        <button type="submit" class="btn btn-primary px-4 mt-3"><i class="fas fa-paper-plane"></i> Share Selected Cards</button>
+        <button type="submit" class="btn btn-primary px-4 mt-3">
+          <i class="fas fa-paper-plane"></i> Share Selected Cards
+        </button>
       </div>
 
     </form>
   </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-purple-dark text-white text-center">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="imageModalLabel">Card Preview</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img id="modalImage" class="modal-img" src="" alt="Card Preview">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS & Modal Script -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Load clicked image into modal
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    const modalImage = document.getElementById('modalImage');
+
+    document.querySelectorAll('.card-img').forEach(img => {
+      img.addEventListener('click', () => {
+        modalImage.src = img.dataset.img;
+        modal.show();
+      });
+    });
+  </script>
 
 </body>
 </html>
