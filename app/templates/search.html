@@ -47,6 +47,10 @@
                 padding: 20px;
                 margin-bottom: 20px;
             }
+            
+            .card:hover {
+                box-shadow: 0 0 15px #513a69, 0 0 30px #513a69, 0 0 45px #513a69; 
+            }
 
             .card img {
                 max-width: 100%;
@@ -64,7 +68,6 @@
             }
 
             .card-footer {
-                margin-top: 15px;
                 font-size: 0.8em;
                 color: #a3a3a3;
             }
@@ -123,13 +126,15 @@
                     
                         <!-- Card 1-->
                         <div class="card">
-                            <h5 class="card-title">Ancient Copper Dragon</h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="card-title">Ancient Copper Dragon</h5>
+                                <button class="rounded-pill px-3 py-2" style="background: none; border: none; color: white; font-size: 2em;"> <i class="bi bi-plus-circle"></i> </button>
+                            </div>
                             <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=563044&type=card" alt="Card Image">
                             <p class="card-description">
                                 Flying
                                 Whenever this creature deals combat damage to a player, roll a d20. 
-                                You create a number of Treasure tokens equal to the result.
-                            </p>
+                                You create a number of Treasure tokens equal to the result. </p>
                             <div class="card-footer">Rarity: Mythic</div>
                         </div>
 
