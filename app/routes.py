@@ -16,3 +16,7 @@ def upload_search():
 @app.route('/upload_csv')
 def upload_csv():
     return render_template('upload_csv.html')
+
+@app.route('/collection')
+def collection():
+    return render_template('visualize_data.html')
