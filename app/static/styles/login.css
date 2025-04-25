@@ -1,5 +1,5 @@
 body {
-    background-color: firebrick;
+    background-color: #2f243a;
 }
 
 .btn {
@@ -8,6 +8,16 @@ body {
 }
 
 .homepage-img {
-    width: 75%;
+    width: 100px;
     height: 75%;
+    margin: 20px
+}
+
+.homepage-intro {
+    margin: 20px;
+}
+
+.homepage-form {
+    background-color: #121212;
+    color: white;
 }
