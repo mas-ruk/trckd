@@ -21,6 +21,11 @@
             .content {
                 padding-left: 30px;
             }
+
+            .choice:hover {
+                transform: scale(1.01);
+                transition: 0.3s ease;
+            }
         </style>
     </head>
 
@@ -48,7 +53,7 @@
 
                     <div class="row">
                         <!-- Search cards by name container -->
-                        <div class="col-md-6 mb-4">
+                        <div class="col-md-6 mb-4 choice">
                             <a href="{{ url_for('upload_search') }} " class="text-decoration-none">
                                 <div class="p-3 rounded shadow-sm bg-purple-dark">
                                     <h5 style="font-weight: bold; padding-bottom: 5px;"> Search by name and filter </h5>
@@ -58,7 +63,7 @@
                             </a>
                         </div>
                         <!-- Upload cards by csv container -->
-                        <div class="col-md-6 mb-4">
+                        <div class="col-md-6 mb-4 choice">
                             <a href="{{ url_for('upload_csv') }} " class="text-decoration-none">
                                 <div class="p-3 rounded shadow-sm bg-purple-dark">
                                     <h5 style="font-weight: bold;"> Upload cards using a CSV file </h5>

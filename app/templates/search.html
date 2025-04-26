@@ -50,6 +50,8 @@
             
             .card:hover {
                 box-shadow: 0 0 15px #513a69, 0 0 30px #513a69, 0 0 45px #513a69; 
+                transform: scale(1.01);
+                transition: 0.3s ease;
             }
 
             .card img {
@@ -79,6 +81,10 @@
                 padding: 20px;
             }
 
+            .dropdown:hover .dropdown-menu {
+                display: block;
+                margin-top: 0; /* remove delay */
+            }
         </style>
     </head>
 
@@ -100,7 +106,46 @@
 
                 <!-- Content -->
                 <div class="col-md-9 col-lg-10 bg-purple-black text-white d-flex flex-column content">
-                    <h1 style="padding-top: 50px; padding-bottom: 20px; font-weight: bold; font-size: 4em"> Add cards </h1>
+                    <!-- Add cards and menu dropdown -->
+                    <div class="d-flex justify-content-between align-items-center"> 
+                        <h1 style="padding-top: 50px; padding-bottom: 20px; font-weight: bold; font-size: 4em"> Add cards </h1>
+                        <div class="dropdown" style="padding-right: 50px;">
+                            <button class="btn btn-purple-circle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-three-dots"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#">Option 1</a></li>
+                                <li><a class="dropdown-item" href="#">Option 2</a></li>
+                                <li><a class="dropdown-item" href="#">Option 3</a></li>
+                            </ul>
+                        </div>
+
+                        <style>
+                            .btn-purple-circle {
+                                background-color: #2f243a; /* Dark purple */
+                                color: white;
+                                border: none;
+                                border-radius: 50%;
+                                width: 50px;
+                                height: 50px;
+                                padding: 0;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                transform: scale(1.50);
+                                transition: background-color 0.3s ease, transform 0.2s ease;
+                            }
+                            
+                            .btn-purple-circle:hover {
+                                background-color: #4b3760; 
+                                transform: scale(1.55); 
+                            }
+                            
+                            .dropdown-toggle::after {
+                                display: none; 
+                            }
+                            </style>
+                    </div>
                     
                     <!-- Search bar and filter buttons -->
                     <div class="d-flex align-items-center gap-4" style= "color: white;">
@@ -177,11 +222,10 @@
                             <p class="card-description">A brief description of the card.</p>
                             <div class="card-footer">Rarity: Mythic</div>
                         </div>
-
                      </div>
                 </div>
             </div>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-5cmG4HDKDcrrk4cZWIRbXW1lgdPbH0osLOYTdSd5quN4dWQdvFeBk4MS7YjE4k0v" crossorigin="anonymous"></script>
     </body>
-
 </html>
