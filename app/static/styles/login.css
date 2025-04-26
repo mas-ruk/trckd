@@ -1,4 +1,8 @@
 body {
+    background-color: #121212;
+}
+
+.menu {
     background-color: #2f243a;
 }
 
@@ -7,17 +11,22 @@ body {
     border-color: white;
 }
 
-.homepage-img {
-    width: 100px;
-    height: 75%;
-    margin: 20px
-}
-
-.homepage-intro {
-    margin: 20px;
+.btn:hover {
+    background-color: lightslategray;
+    border-color: white;
 }
 
 .homepage-form {
-    background-color: #121212;
+    background-color: #2f243a;
+    color: white;
+}
+
+.nav-link {
+    color: white;
+}
+
+.nav-link:hover {
+    background-color: lightslategray;
+    border-radius: 5px;
     color: white;
 }

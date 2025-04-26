@@ -13,54 +13,65 @@
     </head>
     <body>
         <div class="container-fluid">
-            <h1 class="bg-dark text-white p-3">trckd - A Magic: The Gathering Collection App</h1>
-            <div class="row align-items-center">
-                <p class="col-5 border bg-light p-3 homepage-intro"><b>trckd</b> is a web-based application that serves as a collecting tool for the popular trading card game <b>Magic: The Gathering</b>, published by Wizards of the Coast. It provides the ability to upload cards from your collection, sort them and then visualiase data about your entire library. Login or register below to get started.</p>
-                <img class="col-6 p-3 img-thumbnail homepage-img" src="https://dnm.nflximg.net/api/v6/BvVbc2Wxr2w6QuoANoSpJKEIWjQ/AAAAQWCQSRUcuxcg36x-fAfduhyZgCN1mHUBMGq0OEDmIQM8NU-xKpoWNjs2QxnrzxDYjDlqqhl9ftxXCoYbruqQFFFhkvQd3eABBb-v2z9_FTNAxHVcY-oGgc58sqdUTMf5YrQUMdlRjZrtq7tDB5j6uVR6bFA.jpg?r=91f">
-                <div class="col-1"></div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-5 border p-3 homepage-form">
-                    <h2 class="bg-secondary p-1">Login</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="login_email">Email:</label>
-                            <input type="email" class="form-control" id="login_email">
-                        </div>
-                        <div class="form-group">
-                            <label for="login_pwd">Password:</label>
-                            <input type="password" class="form-control" id="login_pwd">
-                        </div>
-                        <div class="checkbox">
-                            <label><input type="checkbox"> Remember me</label>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Login</button>
-                    </form>
-                </div>
-                <div class="col-2 text-center text-white" style="font-size: 30px;"><b>OR</b></div>
-                <div class="col-5 border p-3 homepage-form">
-                    <h2 class="bg-secondary p-1">Register</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="register_email">Email:</label>
-                            <input type="email" class="form-control" id="register_email">
-                        </div>
-                        <div class="form-group">
-                            <label for="register_username">Username:</label>
-                            <input type="password" class="form-control" id="register_username">
-                        </div>
-                        <div class="form-group">
-                            <label for="register_pwd">Password:</label>
-                            <input type="password" class="form-control" id="register_pwd">
-                        </div>
-                        <div class="form-group">
-                            <label for="confirm_pwd">Confirm Password:</label>
-                            <input type="password" class="form-control" id="confirm_pwd">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Register</button>
-                    </form>
+            <div class="row min-vh-100">
+                <ul class="nav text-white flex-column col-2 p-2 menu">
+                    <h4 style="margin-left: 15px; margin-top: 15px;"> <b>trckd</b> </h4>
+                    <hr style="border: 1px solid white; width: 96%;">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#register">Register</a>
+                    </li>
+                </ul>
+                <div class="tab-content col-10">
+                    <div class="tab-pane container active" id="home">
+                        <h1 class="bg-dark text-white p-3">Home</h1>
+                        <img class="p-3 img-thumbnail text-center" src="https://dnm.nflximg.net/api/v6/BvVbc2Wxr2w6QuoANoSpJKEIWjQ/AAAAQWCQSRUcuxcg36x-fAfduhyZgCN1mHUBMGq0OEDmIQM8NU-xKpoWNjs2QxnrzxDYjDlqqhl9ftxXCoYbruqQFFFhkvQd3eABBb-v2z9_FTNAxHVcY-oGgc58sqdUTMf5YrQUMdlRjZrtq7tDB5j6uVR6bFA.jpg?r=91f">
+                        <p class="border bg-light p-3" style="margin: 20px;"><b>trckd</b> is a web-based application that serves as a collecting tool for the popular trading card game <b>Magic: The Gathering</b>, published by Wizards of the Coast. It provides the ability to upload cards from your collection, sort them and then visualiase data about your entire library. Login or register to get started.</p>
+                    </div>
+                    <div class="tab-pane container fade text-white" id="login">
+                        <h1 class="bg-dark p-3">Login</h1>
+                        <form>
+                            <div class="form-group">
+                                <label for="login_email">Email:</label>
+                                <input type="email" class="form-control" id="login_email">
+                            </div>
+                            <div class="form-group">
+                                <label for="login_pwd">Password:</label>
+                                <input type="password" class="form-control" id="login_pwd">
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox"> Remember me</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                    </div>
+                    <div class="tab-pane container fade text-white" id="register">
+                        <h1 class="bg-dark text-white p-3">Register</h1>
+                        <form>
+                            <div class="form-group">
+                                <label for="register_email">Email:</label>
+                                <input type="email" class="form-control" id="register_email">
+                            </div>
+                            <div class="form-group">
+                                <label for="register_username">Username:</label>
+                                <input type="password" class="form-control" id="register_username">
+                            </div>
+                            <div class="form-group">
+                                <label for="register_pwd">Password:</label>
+                                <input type="password" class="form-control" id="register_pwd">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm_pwd">Confirm Password:</label>
+                                <input type="password" class="form-control" id="confirm_pwd">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
