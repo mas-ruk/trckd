@@ -1,81 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title> trckd - Uploading... </title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-        <style>
-            .bg-purple-dark {
-                background-color: #2f243a;
-            }
+{% extends "base.html" %}
 
-            .bg-purple-black {
-                background-color: #121212;
-            }
-            .sidebar {
-                border-top-right-radius: 15px;
-                border-bottom-right-radius: 15px;
-            }
-            .content {
-                padding-left: 30px;
-            }
+{% block title %}trckd - Uploading...{% endblock %}
 
-            .choice:hover {
-                transform: scale(1.01);
-                transition: 0.3s ease;
-            }
-        </style>
-    </head>
+{% block content %}
+    <h1 style="font-weight: bold; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Add Your Cards! </h1>
+    <hr>
+    <h3 style="font-weight: bold; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Choose your fighter! </h3>
 
-    <body>
-        <div class="d-flex flex-column min-vh-100 bg-purple-black"> 
-            <div class="row flex-grow-1 w-100 m-0">
-                <!-- Sidebar -->
-                <div class="col-md-3 col-lg-2 bg-purple-dark text-white sidebar p-3 d-flex flex-column"> 
-                    <h4 style="font-weight: bold;"> trckd </h4>
+    <div class="row">
+        <!-- Search cards by name container -->
+        <div class="col-md-6 mb-4 choice">
+            <a href="{{ url_for('upload_search') }}" class="text-decoration-none">
+                <div class="p-3 rounded shadow-sm bg-purple-dark">
+                    <h5 style="font-weight: bold; padding-bottom: 5px;"> Search by name and filter </h5>
                     <hr>
-
-                    <!-- List items -->
-                    <ul class="nav flex-column">
-                        <li class="nav-item"> <a href="{{url_for('index')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-house me-2"></i> Home</a> </li>
-                        <li class="nav-item"> <a href="{{url_for('upload_data_view')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-plus me-2"></i> Add Cards</a> </li>
-                        <li class="nav-item"> <a href="{{url_for('collection')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-box2-fill me-2"></i> My Collection</a> </li>
-                    </ul> 
+                    <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/08/magic-bad-cards-feature.jpg" class="mb-2 rounded" style="width:100%; height: 250px; object-fit: cover">
                 </div>
-
-                <!-- Content -->
-                <div class="col-md-9 col-lg-10 bg-purple-black text-white d-flex flex-column content">
-                    <h1 style="font-weight: bold; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Add Your Cards! </h1>
-                    <hr>
-                    <h3 style="font-weight: bold; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Choose your fighter! </h3>
-
-                    <div class="row">
-                        <!-- Search cards by name container -->
-                        <div class="col-md-6 mb-4 choice">
-                            <a href="{{ url_for('upload_search') }} " class="text-decoration-none">
-                                <div class="p-3 rounded shadow-sm bg-purple-dark">
-                                    <h5 style="font-weight: bold; padding-bottom: 5px;"> Search by name and filter </h5>
-                                    <hr>
-                                    <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/08/magic-bad-cards-feature.jpg" class="mb-2 rounded" style="width:100%; height: 250px; object-fit: cover">
-                                </div>
-                            </a>
-                        </div>
-                        <!-- Upload cards by csv container -->
-                        <div class="col-md-6 mb-4 choice">
-                            <a href="{{ url_for('upload_csv') }} " class="text-decoration-none">
-                                <div class="p-3 rounded shadow-sm bg-purple-dark">
-                                    <h5 style="font-weight: bold;"> Upload cards using a CSV file </h5>
-                                    <hr>
-                                    <img src="https://shop.mtgcardsmith.com/imgs/smith1.jpg" class="mb-2 rounded" style="width:100%; height: 250px; object-fit: cover">
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </a>
         </div>
-    </body>
+        <!-- Upload cards by csv container -->
+        <div class="col-md-6 mb-4 choice">
+            <a href="{{ url_for('upload_csv') }}" class="text-decoration-none">
+                <div class="p-3 rounded shadow-sm bg-purple-dark">
+                    <h5 style="font-weight: bold;"> Upload cards using a CSV file </h5>
+                    <hr>
+                    <img src="https://shop.mtgcardsmith.com/imgs/smith1.jpg" class="mb-2 rounded" style="width:100%; height: 250px; object-fit: cover">
+                </div>
+            </a>
+        </div>
+    </div>
+{% endblock %}
 
-</html>
+{% block extra_css %}
+<style>
+    .choice:hover {
+        transform: scale(1.02);
+        transition: 0.3s ease;
+    }
+
+    .choice:not(:hover) {
+        transform: scale(1.0);
+        transition: 0.3s ease;
+    }
+</style>
+{% endblock %}
