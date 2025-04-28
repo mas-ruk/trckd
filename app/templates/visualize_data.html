@@ -2,9 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    
     <title>Visualize Data</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/visualize_data.css') }}">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom background classes */
+        .bg-purple-dark {
+            background-color: #2f243a;
+        }
+
+        .bg-purple-black {
+            background-color: #121212;
+        }
+
+        h1, h2, p {
+            color: #fff; 
+        }
+    </style>
+</head>
+<body class="bg-purple-dark">
+
 </head>
 <body>
     <div class="container">
@@ -14,15 +32,15 @@
         <section class="filters-box">
             <h2>Filters</h2>
             <form>
-                <input type="text" placeholder="Search by name...">
+                <input type="text" placeholder="Search by name..." class="form-control mb-2">
 
-                <select>
+                <select class="form-control mb-2">
                     <option value="">Type</option>
                     <option value="creature">Creature</option>
                     <option value="spell">Spell</option>
                 </select>
 
-                <select>
+                <select class="form-control mb-2">
                     <option value="">Colour</option>
                     <option value="red">Red</option>
                     <option value="blue">Blue</option>
@@ -30,23 +48,28 @@
                     <option value="black">Black</option>
                 </select>
 
-                <button type="submit">Apply Filters</button>
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
             </form>
         </section>
 
-        <!-- Cards Display -->
-        <section class="card-display">
-            <div class="card">
-                <div class="card-image">Card Image</div>
-                <h3>Card Name</h3>
-                <p>Type: Creature</p>
-                <p>Colour: Green</p>
-                <p>Rarity: Rare</p>
-                <p>Qty: 1</p>
-                <div class="card-actions">
-                    <button>Edit</button>
-                    <button>Delete</button>
+        <!-- Cards Display using Bootstrap Grid -->
+        <section class="card-display row">
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-image">Card Image</div>
+                    <h3>Card Name</h3>
+                    <p>Type: Creature</p>
+                    <p>Colour: Green</p>
+                    <p>Rarity: Rare</p>
+                    <p>Qty: 1</p>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
                 </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
                 <div class="card">
                     <div class="card-image">Card Image</div>
                     <h3>Card Name</h3>
@@ -55,33 +78,41 @@
                     <p>Rarity: Rare</p>
                     <p>Qty: 1</p>
                     <div class="card-actions">
-                        <button>Edit</button>
-                        <button>Delete</button>
+                        <button class="btn btn-secondary">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
                     </div>
-                    <div class="card">
-                        <div class="card-image">Card Image</div>
-                        <h3>Card Name</h3>
-                        <p>Type: Creature</p>
-                        <p>Colour: Blue</p>
-                        <p>Rarity: Rare</p>
-                        <p>Qty: 1</p>
-                        <div class="card-actions">
-                            <button>Edit</button>
-                            <button>Delete</button>
-                        </div>
-                        <div class="card">
-                            <div class="card-image">Card Image</div>
-                            <h3>Card Name</h3>
-                            <p>Type: Creature</p>
-                            <p>Colour: Black</p>
-                            <p>Rarity: Rare</p>
-                            <p>Qty: 1</p>
-                            <div class="card-actions">
-                                <button>Edit</button>
-                                <button>Delete</button>
-                            </div>
+                </div>
             </div>
 
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-image">Card Image</div>
+                    <h3>Card Name</h3>
+                    <p>Type: Creature</p>
+                    <p>Colour: Blue</p>
+                    <p>Rarity: Rare</p>
+                    <p>Qty: 1</p>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-image">Card Image</div>
+                    <h3>Card Name</h3>
+                    <p>Type: Creature</p>
+                    <p>Colour: Black</p>
+                    <p>Rarity: Rare</p>
+                    <p>Qty: 1</p>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary">Edit</button>
+                        <button class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Stats Section -->
@@ -90,5 +121,10 @@
             <div class="chart-placeholder">[Chart goes here]</div>
         </section>
     </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
