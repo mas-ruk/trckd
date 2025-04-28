@@ -14,13 +14,105 @@
             .bg-purple-black {
                 background-color: #121212;
             }
+            
+            /* Sidebar styling */
             .sidebar {
                 border-top-right-radius: 15px;
                 border-bottom-right-radius: 15px;
+                transition: all 0.3s ease;
+                position: relative;
+                width: 16.67%; /* For col-md-2/col-lg-2 */
+                min-width: 250px;
             }
+            
+            /* Collapsed sidebar - only shows icons */
+            .sidebar.collapsed {
+                width: 70px;
+                min-width: 70px;
+            }
+            
+            /* Hide text in collapsed mode */
+            .sidebar.collapsed .menu-text {
+                display: none;
+            }
+            
+            /* Center icons when collapsed */
+            .sidebar.collapsed .nav-link {
+                text-align: center;
+                padding-left: 0;
+                padding-right: 0;
+            }
+            
+            .sidebar.collapsed .nav-link i {
+                margin-right: 0 !important;
+                font-size: 1.2rem;
+            }
+            
+            /* Header in collapsed mode */
+            .sidebar.collapsed h4 {
+                text-align: center;
+                font-size: 1.2rem;
+            }
+            
+            /* Content area styling */
             .content {
                 padding-left: 30px;
+                transition: all 0.3s ease;
+                width: 83.33%; /* 100% - sidebar width */
             }
+            
+            /* Expanded content when sidebar is collapsed */
+            .content.expanded {
+                width: calc(100% - 70px);
+            }
+            
+            /* Container for flexible layout */
+            .flex-container {
+                display: flex;
+                width: 100%;
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+            
+            /* Replace the existing sidebar-toggle styles with these */
+            .sidebar-toggle {
+                position: absolute;
+                right: -15px;
+                top: 50%; /* Position at middle height */
+                transform: translateY(-50%); /* Center it vertically */
+                background-color: #2f243a;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 100;
+                box-shadow: 0 0 8px #513a69;
+            }
+
+            /* Also update this in the mobile styles section */
+            @media (max-width: 767.98px) {
+                /* Keep existing styles... */
+                
+                .sidebar-toggle {
+                    position: fixed;
+                    left: 250px;
+                    top: 50%; /* Position at middle height */
+                    transform: translateY(-50%); /* Center it vertically */
+                    transition: all 0.3s;
+                }
+                
+                .sidebar.collapsed .sidebar-toggle {
+                    left: 10px;
+                    /* Keep transform for vertical centering */
+                    transform: translateY(-50%);
+                }
+            }
+            
             .add-cards-search::placeholder {
                 color: white;
                 opacity: 1;
@@ -85,147 +177,196 @@
                 display: block;
                 margin-top: 0; /* remove delay */
             }
+            
+            .btn-purple-circle {
+                background-color: #2f243a; /* Dark purple */
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transform: scale(1.50);
+                transition: background-color 0.3s ease, transform 0.2s ease;
+            }
+            
+            .btn-purple-circle:hover {
+                background-color: #4b3760; 
+                transform: scale(1.55); 
+            }
+
+            .dropdown-toggle::after {
+                display: none; 
+            }
         </style>
     </head>
 
-    <body>
-        <div class="d-flex flex-column min-vh-100 bg-purple-black"> 
-            <div class="row flex-grow-1 w-100 m-0">
-                <!-- Sidebar -->
-                <div class="col-md-3 col-lg-2 bg-purple-dark text-white sidebar p-3 d-flex flex-column"> 
-                    <h4 style="font-weight: bold;"> trckd </h4>
-                    <hr>
+    <body class="bg-purple-black">
+        <div class="flex-container">
+            <!-- Sidebar -->
+            <div class="bg-purple-dark text-white sidebar p-3 d-flex flex-column" id="sidebar"> 
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="bi bi-chevron-left" id="toggleIcon"></i>
+                </button>
+                
+                <h4 style="font-weight: bold;"> trckd </h4>
+                <hr>
 
-                    <!-- List items -->
-                    <ul class="nav flex-column">
-                        <li class="nav-item"> <a href="{{url_for('index')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-house me-2"></i> Home</a> </li>
-                        <li class="nav-item"> <a href="{{url_for('upload_data_view')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-plus me-2"></i> Add Cards</a> </li>
-                        <li class="nav-item"> <a href="{{url_for('collection')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-box2-fill me-2"></i> My Collection</a> </li>
-                    </ul> 
+                <!-- List items -->
+                <ul class="nav flex-column">
+                    <li class="nav-item"> <a href="{{url_for('index')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-house me-2"></i> <span class="menu-text">Home</span></a> </li>
+                    <li class="nav-item"> <a href="{{url_for('upload_data_view')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-plus me-2"></i> <span class="menu-text">Add Cards</span></a> </li>
+                    <li class="nav-item"> <a href="{{url_for('collection')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-box2-fill me-2"></i> <span class="menu-text">My Collection</span></a> </li>
+                </ul> 
+            </div>
+
+            <!-- Content -->
+            <div class="bg-purple-black text-white d-flex flex-column content" id="content">
+                <!-- Add cards and menu dropdown -->
+                <div class="d-flex justify-content-between align-items-center"> 
+                    <h1 style="padding-top: 50px; padding-bottom: 20px; font-weight: bold; font-size: 4em"> Add cards </h1>
+                    <div class="dropdown" style="padding-right: 50px;">
+                        <button class="btn btn-purple-circle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">Option 1</a></li>
+                            <li><a class="dropdown-item" href="#">Option 2</a></li>
+                            <li><a class="dropdown-item" href="#">Option 3</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Search bar and filter buttons -->
+                <div class="d-flex align-items-center gap-4" style="color: white;">
+                    
+                    <!-- Search bar -->
+                    <form action="" class="search-bar">
+                        <input type="search" name="search" 
+                        pattern=".*\S.*" 
+                        required 
+                        class="form-control rounded-pill px-4 add-cards-search" 
+                        style="background-color: #2f243a; outline: none; border: none; color: white;" 
+                        placeholder="Search...">
+                    </form>
+
+                     <!-- Filter Buttons -->
+                    <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-filter"></i> Filter </button>
+                    <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-tags-fill"></i> Tags </button>
+                    <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-list"></i> List View / <i class="bi bi-grid"></i> Grid View </button>
                 </div>
 
-                <!-- Content -->
-                <div class="col-md-9 col-lg-10 bg-purple-black text-white d-flex flex-column content">
-                    <!-- Add cards and menu dropdown -->
-                    <div class="d-flex justify-content-between align-items-center"> 
-                        <h1 style="padding-top: 50px; padding-bottom: 20px; font-weight: bold; font-size: 4em"> Add cards </h1>
-                        <div class="dropdown" style="padding-right: 50px;">
-                            <button class="btn btn-purple-circle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-three-dots"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#">Option 1</a></li>
-                                <li><a class="dropdown-item" href="#">Option 2</a></li>
-                                <li><a class="dropdown-item" href="#">Option 3</a></li>
-                            </ul>
+                <!-- Card Grid -->
+                 <div class="card-grid">
+                
+                    <!-- Card 1-->
+                    <div class="card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title">Ancient Copper Dragon</h5>
+                            <button class="rounded-pill px-3 py-2" style="background: none; border: none; color: white; font-size: 2em;"> <i class="bi bi-plus-circle"></i> </button>
                         </div>
-
-                        <style>
-                            .btn-purple-circle {
-                                background-color: #2f243a; /* Dark purple */
-                                color: white;
-                                border: none;
-                                border-radius: 50%;
-                                width: 50px;
-                                height: 50px;
-                                padding: 0;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                transform: scale(1.50);
-                                transition: background-color 0.3s ease, transform 0.2s ease;
-                            }
-                            
-                            .btn-purple-circle:hover {
-                                background-color: #4b3760; 
-                                transform: scale(1.55); 
-                            }
-                            
-                            .dropdown-toggle::after {
-                                display: none; 
-                            }
-                            </style>
-                    </div>
-                    
-                    <!-- Search bar and filter buttons -->
-                    <div class="d-flex align-items-center gap-4" style= "color: white;">
-                        
-                        <!-- Search bar -->
-                        <form action="" class="search-bar">
-                            <input type="search" name="search" 
-                            pattern=".*\S.*" 
-                            required 
-                            class="form-control rounded-pill px-4 add-cards-search" 
-                            style="background-color: #2f243a; outline: none; border: none; color: white;" 
-                            placeholder="Search...">
-                        </form>
-
-                         <!-- Filter Buttons -->
-                        <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-filter"></i> Filter </button>
-                        <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-tags-fill"></i> Tags </button>
-                        <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-list"></i> List View / <i class="bi bi-grid"></i> Grid View </button>
+                        <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=563044&type=card" alt="Card Image">
+                        <p class="card-description">
+                            Flying
+                            Whenever this creature deals combat damage to a player, roll a d20. 
+                            You create a number of Treasure tokens equal to the result. </p>
+                        <div class="card-footer">Rarity: Mythic</div>
                     </div>
 
-                    <!-- Card Grid -->
-                     <div class="card-grid">
-                    
-                        <!-- Card 1-->
-                        <div class="card">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="card-title">Ancient Copper Dragon</h5>
-                                <button class="rounded-pill px-3 py-2" style="background: none; border: none; color: white; font-size: 2em;"> <i class="bi bi-plus-circle"></i> </button>
-                            </div>
-                            <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=563044&type=card" alt="Card Image">
-                            <p class="card-description">
-                                Flying
-                                Whenever this creature deals combat damage to a player, roll a d20. 
-                                You create a number of Treasure tokens equal to the result. </p>
-                            <div class="card-footer">Rarity: Mythic</div>
-                        </div>
+                    <!-- Example Card 2 -->
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" alt="Card Image">
+                        <h5 class="card-title">Card Title 2</h5>
+                        <p class="card-description">A brief description of the card.</p>
+                        <div class="card-footer">Rarity: Uncommon</div>
+                    </div>
 
-                        <!-- Example Card 2 -->
-                        <div class="card">
-                            <img src="https://via.placeholder.com/150" alt="Card Image">
-                            <h5 class="card-title">Card Title 2</h5>
-                            <p class="card-description">A brief description of the card.</p>
-                            <div class="card-footer">Rarity: Uncommon</div>
-                        </div>
+                    <!-- Example Card 3 -->
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" alt="Card Image">
+                        <h5 class="card-title">Card Title 3</h5>
+                        <p class="card-description">A brief description of the card.</p>
+                        <div class="card-footer">Rarity: Common</div>
+                    </div>
 
-                        <!-- Example Card 3 -->
-                        <div class="card">
-                            <img src="https://via.placeholder.com/150" alt="Card Image">
-                            <h5 class="card-title">Card Title 3</h5>
-                            <p class="card-description">A brief description of the card.</p>
-                            <div class="card-footer">Rarity: Common</div>
-                        </div>
+                    <!-- Example Card 4 -->
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" alt="Card Image">
+                        <h5 class="card-title">Card Title 4</h5>
+                        <p class="card-description">A brief description of the card.</p>
+                        <div class="card-footer">Rarity: Mythic</div>
+                    </div>
 
-                        <!-- Example Card 4 -->
-                        <div class="card">
-                            <img src="https://via.placeholder.com/150" alt="Card Image">
-                            <h5 class="card-title">Card Title 4</h5>
-                            <p class="card-description">A brief description of the card.</p>
-                            <div class="card-footer">Rarity: Mythic</div>
-                        </div>
+                    <!-- Example Card 5 -->
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" alt="Card Image">
+                        <h5 class="card-title">Card Title 5</h5>
+                        <p class="card-description">A brief description of the card.</p>
+                        <div class="card-footer">Rarity: Mythic</div>
+                    </div>
 
-                        <!-- Example Card 5 -->
-                        <div class="card">
-                            <img src="https://via.placeholder.com/150" alt="Card Image">
-                            <h5 class="card-title">Card Title 4</h5>
-                            <p class="card-description">A brief description of the card.</p>
-                            <div class="card-footer">Rarity: Mythic</div>
-                        </div>
-
-                        <!-- Example Card 6 -->
-                        <div class="card">
-                            <img src="https://via.placeholder.com/150" alt="Card Image">
-                            <h5 class="card-title">Card Title 4</h5>
-                            <p class="card-description">A brief description of the card.</p>
-                            <div class="card-footer">Rarity: Mythic</div>
-                        </div>
-                     </div>
-                </div>
+                    <!-- Example Card 6 -->
+                    <div class="card">
+                        <img src="https://via.placeholder.com/150" alt="Card Image">
+                        <h5 class="card-title">Card Title 6</h5>
+                        <p class="card-description">A brief description of the card.</p>
+                        <div class="card-footer">Rarity: Mythic</div>
+                    </div>
+                 </div>
             </div>
         </div>
+        
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-5cmG4HDKDcrrk4cZWIRbXW1lgdPbH0osLOYTdSd5quN4dWQdvFeBk4MS7YjE4k0v" crossorigin="anonymous"></script>
+        
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const sidebar = document.getElementById('sidebar');
+                const content = document.getElementById('content');
+                const toggleBtn = document.getElementById('sidebarToggle');
+                const toggleIcon = document.getElementById('toggleIcon');
+                
+                // Function to handle sidebar toggle
+                function toggleSidebar() {
+                    sidebar.classList.toggle('collapsed');
+                    content.classList.toggle('expanded');
+                    
+                    // Change icon based on sidebar state
+                    if (sidebar.classList.contains('collapsed')) {
+                        toggleIcon.classList.remove('bi-chevron-left');
+                        toggleIcon.classList.add('bi-chevron-right');
+                    } else {
+                        toggleIcon.classList.remove('bi-chevron-right');
+                        toggleIcon.classList.add('bi-chevron-left');
+                    }
+                    
+                    // Allow time for animation to complete before recalculating layout
+                    setTimeout(function() {
+                        window.dispatchEvent(new Event('resize'));
+                    }, 300);
+                }
+                
+                // Add click event to toggle button
+                toggleBtn.addEventListener('click', toggleSidebar);
+                
+                // Optional: Close sidebar by default on mobile
+                function checkWidth() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.add('collapsed');
+                        content.classList.add('expanded');
+                        toggleIcon.classList.remove('bi-chevron-left');
+                        toggleIcon.classList.add('bi-chevron-right');
+                    }
+                }
+                
+                // Check width on load
+                checkWidth();
+                
+                // Check width on resize
+                window.addEventListener('resize', checkWidth);
+            });
+        </script>
     </body>
 </html>
