@@ -1,5 +1,6 @@
+from flask import render_template
 from app import app
 
 @app.route('/')
 def index():
-    return "This is text for testing!"
+    return render_template("homepage.html")
