@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}trckd - Search by name{% endblock %}
+
+{% block content %}
+    <!-- Add cards and menu dropdown -->
+    <div class="d-flex justify-content-between align-items-center"> 
+        <h1 style="padding-top: 50px; padding-bottom: 20px; font-weight: bold; font-size: 4em"> Add cards </h1>
+        <div class="dropdown" style="padding-right: 50px;">
+            <button class="btn btn-purple-circle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#">Option 1</a></li>
+                <li><a class="dropdown-item" href="#">Option 2</a></li>
+                <li><a class="dropdown-item" href="#">Option 3</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Search bar and filter buttons -->
+    <div class="d-flex align-items-center gap-4" style="color: white;">
+        
+        <!-- Search bar -->
+        <form action="" class="search-bar">
+            <input type="search" name="search" 
+            pattern=".*\S.*" 
+            required 
+            class="form-control rounded-pill px-4 add-cards-search" 
+            style="background-color: #2f243a; outline: none; border: none; color: white;" 
+            placeholder="Search...">
+        </form>
+
+         <!-- Filter Buttons -->
+        <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-filter"></i> Filter </button>
+        <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-tags-fill"></i> Tags </button>
+        <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-list"></i> List View / <i class="bi bi-grid"></i> Grid View </button>
+    </div>
+
+    <!-- Card Grid -->
+     <div class="card-grid">
+        <!-- Card 1-->
+        <div class="card">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title">Ancient Copper Dragon</h5>
+                <button class="rounded-pill px-3 py-2" style="background: none; border: none; color: white; font-size: 2em;"> <i class="bi bi-plus-circle"></i> </button>
+            </div>
+            <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=563044&type=card" alt="Card Image">
+            <p class="card-description">
+                Flying
+                Whenever this creature deals combat damage to a player, roll a d20. 
+                You create a number of Treasure tokens equal to the result. </p>
+            <div class="card-footer">Rarity: Mythic</div>
+        </div>
+
+        <!-- Example Cards 2-6 -->
+        {% for i in range(2, 7) %}
+        <div class="card">
+            <img src="https://via.placeholder.com/150" alt="Card Image">
+            <h5 class="card-title">Card Title {{ i }}</h5>
+            <p class="card-description">A brief description of the card.</p>
+            <div class="card-footer">Rarity: {% if i > 4 %}Mythic{% elif i > 2 %}Uncommon{% else %}Common{% endif %}</div>
+        </div>
+        {% endfor %}
+     </div>
+{% endblock %}

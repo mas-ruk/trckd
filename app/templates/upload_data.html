@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}trckd - Uploading...{% endblock %}
+
+{% block content %}
+    <h1 style="font-weight: bold; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Add Your Cards! </h1>
+    <hr>
+    <h3 style="font-weight: bold; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Choose your fighter! </h3>
+
+    <div class="row">
+        <!-- Search cards by name container -->
+        <div class="col-md-6 mb-4 choice">
+            <a href="{{ url_for('upload_search') }}" class="text-decoration-none">
+                <div class="p-3 rounded shadow-sm bg-purple-dark">
+                    <h5 style="font-weight: bold; padding-bottom: 5px;"> Search by name and filter </h5>
+                    <hr>
+                    <img src="https://static1.cbrimages.com/wordpress/wp-content/uploads/2020/08/magic-bad-cards-feature.jpg" class="mb-2 rounded" style="width:100%; height: 250px; object-fit: cover">
+                </div>
+            </a>
+        </div>
+        <!-- Upload cards by csv container -->
+        <div class="col-md-6 mb-4 choice">
+            <a href="{{ url_for('upload_csv') }}" class="text-decoration-none">
+                <div class="p-3 rounded shadow-sm bg-purple-dark">
+                    <h5 style="font-weight: bold;"> Upload cards using a CSV file </h5>
+                    <hr>
+                    <img src="https://shop.mtgcardsmith.com/imgs/smith1.jpg" class="mb-2 rounded" style="width:100%; height: 250px; object-fit: cover">
+                </div>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .choice:hover {
+        transform: scale(1.02);
+        transition: 0.3s ease;
+    }
+
+    .choice:not(:hover) {
+        transform: scale(1.0);
+        transition: 0.3s ease;
+    }
+</style>
+{% endblock %}
