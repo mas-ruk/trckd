@@ -31,36 +31,25 @@
             placeholder="Search...">
         </form>
 
-         <!-- Filter Buttons -->
+        <!-- Filter Buttons -->
         <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-filter"></i> Filter </button>
         <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-tags-fill"></i> Tags </button>
         <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-list"></i> List View / <i class="bi bi-grid"></i> Grid View </button>
     </div>
 
     <!-- Card Grid -->
-     <div class="card-grid">
-        <!-- Card 1-->
+    <div class="card-grid" id="card-grid">
+        {% for card in cards %}
         <div class="card">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="card-title">Ancient Copper Dragon</h5>
-                <button class="rounded-pill px-3 py-2" style="background: none; border: none; color: white; font-size: 2em;"> <i class="bi bi-plus-circle"></i> </button>
-            </div>
-            <img src="https://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=563044&type=card" alt="Card Image">
-            <p class="card-description">
-                Flying
-                Whenever this creature deals combat damage to a player, roll a d20. 
-                You create a number of Treasure tokens equal to the result. </p>
-            <div class="card-footer">Rarity: Mythic</div>
+            <h5 class="card-title">{{ card.name }}</h5>
+            <img src="{{ card.image_uris.normal }}" alt="{{ card.name }} image" class="card-img">
+            <p class="card-description">{{ card.oracle_text }}</p>
+            <p>Set: {{ card.set_name }} ({{ card.set_code }})</p>
+            <p>Rarity: {{ card.rarity }}</p>
+            <p>Mana Cost: {{ card.mana_cost }}</p>
         </div>
-
-        <!-- Example Cards 2-6 -->
-        {% for i in range(2, 7) %}
-        <div class="card">
-            <img src="https://via.placeholder.com/150" alt="Card Image">
-            <h5 class="card-title">Card Title {{ i }}</h5>
-            <p class="card-description">A brief description of the card.</p>
-            <div class="card-footer">Rarity: {% if i > 4 %}Mythic{% elif i > 2 %}Uncommon{% else %}Common{% endif %}</div>
-        </div>
+        {% else %}
+        <p>No cards found.</p>
         {% endfor %}
-     </div>
+    </div>
 {% endblock %}

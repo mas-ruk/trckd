@@ -1,27 +1,36 @@
 # models.py
-
+from datetime import datetime
 from app import db
 
 class Card(db.Model):
-    # sets the Scryfall card ID as the primary key
-    card_id = db.Column(db.String(64), primary_key=True)
+    __tablename__ = 'cards'
+    
+    # Core fields
+    id = db.Column(db.String(64), primary_key=True)  # Scryfall UUID
     name = db.Column(db.String(128), nullable=False)
+    lang = db.Column(db.String(3), default='en')
     
-    ## SET INFORMATION
-    
-    # most sets have 3 character combinations but I couldn't find anywhere that could prove otherwise so I've put 5 for safety
-    set_id = db.Column(db.String(5))
+    # Set info
+    set_code = db.Column(db.String(5), nullable=False)  # e.g. 'MH2'
+    set_name = db.Column(db.String(128))
     collector_number = db.Column(db.String(16))
-    rarity = db.Column(db.String(20)) # common, uncommmon, rare, mythic
+    rarity = db.Column(db.String(20))  # common/uncommon/rare/mythic
+    
+    # Gameplay info
+    mana_cost = db.Column(db.String(64))  # "{1}{U}{B}"
+    cmc = db.Column(db.Float)
+    type_line = db.Column(db.String(128))
+    oracle_text = db.Column(db.Text)
+    power = db.Column(db.String(8))  # Can be numbers or *
+    toughness = db.Column(db.String(8))
+    
+    # Visuals
+    image_uris = db.Column(db.JSON)  # Stores all image URLs as JSON
+    color_identity = db.Column(db.JSON)  # ['W', 'U'], etc.
+    
+    # Timestamps
+    last_updated = db.Column(db.DateTime, default=datetime.utcnow)
 
-    ## VISUALS
-    image_url = db.Column(db.String(256))
-
-    ## COLOURS
-    mana_cost = db.Column(db.String(64))
-    colours = db.Column(db.String(32)) # "W, U" 
-
-    ## CARD ATTRIBUTE
-    power = db.Column(db.String) # number or *
-    toughness = db.Column(db.String)
+    def __repr__(self):
+        return f'<Card {self.name} ({self.set_code})>'
 

@@ -1,6 +1,6 @@
 from flask import render_template
-from flask import render_template
 from app import app
+from app.models import Card
 
 @app.route('/')
 def index():
@@ -12,7 +12,8 @@ def upload_data_view():
 
 @app.route('/search')
 def upload_search():
-    return render_template('search.html')
+    cards = Card.query.all() # grab all cards from database
+    return render_template('search.html', cards=cards)
 
 @app.route('/upload_csv')
 def upload_csv():
