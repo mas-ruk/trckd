@@ -36,42 +36,73 @@
                         <p class="border bg-light p-3 rounded" style="margin: 20px;"><b>trckd</b> is a web-based application that serves as a collecting tool for the popular trading card game <b>Magic: The Gathering</b>, published by Wizards of the Coast. It provides the ability to upload cards from your collection, sort them and then visualiase data about your entire library. Login or register to get started.</p>
                     </div>
                     <div class="tab-pane container fade text-white" id="login">
-                        <h1 class="bg-dark p-3 rounded">Login</h1>
-                        <form>
-                            <div class="form-group">
-                                <label for="login_email">Email:</label>
-                                <input type="email" class="form-control" id="login_email">
+                        <h1 class="bg-dark p-3 rounded mb-3">Login</h1>
+                        <form method="POST">
+                            {{ login_form.hidden_tag() }}
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-auto">                           
+                                    {{ login_form.email.label(class="form-label font-weight-bold") }} 
+                                </div>
+                                <div class="col">
+                                    {{ login_form.email(class="form-control") }}
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="login_pwd">Password:</label>
-                                <input type="password" class="form-control" id="login_pwd">
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-auto">                           
+                                    {{ login_form.password.label(class="form-label font-weight-bold") }} 
+                                </div>
+                                <div class="col">
+                                    {{ login_form.password(class="form-control") }}
+                                </div>
                             </div>
-                            <div class="checkbox">
-                                <label><input type="checkbox"> Remember me</label>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    {{ login_form.submit(class="btn btn-primary float-right") }}
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Login</button>
                         </form>
                     </div>
                     <div class="tab-pane container fade text-white" id="register">
-                        <h1 class="bg-dark text-white p-3 rounded">Register</h1>
-                        <form>
-                            <div class="form-group">
-                                <label for="register_email">Email:</label>
-                                <input type="email" class="form-control" id="register_email">
+                        <h1 class="bg-dark text-white p-3 rounded mb-3">Register</h1>
+                        <form method="POST">
+                            {{ login_form.hidden_tag() }}
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-auto">                           
+                                    {{ register_form.email.label(class="form-label font-weight-bold") }} 
+                                </div>
+                                <div class="col">
+                                    {{ register_form.email(class="form-control") }}
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="register_username">Username:</label>
-                                <input type="password" class="form-control" id="register_username">
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-auto">                           
+                                    {{ register_form.username.label(class="form-label font-weight-bold") }} 
+                                </div>
+                                <div class="col">
+                                    {{ register_form.username(class="form-control") }}
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="register_pwd">Password:</label>
-                                <input type="password" class="form-control" id="register_pwd">
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-auto">                           
+                                    {{ register_form.password.label(class="form-label font-weight-bold") }} 
+                                </div>
+                                <div class="col">
+                                    {{ register_form.password(class="form-control") }}
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="confirm_pwd">Confirm Password:</label>
-                                <input type="password" class="form-control" id="confirm_pwd">
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-auto">                           
+                                    {{ register_form.password_confirm.label(class="form-label font-weight-bold") }} 
+                                </div>
+                                <div class="col">
+                                    {{ register_form.password_confirm(class="form-control") }}
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Register</button>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    {{ register_form.submit(class="btn btn-primary float-right") }}
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </div>
