@@ -1,10 +1,9 @@
 {% extends "base.html" %}
-
 {% block title %}trckd - Search by name{% endblock %}
 
 {% block content %}
     <!-- Add cards and menu dropdown -->
-    <div class="d-flex justify-content-between align-items-center"> 
+    <div class="d-flex justify-content-between align-items-center">
         <h1 style="padding-top: 50px; padding-bottom: 20px; font-weight: bold; font-size: 4em"> Add cards </h1>
         <div class="dropdown" style="padding-right: 50px;">
             <button class="btn btn-purple-circle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -17,39 +16,33 @@
             </ul>
         </div>
     </div>
-    
+
     <!-- Search bar and filter buttons -->
     <div class="d-flex align-items-center gap-4" style="color: white;">
-        
-        <!-- Search bar -->
-        <form action="" class="search-bar">
-            <input type="search" name="search" 
-            pattern=".*\S.*" 
-            required 
-            class="form-control rounded-pill px-4 add-cards-search" 
-            style="background-color: #2f243a; outline: none; border: none; color: white;" 
-            placeholder="Search...">
-        </form>
-
+        <!-- Search bar - Removed form to avoid page reload -->
+        <div class="search-bar">
+            <input type="search" 
+                class="form-control rounded-pill px-4 add-cards-search"
+                style="background-color: #2f243a; outline: none; border: none; color: white;"
+                placeholder="Search...">
+        </div>
         <!-- Filter Buttons -->
         <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-filter"></i> Filter </button>
         <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-tags-fill"></i> Tags </button>
         <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-list"></i> List View / <i class="bi bi-grid"></i> Grid View </button>
     </div>
-
-    <!-- Card Grid -->
+    
+    <!-- Card Grid - Initially Empty, will be filled via JavaScript -->
     <div class="card-grid" id="card-grid">
-        {% for card in cards %}
-        <div class="card">
-            <h5 class="card-title">{{ card.name }}</h5>
-            <img src="{{ card.image_uris.normal }}" alt="{{ card.name }} image" class="card-img">
-            <p class="card-description">{{ card.oracle_text }}</p>
-            <p>Set: {{ card.set_name }} ({{ card.set_code }})</p>
-            <p>Rarity: {{ card.rarity }}</p>
-            <p>Mana Cost: {{ card.mana_cost }}</p>
+        <div class="text-center w-100">
+            <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
-        {% else %}
-        <p>No cards found.</p>
-        {% endfor %}
     </div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Add your dynamic search JavaScript -->
+<script src="{{ url_for('static', filename='js/dynamic_search.js') }}"></script>
 {% endblock %}
