@@ -3,7 +3,7 @@ from app import app
 
 @app.route('/')
 def index():
-    return "This is text for testing!"
+    return render_template('homepage.html')
 
 @app.route('/upload') 
 def upload_data_view():
