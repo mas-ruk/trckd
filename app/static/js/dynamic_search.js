@@ -53,6 +53,14 @@ document.addEventListener('DOMContentLoaded', function() {
         cards.forEach(card => {
             const imageUrl = card.image_uris?.normal || 'https://via.placeholder.com/223x310?text=No+Image';
 
+            // format set code to uppercase
+            const setCode = (card.set || '').toUpperCase();
+            
+            // Capitalize rarity
+            const rarity = card.rarity
+            ? card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)
+            : '';
+
             const cardElement = document.createElement('div');
             cardElement.className = 'card bg-dark text-light m-3';
             cardElement.style.width = '18rem';
@@ -61,9 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <img src="${imageUrl}" class="card-img-top" alt="${card.name}">
                 <div class="card-body">
                     <h5 class="card-title">${card.name}</h5>
-                    <p class="card-text">${card.oracle_text || ''}</p>
-                    <p class="card-text"><small>${card.set_name || ''} (${card.set || ''}) • ${card.rarity || ''}</small></p>
-                    <p class="card-text"><strong>Mana Cost:</strong> ${card.mana_cost || ''}</p>
+                    <p class="card-text">${card.set_name || ''} (${setCode}) | <strong>${rarity}</strong></p>
                 </div>
             `;
 
