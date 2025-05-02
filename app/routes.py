@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from app.forms import LoginForm, RegisterForm
+from werkzeug.security import generate_password_hash, check_password_hash
 from app import app
 
 @app.route('/')
@@ -16,6 +17,7 @@ def index():
         email = register_form.email.data
         username = register_form.username.data
         password = register_form.password.data
+        password_confirm = register_form.password_confirm.data
         # process data
 
     return render_template('homepage.html', login_form=login_form, register_form=register_form)
@@ -35,3 +37,7 @@ def upload_csv():
 @app.route('/collection')
 def collection():
     return render_template('visualize_data.html')
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
