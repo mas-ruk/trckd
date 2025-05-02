@@ -196,3 +196,21 @@
 .dropdown-toggle::after {
     display: none; 
 }
+
+.card-footer-btn {
+    background-color: #2f243a;
+    color: white;
+    outline: none !important;
+    border: none;
+    box-shadow: 0 0 8px 4px #513a69;
+    font-weight: bold;   
+}
+
+.card-footer-btn:hover {
+    transform: scale(1.05);
+    transition: 0.3s ease;
+}
+
+.card-footer-btn:not(:hover) {
+    transition: 0.3s ease;
+}

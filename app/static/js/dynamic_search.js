@@ -71,6 +71,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class="card-title">${card.name}</h5>
                     <p class="card-text">${card.set_name || ''} (${setCode}) | <strong>${rarity}</strong></p>
                 </div>
+                <!-- Footer with buttons -->
+                <div class="card-footer d-flex justify-content-between pt-3">
+                    <button class="card-footer-btn rounded-pill px-4 py-2" id="add-${card.id}"><i class="bi bi-plus-lg"></i> Add</button>
+                    <button class="card-footer-btn rounded-pill px-4 py-2" id="details-${card.id}"><i class="bi bi-info-circle"></i> Details</button>
+                </div>
             `;
 
             cardGrid.appendChild(cardElement);
