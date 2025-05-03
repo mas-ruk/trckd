@@ -4,138 +4,261 @@
     <meta charset="UTF-8">
     <title>Visualize Data</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/visualize_data.css') }}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Custom background classes */
-        .bg-purple-dark {
-            background-color: #2f243a;
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            overflow-x: hidden;
         }
 
-        .bg-purple-black {
-            background-color: #121212;
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            background-color: #2f243a;
+            transition: width 0.4s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+            overflow: hidden;
+            z-index: 999;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #3a2f49;
+        }
+
+        .sidebar ul li i {
+            font-size: 1.2rem;
+        }
+
+        .sidebar ul li span {
+            transition: opacity 0.4s;
+        }
+
+        .sidebar.collapsed ul li span {
+            opacity: 0;
+        }
+
+        .toggle-btn {
+            position: absolute;
+            top: 50%;
+            right: -15px;
+            background-color: #4a3d56;
+            color: white;
+            border-radius: 50%;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 1000;
+        }
+
+        .toggle-btn:hover {
+            background-color: #6a5c7d;
+        }
+
+        /* Main Content */
+        main {
+            margin-left: 250px;
+            padding: 2rem;
+            transition: margin-left 0.4s ease;
+        }
+
+        .sidebar.collapsed + main {
+            margin-left: 80px;
+        }
+
+        /* Filters */
+        .filters-box {
+            margin-bottom: 2rem;
+        }
+
+        .form-label,
+        .form-check-label,
+        .form-select,
+        .form-select option {
+            color: white;
+        }
+
+        .form-select {
+            background-color: #2f243a;
+            border: 1px solid #4a3d56;
+        }
+
+        .btn-primary {
+            background-color: #6a4dad;
+            border-color: #6a4dad;
+        }
+
+        .btn-primary:hover {
+            background-color: #7c5ed1;
+            border-color: #7c5ed1;
         }
 
         h1, h2, p {
-            color: #fff; 
+            color: #fff;
+        }
+
+        /* Cards */
+        .card {
+            background-color: #1e1e1e;
+            border: none;
+            color: white;
         }
 
         .card:hover {
-                box-shadow: 0 0 15px #513a69, 0 0 30px #513a69, 0 0 45px #513a69; 
-                transform: scale(1.03);
-                transition: 0.3s ease;
+            box-shadow: 0 0 15px #513a69, 0 0 30px #513a69, 0 0 45px #513a69;
+            transform: scale(1.03);
+            transition: 0.3s ease;
         }
 
         .card:not(:hover) {
-            transform: scale(1.00);
+            transform: scale(1);
             transition: 0.3s ease;
+        }
+
+        .card-image {
+            height: 180px;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: #aaa;
+            margin-bottom: 10px;
+        }
+
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        /* Stats Section */
+        .stats-box {
+            margin-top: 3rem;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background-color: #2f2f2f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #bbb;
+            border-radius: 8px;
         }
     </style>
 </head>
-<body class="bg-purple-dark">
-
-</head>
 <body>
-    <div class="container">
-        <h1>My Magic: The Gathering Collection</h1>
-
-        <!-- Filter Box -->
-        <section class="filters-box">
-            <h2>Filters</h2>
-            <form>
-                <input type="text" placeholder="Search by name..." class="form-control mb-2">
-
-                <select class="form-control mb-2">
-                    <option value="">Type</option>
-                    <option value="creature">Creature</option>
-                    <option value="spell">Spell</option>
-                </select>
-
-                <select class="form-control mb-2">
-                    <option value="">Colour</option>
-                    <option value="red">Red</option>
-                    <option value="blue">Blue</option>
-                    <option value="green">Green</option>
-                    <option value="black">Black</option>
-                </select>
-
-                <button type="submit" class="btn btn-primary">Apply Filters</button>
-            </form>
-        </section>
-
-        <!-- Cards Display using Bootstrap Grid -->
-        <section class="card-display row">
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <div class="card-image">Card Image</div>
-                    <h3>Card Name</h3>
-                    <p>Type: Creature</p>
-                    <p>Colour: Green</p>
-                    <p>Rarity: Rare</p>
-                    <p>Qty: 1</p>
-                    <div class="card-actions">
-                        <button class="btn btn-secondary">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <div class="card-image">Card Image</div>
-                    <h3>Card Name</h3>
-                    <p>Type: Creature</p>
-                    <p>Colour: Red</p>
-                    <p>Rarity: Rare</p>
-                    <p>Qty: 1</p>
-                    <div class="card-actions">
-                        <button class="btn btn-secondary">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <div class="card-image">Card Image</div>
-                    <h3>Card Name</h3>
-                    <p>Type: Creature</p>
-                    <p>Colour: Blue</p>
-                    <p>Rarity: Rare</p>
-                    <p>Qty: 1</p>
-                    <div class="card-actions">
-                        <button class="btn btn-secondary">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <div class="card-image">Card Image</div>
-                    <h3>Card Name</h3>
-                    <p>Type: Creature</p>
-                    <p>Colour: Black</p>
-                    <p>Rarity: Rare</p>
-                    <p>Qty: 1</p>
-                    <div class="card-actions">
-                        <button class="btn btn-secondary">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Stats Section -->
-        <section class="stats-box">
-            <h2>Collection Stats</h2>
-            <div class="chart-placeholder">[Chart goes here]</div>
-        </section>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>trckd</h2>
+        <ul>
+            <li><i class="fas fa-home"></i> <span>Home</span></li>
+            <li><i class="fas fa-share-alt"></i> <span>Share Cards</span></li>
+            <li><i class="fas fa-briefcase"></i> <span>My Collection</span></li>
+        </ul>
+        <div class="toggle-btn" id="toggleBtn">
+            <i class="fas fa-arrow-left"></i>
+        </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <h1>My Magic: The Gathering Collection</h1>
+
+            <!-- Filter Box -->
+            <section class="filters-box">
+                <h2>Filters</h2>
+                <form>
+                    <input type="text" placeholder="Search by name..." class="form-control mb-2">
+
+                    <select class="form-control mb-2">
+                        <option value="">Type</option>
+                        <option value="creature">Creature</option>
+                        <option value="spell">Spell</option>
+                    </select>
+
+                    <select class="form-control mb-2">
+                        <option value="">Colour</option>
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                        <option value="black">Black</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </form>
+            </section>
+
+            <!-- Cards Display -->
+            <section class="card-display row">
+                
+                <div class="col-md-3 mb-4">
+                    <div class="card p-3">
+                        <div class="card-image">[Image]</div>
+                        <h5>{{ card.name }}</h5>
+                        <p>Type: {{ card.type }}</p>
+                        <p>Colour: {{ card.colour }}</p>
+                        <p>Rarity: {{ card.rarity }}</p>
+                        <p>Qty: {{ card.quantity }}</p>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary btn-sm">Edit</button>
+                            <button class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                </div>
+                
+            </section>
+
+            <!-- Stats Section -->
+            <section class="stats-box">
+                <h2>Collection Stats</h2>
+                <div class="chart-placeholder">[Chart will render here]</div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('toggleBtn').addEventListener('click', function () {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        });
+    </script>
 </body>
 </html>
