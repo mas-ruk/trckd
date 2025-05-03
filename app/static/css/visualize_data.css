@@ -1,23 +1,24 @@
+/* Base styles */
 body {
-    background-color: #2f243a;
+    background-color: #2f243a;  /* Dark background */
     color: #fff;
+    font-family: Arial, sans-serif;
 }
 
 h1, h2, p {
     color: #fff;
 }
 
-/* Sidebar styling */
 .sidebar {
     position: fixed;
-    left: 0;
     top: 0;
-    bottom: 0;
+    left: 0;
+    height: 100%;
     width: 220px;
     background-color: #1f1f2f;
     padding: 1rem;
-    color: white;
-    z-index: 1000;
+    color: #fff;
+    transition: transform 0.3s ease;
 }
 
 .sidebar h2 {
@@ -41,7 +42,7 @@ h1, h2, p {
     margin-right: 10px;
 }
 
-.toggle-btn {
+.sidebar .toggle-btn {
     position: absolute;
     top: 10px;
     right: -30px;
@@ -65,7 +66,7 @@ h1, h2, p {
     margin-left: 0;
 }
 
-/* Carousel card styles */
+/* Card styles */
 .carousel-inner {
     display: flex;
     align-items: center;
@@ -79,7 +80,7 @@ h1, h2, p {
 .card {
     width: 220px;
     height: 320px;
-    background-color: #4a4e69;
+    background-color: #4a4e69;  /* Purple shade */
     color: #fff;
     border-radius: 10px;
     padding: 20px;
@@ -108,7 +109,7 @@ h1, h2, p {
 
 .card.opened {
     height: 360px;
-    background-color: #5c5470;
+    background-color: #5c5470;  /* Darker shade of purple */
 }
 
 .card.opened .card-details {
@@ -116,18 +117,7 @@ h1, h2, p {
     margin-top: 10px;
 }
 
-.carousel-control-prev,
-.carousel-control-next {
-    width: 5%;
-    z-index: 10;
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-}
-
+/* Pie chart styling */
 .chart-placeholder {
     max-width: 300px;
     margin-top: 30px;
@@ -135,170 +125,46 @@ h1, h2, p {
 
 canvas {
     width: 100% !important;
-    height: auto !important;
+    height: 300px !important;  /* Fixed height for better fit */
 }
 
-/* Stats Box */
-.stats-box h2 {
-    color: #fff; /* Make the section title white */
-}
-
-.stats-box p {
-    color: #fff; /* Make any text in the stats box white */
-}
-
-/* Filters Box */
-.filters-box {
-    background-color: #333;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.filters-box h2 {
-    color: #fff;
-}
-
-.filters-box form {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.filters-box input,
-.filters-box select,
-.filters-box button {
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 0.9rem;
-    outline: none;
-    transition: all 0.3s ease;
-}
-
-/* Glowing effect for the input */
-.filters-box input:focus,
-.filters-box select:focus {
-    border-color: #6a5acd; /* Purple Border */
-    box-shadow: 0 0 8px rgba(0, 128, 255, 0.8); /* Purple Glowing */
-}
-
-.filters-box button {
-    background-color: #6a5acd;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.filters-box button:hover {
-    background-color: #5a4bcf;
-}
-
-/* Card display */
-.card-display {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-}
-
-.card {
-    background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    text-align: left;
-    transition: transform 0.2s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 12px rgba(0,0,0,0.2);
-}
-
-.card-image {
-    height: 100px;
-    background-color: #f0f2f5;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
+/* Filter styling */
+.filters-box form input, .filters-box form select {
     margin-bottom: 10px;
+    width: 100%;
 }
 
-.card h3 {
-    margin: 0 0 10px 0;
-    color: #333;
-    font-size: 1.1rem;
+.filters-box form button {
+    width: 100%;
 }
 
-.card p {
-    margin: 4px 0;
-    color: #777;
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 180px;
+    }
+
+    #main-content {
+        margin-left: 200px;
+    }
+
+    .chart-placeholder {
+        max-width: 100%;
+    }
 }
 
-.card-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
+@media (max-width: 480px) {
+    .sidebar {
+        width: 150px;
+    }
 
-.card-actions button {
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
-    cursor: pointer;
-}
+    #main-content {
+        margin-left: 160px;
+    }
 
-.card-actions button:hover {
-    background-color: #e8e8e8;
-}
+    .card {
+        width: 200px;
+        height: 280px;
+    }
 
-/* Styling for the search bar */
-.filters-box input[type="text"] {
-    width: 250px;
-    border-radius: 20px;
-    padding: 10px 15px;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(106, 92, 205, 0.3);
-}
-
-.filters-box input[type="text"]:focus {
-    border-color: #6a5acd; /* Purple border */
-    box-shadow: 0 0 15px rgba(106, 92, 205, 0.5); /* Glowing effect */
-}
-
-.filters-box select {
-    width: 150px;
-    border-radius: 6px;
-    padding: 8px;
-    font-size: 0.9rem;
-    background-color: #f9f9f9;
-}
-
-.filters-box select:focus {
-    outline: none;
-    border-color: #6a5acd;
-    box-shadow: 0 0 10px rgba(106, 92, 205, 0.5);
-}
-
-.filters-box button {
-    width: 150px;
-    font-weight: bold;
-    background-color: #6a5acd;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    padding: 10px;
-    transition: background-color 0.3s;
-}
-
-.filters-box button:hover {
-    background-color: #5a4bcf;
-}
-
-
+    .

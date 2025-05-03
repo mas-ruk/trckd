@@ -21,7 +21,6 @@
             color: #fff;
         }
 
-        /* Sidebar styling */
         .sidebar {
             position: fixed;
             left: 0;
@@ -79,7 +78,6 @@
             margin-left: 0;
         }
 
-        /* Carousel card styles */
         .carousel-inner {
             display: flex;
             align-items: center;
@@ -104,6 +102,13 @@
             text-align: center;
             transition: all 0.3s ease-in-out;
             overflow: hidden;
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 10px;
         }
 
         .card h3 {
@@ -151,6 +156,31 @@
             width: 100% !important;
             height: auto !important;
         }
+
+        /* Filter styling */
+        .filters-box form input, .filters-box form select {
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .filters-box form button {
+            width: 100%;
+        }
+
+        /* Media Queries for responsiveness */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 180px;
+            }
+
+            #main-content {
+                margin-left: 200px;
+            }
+
+            .chart-placeholder {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 
@@ -173,6 +203,18 @@
 <main id="main-content">
     <div class="container">
         <h1>My Magic: The Gathering Collection</h1>
+
+        <!-- New Collection Form -->
+        <section class="new-collection-form mb-4">
+            <h2>Create New Collection</h2>
+            <form action="/create_collection" method="POST">
+                <div class="form-group">
+                    <label for="collection_name">Collection Name:</label>
+                    <input type="text" id="collection_name" name="collection_name" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Collection</button>
+            </form>
+        </section>
 
         <!-- Filter Box -->
         <section class="filters-box mb-4">
@@ -199,9 +241,11 @@
         <section class="card-display mb-5">
             <div id="cardCarousel" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
+
                     <!-- Card 1 -->
                     <div class="carousel-item active d-flex justify-content-center">
                         <div class="card" id="card1">
+                            <img src="{{ url_for('static', filename='images/card_image.jpg') }}" class="card-img-top" alt="Card Name">
                             <h3>Card Name</h3>
                             <p>Click to Open</p>
                             <div class="card-details">
@@ -217,6 +261,7 @@
                     <!-- Card 2 -->
                     <div class="carousel-item d-flex justify-content-center">
                         <div class="card" id="card2">
+                            <img src="{{ url_for('static', filename='images/card_image2.jpg') }}" class="card-img-top" alt="Card Name 2">
                             <h3>Card Name 2</h3>
                             <p>Click to Open</p>
                             <div class="card-details">
@@ -228,9 +273,40 @@
                             </div>
                         </div>
                     </div>
-                </div>
 
-                     
+                    <!-- Card 3 -->
+                    <div class="carousel-item d-flex justify-content-center">
+                        <div class="card" id="card3">
+                            <img src="{{ url_for('static', filename='images/card_image3.jpg') }}" class="card-img-top" alt="Card Name 3">
+                            <h3>Card Name 3</h3>
+                            <p>Click to Open</p>
+                            <div class="card-details">
+                                <h4>Details</h4>
+                                <p>Type: Artifact</p>
+                                <p>Colour: Orange</p>
+                                <p>Rarity: Uncommon</p>
+                                <p>Qty: 5</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="carousel-item d-flex justify-content-center">
+                        <div class="card" id="card4">
+                            <img src="{{ url_for('static', filename='images/card_image4.jpg') }}" class="card-img-top" alt="Card Name 4">
+                            <h3>Card Name 4</h3>
+                            <p>Click to Open</p>
+                            <div class="card-details">
+                                <h4>Details</h4>
+                                <p>Type: Artifact</p>
+                                <p>Colour: Orange</p>
+                                <p>Rarity: Uncommon</p>
+                                <p>Qty: 2</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
 
                 <!-- Carousel Controls -->
                 <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
@@ -256,49 +332,46 @@
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+    // Toggle sidebar visibility
     document.getElementById('toggleBtn').addEventListener('click', function () {
         document.getElementById('sidebar').classList.toggle('collapsed');
     });
 
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', function () {
-            this.classList.toggle('opened');
+    // Toggle card details on click
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            card.classList.toggle('opened');
         });
     });
 
-    const data = {
-        labels: ['Creature', 'Spell', 'Artifact', 'Enchantment', 'Planeswalker'],
-        datasets: [{
-            data: [20, 10, 5, 7, 3],
-            backgroundColor: ['#ff8c00', '#ffcc00', '#4caf50', '#3f51b5', '#f44336'],
-        }]
-    };
-
-    const config = {
+    // Chart.js example for Pie Chart
+    var ctx = document.getElementById('myPieChart').getContext('2d');
+    var myPieChart = new Chart(ctx, {
         type: 'pie',
-        data: data,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.label + ': ' + tooltipItem.raw + ' cards';
-                        }
-                    }
-                }
-            }
+        data: {
+            labels: ['Creature', 'Spell', 'Artifact'],
+            datasets: [{
+                data: [40, 35, 25],
+                backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe'],
+                borderColor: ['#fff', '#fff', '#fff'],
+                borderWidth: 1
+            }]
         },
-    };
-
-    new Chart(document.getElementById('myPieChart'), config);
+        options: {
+            responsive: true
+        }
+    });
 </script>
 
 </body>
 </html>
+
+
+
+
