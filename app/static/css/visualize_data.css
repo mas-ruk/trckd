@@ -14,6 +14,7 @@ body {
 h1 {
     font-size: 2rem;
     margin-bottom: 30px;
+    color: #333;
 }
 
 .filters-box, .stats-box {
@@ -37,8 +38,29 @@ h1 {
     border-radius: 6px;
     border: 1px solid #ccc;
     font-size: 0.9rem;
+    outline: none;
+    transition: all 0.3s ease;
 }
 
+/* Glowing effect for the input */
+.filters-box input:focus,
+.filters-box select:focus {
+    border-color: #6a5acd; /* Purple Border */
+    box-shadow: 0 0 8px rgba(106, 92, 205, 0.7); /* Purple Glowing */
+}
+
+.filters-box button {
+    background-color: #6a5acd;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.filters-box button:hover {
+    background-color: #5a4bcf;
+}
+
+/* Card display */
 .card-display {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -51,6 +73,12 @@ h1 {
     border-radius: 10px;
     box-shadow: 0 0 8px rgba(0,0,0,0.1);
     text-align: left;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
 }
 
 .card-image {
@@ -66,10 +94,13 @@ h1 {
 
 .card h3 {
     margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.1rem;
 }
 
 .card p {
     margin: 4px 0;
+    color: #777;
 }
 
 .card-actions {
@@ -87,6 +118,10 @@ h1 {
     cursor: pointer;
 }
 
+.card-actions button:hover {
+    background-color: #e8e8e8;
+}
+
 .chart-placeholder {
     height: 150px;
     background-color: #f0f2f5;
@@ -96,3 +131,48 @@ h1 {
     align-items: center;
     color: #999;
 }
+
+/* Styling for the search bar */
+.filters-box input[type="text"] {
+    width: 250px;
+    border-radius: 20px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(106, 92, 205, 0.3);
+}
+
+.filters-box input[type="text"]:focus {
+    border-color: #6a5acd; /* Purple border */
+    box-shadow: 0 0 15px rgba(106, 92, 205, 0.5); /* Glowing effect */
+}
+
+.filters-box select {
+    width: 150px;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 0.9rem;
+    background-color: #f9f9f9;
+}
+
+.filters-box select:focus {
+    outline: none;
+    border-color: #6a5acd;
+    box-shadow: 0 0 10px rgba(106, 92, 205, 0.5);
+}
+
+.filters-box button {
+    width: 150px;
+    font-weight: bold;
+    background-color: #6a5acd;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+.filters-box button:hover {
+    background-color: #5a4bcf;
+}
+
