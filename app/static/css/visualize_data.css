@@ -46,7 +46,7 @@ h1 {
 .filters-box input:focus,
 .filters-box select:focus {
     border-color: #6a5acd; /* Purple Border */
-    box-shadow: 0 0 8px rgba(106, 92, 205, 0.7); /* Purple Glowing */
+    box-shadow: 0 0 8px rgba(0, 128, 255, 0.8); /* Purple Glowing */
 }
 
 .filters-box button {
