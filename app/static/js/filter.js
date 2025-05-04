@@ -16,14 +16,4 @@ document.addEventListener("DOMContentLoaded", function () {
             popup.classList.remove("show");
         }
     });
-
-    // Handle filter option selection
-    filterOptions.forEach(option => {
-        option.addEventListener("click", function () {
-            // Toggle 'selected' class
-            this.classList.toggle("selected");
-
-            // Optionally, you can also highlight the button or take further actions.
-        });
-    });
 });

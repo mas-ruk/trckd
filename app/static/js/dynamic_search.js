@@ -18,18 +18,35 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.filter-option').forEach(option => {
         option.addEventListener('click', function() {
             const filter = option.getAttribute('data-filter');
-            if (!activeFilters.includes(filter)) {
-                activeFilters.push(filter);
+    
+            // Toggle 'selected' class
+            option.classList.toggle('selected');
+    
+            // Toggle filter in activeFilters array
+            const index = activeFilters.indexOf(filter);
+            if (index > -1) {
+                activeFilters.splice(index, 1); // Remove filter
+            } else {
+                activeFilters.push(filter); // Add filter
             }
+    
             fetchCards();
         });
     });
+    
 
     // Clear filters
     clearFiltersButton.addEventListener('click', function() {
         activeFilters = [];
-        fetchCards();  // Fetch all cards with no filters
+    
+        // Clear all visual highlights
+        document.querySelectorAll('.filter-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+    
+        fetchCards(); // Refresh the card grid with no filters
     });
+    
 
     // Debounced input listener for search bar
     searchInput.addEventListener('input', debounce(function() {
