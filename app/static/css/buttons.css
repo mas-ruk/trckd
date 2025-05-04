@@ -17,11 +17,6 @@
     font-weight: bold;   
 }
 
-.dropdown:hover .dropdown-menu {
-    display: block;
-    margin-top: 0; /* remove delay */
-}
-
 .btn-purple-circle {
     background-color: #2f243a; /* Dark purple */
     color: white;
@@ -40,8 +35,4 @@
 .btn-purple-circle:hover {
     background-color: #4b3760; 
     transform: scale(1.55); 
-}
-
-.dropdown-toggle::after {
-    display: none; 
 }

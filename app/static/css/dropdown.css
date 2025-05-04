@@ -1,0 +1,67 @@
+/* app\static\css\dropdown.css */
+
+/* Filter Dropdown Wrapper */
+.filter-dropdown-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+/* Dropdown Popup */
+.filter-popup {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2f243a;
+    border: 1px solid #513a69;
+    border-radius: 10px;
+    padding: 10px 15px;
+    box-shadow: 0 0 12px #513a69;
+    z-index: 200;
+    display: none;
+    min-width: 220px;
+    color: white;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+
+.filter-popup .filter-list {
+    list-style-type: none;
+}
+
+/* Show the popup */
+.filter-popup.show {
+    display: block;
+}
+
+/* Filter Option (Buttons inside the popup) */
+.filter-popup .dropdown-item {
+    background: none;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    text-align: left;
+    width: 100%;
+    transition: background 0.2s ease;
+}
+
+.filter-popup .dropdown-item:hover {
+    background-color: #3d2d4d;
+    cursor: pointer;
+}
+
+/* Divider for separating sections in dropdown */
+.filter-popup hr.dropdown-divider {
+    border-color: #513a69;
+}
+
+/* Responsiveness for mobile screens */
+@media (max-width: 767.98px) {
+    .filter-popup {
+        width: 100%;
+        left: 0;
+        transform: none;
+    }
+}
