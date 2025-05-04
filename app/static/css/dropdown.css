@@ -65,3 +65,15 @@
         transform: none;
     }
 }
+
+/* Style for selected filter option */
+.filter-popup .dropdown-item.selected {
+    background-color: #6a4c93; /* Lighter purple */
+    color: white;
+    font-weight: bold; /* Make the selected option stand out more */
+}
+
+.filter-popup .dropdown-item.selected::after {
+    content: " X"; 
+    margin-left: 5px;
+}

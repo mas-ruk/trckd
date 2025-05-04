@@ -1,3 +1,5 @@
+// app\static\js\dynamic_search.js
+
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('.add-cards-search');
     const cardGrid = document.getElementById('card-grid');
