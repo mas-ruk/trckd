@@ -3,10 +3,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('.add-cards-search');
     const cardGrid = document.getElementById('card-grid');
-    const filterDropdown = document.getElementById('filter-dropdown');
     const filterButton = document.querySelector('.filter-button');
+    const filterDropdown = document.getElementById('filter-dropdown');
     const clearFiltersButton = document.getElementById('clear-filters-btn');
-    
+
     let activeFilters = [];
 
     // Toggle filter dropdown visibility
@@ -18,48 +18,43 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.filter-option').forEach(option => {
         option.addEventListener('click', function() {
             const filter = option.getAttribute('data-filter');
-    
-            // Toggle 'selected' class
-            option.classList.toggle('selected');
-    
-            // Toggle filter in activeFilters array
-            const index = activeFilters.indexOf(filter);
-            if (index > -1) {
-                activeFilters.splice(index, 1); // Remove filter
+
+            if (option.classList.contains('selected')) {
+                option.classList.remove('selected');
+                activeFilters = activeFilters.filter(f => f !== filter);
             } else {
-                activeFilters.push(filter); // Add filter
+                option.classList.add('selected');
+                if (!activeFilters.includes(filter)) {
+                    activeFilters.push(filter);
+                }
             }
-    
+
             fetchCards();
         });
     });
-    
 
     // Clear filters
     clearFiltersButton.addEventListener('click', function() {
         activeFilters = [];
-    
-        // Clear all visual highlights
-        document.querySelectorAll('.filter-option').forEach(option => {
-            option.classList.remove('selected');
-        });
-    
-        fetchCards(); // Refresh the card grid with no filters
+        document.querySelectorAll('.filter-option.selected').forEach(opt => opt.classList.remove('selected'));
+        fetchCards();
     });
-    
 
     // Debounced input listener for search bar
-    searchInput.addEventListener('input', debounce(function() {
-        fetchCards();
-    }, 300));
+    searchInput.addEventListener('input', debounce(fetchCards, 300));
 
-    // Fetch cards with search query and active filters
     function fetchCards() {
         const query = searchInput.value.trim();
-        
-        let filters = activeFilters.join(' ');
+        const filters = activeFilters.join(' ');
         let searchQuery = query ? `name:${encodeURIComponent(query)}` : '';
-        
+
+        // If both are empty, show default message and return
+        if (!query && activeFilters.length === 0) {
+            cardGrid.innerHTML = '<p class="text-light">Start typing to search for Magic cards.</p>';
+            return;
+        }
+
+        // Combine query + filters
         if (filters) {
             searchQuery += ` ${filters}`;
         }
@@ -73,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        const url = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(searchQuery)}`;
+        const url = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(searchQuery.trim())}`;
 
         fetch(url)
             .then(response => {
@@ -89,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // Render cards into the DOM
     function updateCardGrid(cards) {
         cardGrid.innerHTML = '';
 
@@ -100,14 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         cards.forEach(card => {
             const imageUrl = card.image_uris?.normal || 'https://via.placeholder.com/223x310?text=No+Image';
-
-            // format set code to uppercase
             const setCode = (card.set || '').toUpperCase();
-            
-            // Capitalize rarity
             const rarity = card.rarity
-            ? card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)
-            : '';
+                ? card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)
+                : '';
 
             const cardElement = document.createElement('div');
             cardElement.className = 'card bg-dark text-light m-3';
@@ -119,10 +109,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h5 class="card-title">${card.name}</h5>
                     <p class="card-text">${card.set_name || ''} (${setCode}) | <strong>${rarity}</strong></p>
                 </div>
-                <!-- Footer with buttons -->
                 <div class="card-footer d-flex justify-content-between pt-3">
-                    <button class="card-footer-btn rounded-pill px-4 py-2" id="add-${card.id}"><i class="bi bi-plus-lg"></i> Add</button>
-                    <button class="card-footer-btn rounded-pill px-4 py-2" id="details-${card.id}"><i class="bi bi-info-circle"></i> Details</button>
+                    <button class="card-footer-btn rounded-pill px-4 py-2" id="add-${card.id}">
+                        <i class="bi bi-plus-lg"></i> Add
+                    </button>
+                    <button class="card-footer-btn rounded-pill px-4 py-2" id="details-${card.id}">
+                        <i class="bi bi-info-circle"></i> Details
+                    </button>
                 </div>
             `;
 
@@ -130,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Debounce helper
     function debounce(func, wait) {
         let timeout;
         return function(...args) {
@@ -139,5 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
+    // Initial message
     cardGrid.innerHTML = '<p class="text-light">Start typing to search for Magic cards.</p>';
 });
