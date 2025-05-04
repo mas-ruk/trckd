@@ -80,12 +80,13 @@
 
         .carousel-inner {
             display: flex;
-            align-items: center;
         }
 
         .carousel-item {
             display: flex;
             justify-content: center;
+            width: 100%;
+            align-items: center;
         }
 
         .card {
@@ -157,7 +158,6 @@
             height: auto !important;
         }
 
-        /* Filter styling */
         .filters-box form input, .filters-box form select {
             margin-bottom: 10px;
             width: 100%;
@@ -167,7 +167,6 @@
             width: 100%;
         }
 
-        /* Media Queries for responsiveness */
         @media (max-width: 768px) {
             .sidebar {
                 width: 180px;
@@ -180,6 +179,11 @@
             .chart-placeholder {
                 max-width: 100%;
             }
+
+            .carousel-item {
+                flex-direction: column;
+                align-items: center;
+            }
         }
     </style>
 </head>
@@ -190,9 +194,9 @@
 <div class="sidebar" id="sidebar">
     <h2>trckd</h2>
     <ul>
-        <li><i class="fas fa-home"></i> <span>Home</span></li>
-        <li><i class="fas fa-share-alt"></i> <span>Share Cards</span></li>
-        <li><i class="fas fa-briefcase"></i> <span>My Collection</span></li>
+        <li><a href="#home" class="nav-link"><i class="fas fa-home"></i> <span>Home</span></a></li>
+        <li><a href="#share-cards" class="nav-link"><i class="fas fa-share-alt"></i> <span>Share Cards</span></a></li>
+        <li><a href="#my-collection" class="nav-link"><i class="fas fa-briefcase"></i> <span>My Collection</span></a></li>
     </ul>
     <div class="toggle-btn" id="toggleBtn">
         <i class="fas fa-arrow-left"></i>
@@ -201,133 +205,153 @@
 
 <!-- Main Content -->
 <main id="main-content">
-    <div class="container">
-        <h1>My Magic: The Gathering Collection</h1>
+    <h1>My Magic: The Gathering Collection</h1>
 
-        <!-- New Collection Form -->
-        <section class="new-collection-form mb-4">
-            <h2>Create New Collection</h2>
-            <form action="/create_collection" method="POST">
-                <div class="form-group">
-                    <label for="collection_name">Collection Name:</label>
-                    <input type="text" id="collection_name" name="collection_name" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Create Collection</button>
-            </form>
-        </section>
-
-        <!-- Filter Box -->
-        <section class="filters-box mb-4">
-            <h2>Filters</h2>
-            <form>
-                <input type="text" placeholder="Search by name..." class="form-control mb-2">
-                <select class="form-control mb-2">
-                    <option value="">Type</option>
-                    <option value="creature">Creature</option>
-                    <option value="spell">Spell</option>
-                </select>
-                <select class="form-control mb-2">
-                    <option value="">Colour</option>
-                    <option value="red">Red</option>
-                    <option value="blue">Blue</option>
-                    <option value="green">Green</option>
-                    <option value="black">Black</option>
-                </select>
-                <button type="submit" class="btn btn-primary">Apply Filters</button>
-            </form>
-        </section>
-
-        <!-- Cards Carousel -->
-        <section class="card-display mb-5">
-            <div id="cardCarousel" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner">
-
-                    <!-- Card 1 -->
-                    <div class="carousel-item active d-flex justify-content-center">
-                        <div class="card" id="card1">
-                            <img src="{{ url_for('static', filename='images/card_image.jpg') }}" class="card-img-top" alt="Card Name">
-                            <h3>Card Name</h3>
-                            <p>Click to Open</p>
-                            <div class="card-details">
-                                <h4>Details</h4>
-                                <p>Type: Creature</p>
-                                <p>Colour: Green</p>
-                                <p>Rarity: Rare</p>
-                                <p>Qty: 1</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div class="carousel-item d-flex justify-content-center">
-                        <div class="card" id="card2">
-                            <img src="{{ url_for('static', filename='images/card_image2.jpg') }}" class="card-img-top" alt="Card Name 2">
-                            <h3>Card Name 2</h3>
-                            <p>Click to Open</p>
-                            <div class="card-details">
-                                <h4>Details</h4>
-                                <p>Type: Spell</p>
-                                <p>Colour: Red</p>
-                                <p>Rarity: Uncommon</p>
-                                <p>Qty: 2</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="carousel-item d-flex justify-content-center">
-                        <div class="card" id="card3">
-                            <img src="{{ url_for('static', filename='images/card_image3.jpg') }}" class="card-img-top" alt="Card Name 3">
-                            <h3>Card Name 3</h3>
-                            <p>Click to Open</p>
-                            <div class="card-details">
-                                <h4>Details</h4>
-                                <p>Type: Artifact</p>
-                                <p>Colour: Orange</p>
-                                <p>Rarity: Uncommon</p>
-                                <p>Qty: 5</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 4 -->
-                    <div class="carousel-item d-flex justify-content-center">
-                        <div class="card" id="card4">
-                            <img src="{{ url_for('static', filename='images/card_image4.jpg') }}" class="card-img-top" alt="Card Name 4">
-                            <h3>Card Name 4</h3>
-                            <p>Click to Open</p>
-                            <div class="card-details">
-                                <h4>Details</h4>
-                                <p>Type: Artifact</p>
-                                <p>Colour: Orange</p>
-                                <p>Rarity: Uncommon</p>
-                                <p>Qty: 2</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Carousel Controls -->
-                <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
+    <!-- New Collection Form -->
+    <section class="new-collection-form mb-4" id="home">
+        <h2>Create New Collection</h2>
+        <form action="/create_collection" method="POST">
+            <div class="form-group">
+                <label for="collection_name">Collection Name:</label>
+                <input type="text" id="collection_name" name="collection_name" class="form-control" required>
             </div>
-        </section>
+            <button type="submit" class="btn btn-primary">Create Collection</button>
+        </form>
+    </section>
 
-        <!-- Pie Chart -->
-        <section class="stats-box">
-            <h2>Collection Stats</h2>
-            <div class="chart-placeholder">
-                <canvas id="myPieChart"></canvas>
+    <!-- Filter Box -->
+    <section class="filters-box mb-4" id="share-cards">
+        <h2>Filters</h2>
+        <form>
+            <input type="text" placeholder="Search by name..." class="form-control mb-2">
+            <select class="form-control mb-2">
+                <option value="">Type</option>
+                <option value="creature">Creature</option>
+                <option value="spell">Spell</option>
+            </select>
+            <select class="form-control mb-2">
+                <option value="">Colour</option>
+                <option value="red">Red</option>
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="black">Black</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Apply Filters</button>
+        </form>
+    </section>
+
+    <!-- Carousel -->
+    <div id="cardCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <!-- Carousel Item 1 -->
+            <div class="carousel-item active">
+                <div class="d-flex justify-content-center">
+                    <div class="card" id="card1">
+                        <img src="{{ url_for('static', filename='images/card_image.jpg') }}" alt="Card Name">
+                        <h3>Card Name</h3>
+                        <p>Click to Open</p>
+                        <div class="card-details">
+                            <h4>Details</h4>
+                            <p>Type: Creature</p>
+                            <p>Colour: Green</p>
+                            <p>Rarity: Rare</p>
+                            <p>Qty: 1</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </section>
+
+            <!-- Carousel Item 2 -->
+            <div class="carousel-item">
+                <div class="d-flex justify-content-center">
+                    <div class="card" id="card2">
+                        <img src="{{ url_for('static', filename='images/card_image2.jpg') }}" alt="Card Name 2">
+                        <h3>Card Name 2</h3>
+                        <p>Click to Open</p>
+                        <div class="card-details">
+                            <h4>Details</h4>
+                            <p>Type: Spell</p>
+                            <p>Colour: Red</p>
+                            <p>Rarity: Uncommon</p>
+                            <p>Qty: 2</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carousel Item 3 -->
+            <div class="carousel-item">
+                <div class="d-flex justify-content-center">
+                    <div class="card" id="card3">
+                        <img src="{{ url_for('static', filename='images/card_image3.jpg') }}" alt="Card Name 3">
+                        <h3>Card Name 3</h3>
+                        <p>Click to Open</p>
+                        <div class="card-details">
+                            <h4>Details</h4>
+                            <p>Type: Artifact</p>
+                            <p>Colour: Blue</p>
+                            <p>Rarity: Common</p>
+                            <p>Qty: 3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carousel Item 4 -->
+            <div class="carousel-item">
+                <div class="d-flex justify-content-center">
+                    <div class="card" id="card4">
+                        <img src="{{ url_for('static', filename='images/card_image4.jpg') }}" alt="Card Name 4">
+                        <h3>Card Name 4</h3>
+                        <p>Click to Open</p>
+                        <div class="card-details">
+                            <h4>Details</h4>
+                            <p>Type: Creature</p>
+                            <p>Colour: Black</p>
+                            <p>Rarity: Rare</p>
+                            <p>Qty: 1</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carousel Item 5 -->
+            <div class="carousel-item">
+                <div class="d-flex justify-content-center">
+                    <div class="card" id="card5">
+                        <img src="{{ url_for('static', filename='images/card_image5.jpg') }}" alt="Card Name 5">
+                        <h3>Card Name 5</h3>
+                        <p>Click to Open</p>
+                        <div class="card-details">
+                            <h4>Details</h4>
+                            <p>Type: Enchantment</p>
+                            <p>Colour: White</p>
+                            <p>Rarity: Mythic</p>
+                            <p>Qty: 2</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carousel Controls -->
+        <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
+
+    <!-- Pie Chart -->
+    <section class="stats-box">
+        <h2>Collection Stats</h2>
+        <div class="chart-placeholder">
+            <canvas id="myPieChart"></canvas>
+        </div>
+    </section>
 </main>
 
 <!-- Scripts -->
@@ -350,7 +374,7 @@
         });
     });
 
-    // Chart.js example for Pie Chart
+    // Chart.js Pie Chart
     var ctx = document.getElementById('myPieChart').getContext('2d');
     var myPieChart = new Chart(ctx, {
         type: 'pie',
@@ -371,7 +395,5 @@
 
 </body>
 </html>
-
-
 
 
