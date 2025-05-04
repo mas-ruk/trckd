@@ -26,8 +26,47 @@
                 style="background-color: #2f243a; outline: none; border: none; color: white;"
                 placeholder="Search...">
         </div>
+
         <!-- Filter Buttons -->
+
+        <!-- Filter Dropdown -->
         <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-filter"></i> Filter </button>
+        <div id="filter-dropdown" class="dropdown-menu mt-2" style="display: none;">
+            <!-- Colours -->
+            <h6 class="dropdown-header"> Colour </h6>
+            <button class="dropdown-item filter-option" data-filter="color:white">White</button>
+            <button class="dropdown-item filter-option" data-filter="color:blue">Blue</button>
+            <button class="dropdown-item filter-option" data-filter="color:black">Black</button>
+            <button class="dropdown-item filter-option" data-filter="color:red">Red</button>
+            <button class="dropdown-item filter-option" data-filter="color:green">Green</button>
+            <button class="dropdown-item filter-option" data-filter="color:multicolor">Multicolor</button>
+
+            <!-- Types -->
+            <h6 class="dropdown-header">Type</h6>
+            <button class="dropdown-item filter-option" data-filter="type:creature">Creature</button>
+            <button class="dropdown-item filter-option" data-filter="type:sorcery">Sorcery</button>
+            <button class="dropdown-item filter-option" data-filter="type:instant">Instant</button>
+            <button class="dropdown-item filter-option" data-filter="type:enchantment">Enchantment</button>
+            <button class="dropdown-item filter-option" data-filter="type:planeswalker">Planeswalker</button>
+            <button class="dropdown-item filter-option" data-filter="type:land">Land</button>
+            <button class="dropdown-item filter-option" data-filter="type:battle">Battles</button>
+            <button class="dropdown-item filter-option" data-filter="type:conspiracy">Conspiracy</button>
+            <button class="dropdown-item filter-option" data-filter="type:tribal">Tribal</button>
+            <button class="dropdown-item filter-option" data-filter="type:vanguard">Vanguard</button>
+            <button class="dropdown-item filter-option" data-filter="type:scheme">Scheme</button>
+
+            <!-- Rarity -->
+            <h6 class="dropdown-header">Rarity</h6>
+            <button class="dropdown-item filter-option" data-filter="rarity:common">Common</button>
+            <button class="dropdown-item filter-option" data-filter="rarity:uncommon">Uncommon</button>
+            <button class="dropdown-item filter-option" data-filter="rarity:rare">Rare</button>
+            <button class="dropdown-item filter-option" data-filter="rarity:mythic">Mythic</button>
+
+            <!-- Clear Filters Button -->
+            <button id="clear-filters-btn" class="dropdown-item text-danger">Clear Filters</button>
+        </div>
+
+
         <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-tags-fill"></i> Tags </button>
         <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-list"></i> List View / <i class="bi bi-grid"></i> Grid View </button>
     </div>

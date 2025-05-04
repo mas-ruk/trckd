@@ -1,15 +1,50 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('.add-cards-search');
     const cardGrid = document.getElementById('card-grid');
+    const filterDropdown = document.getElementById('filter-dropdown');
+    const filterButton = document.querySelector('.filter-button');
+    const clearFiltersButton = document.getElementById('clear-filters-btn');
+    
+    let activeFilters = [];
 
-    // Debounced input listener
+    // Toggle filter dropdown visibility
+    filterButton.addEventListener('click', function() {
+        filterDropdown.style.display = filterDropdown.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Handle filter option selection
+    document.querySelectorAll('.filter-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const filter = option.getAttribute('data-filter');
+            if (!activeFilters.includes(filter)) {
+                activeFilters.push(filter);
+            }
+            fetchCards();
+        });
+    });
+
+    // Clear filters
+    clearFiltersButton.addEventListener('click', function() {
+        activeFilters = [];
+        fetchCards();  // Fetch all cards with no filters
+    });
+
+    // Debounced input listener for search bar
     searchInput.addEventListener('input', debounce(function() {
-        const query = searchInput.value.trim();
-        fetchCards(query);
+        fetchCards();
     }, 300));
 
-    // Fetch cards from the Scryfall API
-    function fetchCards(query) {
+    // Fetch cards with search query and active filters
+    function fetchCards() {
+        const query = searchInput.value.trim();
+        
+        let filters = activeFilters.join(' ');
+        let searchQuery = query ? `name:${encodeURIComponent(query)}` : '';
+        
+        if (filters) {
+            searchQuery += ` ${filters}`;
+        }
+
         // Show loading spinner
         cardGrid.innerHTML = `
             <div class="text-center w-100">
@@ -19,13 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        // Empty query? Search all cards (or show message)
-        if (!query) {
-            cardGrid.innerHTML = '<p class="text-light">Start typing to search cards by name.</p>';
-            return;
-        }
-
-        const url = `https://api.scryfall.com/cards/search?q=name:${encodeURIComponent(query)}`;
+        const url = `https://api.scryfall.com/cards/search?q=${encodeURIComponent(searchQuery)}`;
 
         fetch(url)
             .then(response => {
