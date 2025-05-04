@@ -44,9 +44,16 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('input', debounce(fetchCards, 300));
 
     function fetchCards() {
-        const query = searchInput.value.trim();
-        const filters = activeFilters.join(' ');
-        let searchQuery = query ? `name:${encodeURIComponent(query)}` : '';
+        let query = searchInput.value.trim();
+
+        // Wrap multi-word search in quotes
+        if (query.includes(' ')) {
+            query = `"${query}"`;
+        }
+
+        let filters = activeFilters.join(' ');
+        let searchQuery = query ? `name:${query}` : '';
+
 
         // If both are empty, show default message and return
         if (!query && activeFilters.length === 0) {
