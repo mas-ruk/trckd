@@ -1,0 +1,38 @@
+/* app\static\css\buttons.css */
+
+.add-cards-search::placeholder {
+    color: white;
+    opacity: 1;
+}
+.add-cards-search:focus {
+    outline: none; 
+    box-shadow: 0 0 0 2px #513a69; 
+}
+.filter-button {
+    background-color: #2f243a;
+    color: white;
+    outline: none !important;
+    border: none;
+    box-shadow: 0 0 8px 4px #513a69;
+    font-weight: bold;   
+}
+
+.btn-purple-circle {
+    background-color: #2f243a; /* Dark purple */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(1.50);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-purple-circle:hover {
+    background-color: #4b3760; 
+    transform: scale(1.55); 
+}
