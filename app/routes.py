@@ -11,16 +11,16 @@ def index():
     register_form = RegisterForm()
     resubmit = False
 
-    if register_form.validate_on_submit() and register_form.form_name.data == 'register_form':
-        email = register_form.email.data
+    if register_form.form_name.data == 'register_form' and register_form.validate_on_submit():
+        register_email = register_form.register_email.data
         username = register_form.username.data
-        password = register_form.password.data
+        register_password = register_form.register_password.data
 
         users = User.query.all()
 
         for user in users:
-            if email == user.email:
-                register_form.email.errors.append("Email already in use. Choose a different email.")
+            if register_email == user.email:
+                register_form.register_email.errors.append("Email already in use. Choose a different email.")
                 resubmit = True
 
             if username == user.username:
@@ -28,23 +28,23 @@ def index():
                 resubmit = True
 
         if not resubmit:
-            new_user = User(email=email, username=username, password=generate_password_hash(password))
+            new_user = User(email=register_email, username=username, password=generate_password_hash(register_password))
             db.session.add(new_user)
             db.session.commit()
             login_user(user)
             return redirect(url_for('collection'))
 
-    elif login_form.validate_on_submit() and login_form.form_name.data == 'login_form':
-        email = login_form.email.data
-        password = login_form.password.data
+    elif login_form.form_name.data == 'login_form' and login_form.validate_on_submit():
+        login_email = login_form.login_email.data
+        login_password = login_form.login_password.data
         
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=login_email).first()
 
         if user == None:
-            login_form.email.errors.append("No user registered to that email address.")
+            login_form.login_email.errors.append("No user registered to that email address.")
             resubmit = True
-        if not check_password_hash(user.password, password):
-            login_form.password.errors.append("Incorrect password.")
+        elif not check_password_hash(user.password, login_password):
+            login_form.login_password.errors.append("Incorrect password.")
             resubmit = True
 
         if not resubmit:

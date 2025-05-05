@@ -41,27 +41,27 @@
                             {{ login_form.hidden_tag() }}
                             <div class="row mb-3 align-items-center">
                                 <div class="col-auto">                           
-                                    {{ login_form.email.label(class="form-label font-weight-bold") }} 
+                                    {{ login_form.login_email.label(class="form-label font-weight-bold") }} 
                                 </div>
                                 <div class="col">
-                                    {{ login_form.email(class="form-control") }}
+                                    {{ login_form.login_email(class="form-control") }}
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
-                                {% for error in login_form.email.errors %}
+                                {% for error in login_form.login_email.errors %}
                                 <span style="color:red;">[{{ error}}]</span>
                                 {% endfor %}
                             </div>
                             <div class="row mb-3 align-items-center">
                                 <div class="col-auto">                           
-                                    {{ login_form.password.label(class="form-label font-weight-bold") }} 
+                                    {{ login_form.login_password.label(class="form-label font-weight-bold") }} 
                                 </div>
                                 <div class="col">
-                                    {{ login_form.password(class="form-control") }}
+                                    {{ login_form.login_password(class="form-control") }}
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
-                                {% for error in login_form.password.errors %}
+                                {% for error in login_form.login_password.errors %}
                                 <span style="color:red;">[{{ error}}]</span>
                                 {% endfor %}
                             </div>
@@ -78,14 +78,14 @@
                             {{ register_form.hidden_tag() }}
                             <div class="row mb-3 align-items-center">
                                 <div class="col-auto">                           
-                                    {{ register_form.email.label(class="form-label font-weight-bold") }} 
+                                    {{ register_form.register_email.label(class="form-label font-weight-bold") }} 
                                 </div>
                                 <div class="col">
-                                    {{ register_form.email(class="form-control") }}
+                                    {{ register_form.register_email(class="form-control") }}
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
-                                {% for error in register_form.email.errors %}
+                                {% for error in register_form.register_email.errors %}
                                 <span style="color:red;">[{{ error}}]</span>
                                 {% endfor %}
                             </div>
@@ -104,14 +104,14 @@
                             </div>
                             <div class="row mb-3 align-items-center">
                                 <div class="col-auto">                           
-                                    {{ register_form.password.label(class="form-label font-weight-bold") }} 
+                                    {{ register_form.register_password.label(class="form-label font-weight-bold") }} 
                                 </div>
                                 <div class="col">
-                                    {{ register_form.password(class="form-control") }}
+                                    {{ register_form.register_password(class="form-control") }}
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
-                                {% for error in register_form.password.errors %}
+                                {% for error in register_form.register_password.errors %}
                                 <span style="color:red;">[{{ error}}]</span>
                                 {% endfor %}
                             </div>
