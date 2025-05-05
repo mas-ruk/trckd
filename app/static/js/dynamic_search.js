@@ -1,16 +1,6 @@
 // app\static\js\dynamic_search.js
 
 document.addEventListener('DOMContentLoaded', function() {
-    // fetch exchange rate for conversion from USD to AUD
-    let usdToAud = 1.5;
-    fetch('https://api.exchangerate.host/latest?base=USD&symbols=AUD')
-        .then(res => res.json())
-        .then(data => {
-            usdToAud = data.rates.AUD;
-        })
-        .catch(err => console.error('Failed to load exchange rate:', err));
-
-    
     const searchInput = document.querySelector('.add-cards-search');
     const cardGrid = document.getElementById('card-grid');
     const filterButton = document.querySelector('.filter-button');
@@ -18,6 +8,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearFiltersButton = document.getElementById('clear-filters-btn');
 
     let activeFilters = [];
+    let usdToAud = 1.65; // Default fallback exchange rate (USD to AUD)
+
+    // Fetch real-time exchange rate from USD to AUD using Exchangerate-API
+    fetch('https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD')
+        .then(res => res.json())
+        .then(data => {
+            if (data.result === "success") {
+                usdToAud = data.rates.AUD; // Update the exchange rate if the API call is successful
+            } else {
+                console.error('Error fetching exchange rate');
+            }
+        })
+        .catch(err => console.error('Failed to load exchange rate:', err));
 
     // Toggle filter dropdown visibility
     filterButton.addEventListener('click', function() {
@@ -116,17 +119,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)
                 : '';
             
-            // Extract price and convert to AUD if possible
+            // Fetch the USD price
             const usdPrice = card.prices?.usd;
-            const eurPrice = card.prices?.eur;
+            let priceText = 'Price N/A';
 
-            let priceText = 'N/A';
-
+            // Convert to AUD if USD price is available
             if (usdPrice) {
-                const audPrice = parseFloat(usdPrice) * usdToAud;
-                priceText = `A$${audPrice.toFixed(2)}`;
-            } else if (eurPrice) {
-                priceText = `€${parseFloat(eurPrice).toFixed(2)}`;
+                const audPrice = (usdPrice * usdToAud).toFixed(2);
+                priceText = `A$${audPrice}`;
             }
 
             const cardElement = document.createElement('div');
