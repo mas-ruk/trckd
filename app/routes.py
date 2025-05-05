@@ -7,11 +7,11 @@ from app.models import User
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    login_form = LoginForm()
-    register_form = RegisterForm()
+    login_form = LoginForm(prefix='login')
+    register_form = RegisterForm(prefix='register')
     resubmit = False
 
-    if register_form.form_name.data == 'register_form' and register_form.validate_on_submit():
+    if register_form.register_submit.data and register_form.validate_on_submit():
         register_email = register_form.register_email.data
         username = register_form.username.data
         register_password = register_form.register_password.data
@@ -33,8 +33,10 @@ def index():
             db.session.commit()
             login_user(user)
             return redirect(url_for('collection'))
+        '''else:
+            return render_template('homepage.html', login_form=login_form, register_form=register_form, scroll_to='register')'''
 
-    elif login_form.form_name.data == 'login_form' and login_form.validate_on_submit():
+    elif login_form.submit.data and login_form.validate_on_submit():
         login_email = login_form.login_email.data
         login_password = login_form.login_password.data
         
@@ -50,6 +52,8 @@ def index():
         if not resubmit:
             login_user(user)
             return redirect(url_for('collection'))
+        '''else:
+            return render_template('homepage.html', login_form=login_form, register_form=register_form, scroll_to='login')'''
 
     return render_template('homepage.html', login_form=login_form, register_form=register_form)
 
