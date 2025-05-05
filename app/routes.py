@@ -10,6 +10,12 @@ def index():
     login_form = LoginForm(prefix='login')
     register_form = RegisterForm(prefix='register')
     resubmit = False
+    active_tab = 'home'
+
+    if register_form.register_submit.data:
+        active_tab = 'register'
+    elif login_form.submit.data:
+        active_tab = 'login'
 
     if register_form.register_submit.data and register_form.validate_on_submit():
         register_email = register_form.register_email.data
@@ -33,8 +39,6 @@ def index():
             db.session.commit()
             login_user(user)
             return redirect(url_for('collection'))
-        '''else:
-            return render_template('homepage.html', login_form=login_form, register_form=register_form, scroll_to='register')'''
 
     elif login_form.submit.data and login_form.validate_on_submit():
         login_email = login_form.login_email.data
@@ -52,10 +56,8 @@ def index():
         if not resubmit:
             login_user(user)
             return redirect(url_for('collection'))
-        '''else:
-            return render_template('homepage.html', login_form=login_form, register_form=register_form, scroll_to='login')'''
 
-    return render_template('homepage.html', login_form=login_form, register_form=register_form)
+    return render_template('homepage.html', login_form=login_form, register_form=register_form, active_tab=active_tab)
 
 @app.route('/upload') 
 def upload_data_view():

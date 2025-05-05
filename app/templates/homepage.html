@@ -20,22 +20,22 @@
                     <h4 style="margin-left: 15px; margin-top: 15px;"> <b>trckd</b> </h4>
                     <hr style="border: 1px solid white; width: 96%;">
                     <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#home"><i class="fas fa-home"></i> Home</a>
+                        <a class="nav-link {% if active_tab == 'home' %}active{% endif %}" data-toggle="tab" href="#home"><i class="fas fa-home"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#login"><i class="fas fa-arrow-right"></i> Login</a>
+                        <a class="nav-link {% if active_tab == 'login' %}active{% endif %}" data-toggle="tab" href="#login"><i class="fas fa-arrow-right"></i> Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#register"><i class="fas fa-plus"></i> Register</a>
+                        <a class="nav-link {% if active_tab == 'register' %}active{% endif %}" data-toggle="tab" href="#register"><i class="fas fa-plus"></i> Register</a>
                     </li>
                 </ul>
                 <div class="tab-content col-10">
-                    <div class="tab-pane container active" id="home">
+                    <div class="tab-pane container {% if active_tab == 'home' %}show active{% endif %}" id="home">
                         <h1 class="bg-dark text-white p-3 rounded">Home</h1>
                         <img class="p-3 img-thumbnail text-center" src="https://dnm.nflximg.net/api/v6/BvVbc2Wxr2w6QuoANoSpJKEIWjQ/AAAAQWCQSRUcuxcg36x-fAfduhyZgCN1mHUBMGq0OEDmIQM8NU-xKpoWNjs2QxnrzxDYjDlqqhl9ftxXCoYbruqQFFFhkvQd3eABBb-v2z9_FTNAxHVcY-oGgc58sqdUTMf5YrQUMdlRjZrtq7tDB5j6uVR6bFA.jpg?r=91f">
                         <p class="border bg-light p-3 rounded" style="margin: 20px;"><b>trckd</b> is a web-based application that serves as a collecting tool for the popular trading card game <b>Magic: The Gathering</b>, published by Wizards of the Coast. It provides the ability to upload cards from your collection, sort them and then visualiase data about your entire library. Login or register to get started.</p>
                     </div>
-                    <div class="tab-pane container fade text-white" id="login">
+                    <div class="tab-pane container fade text-white {% if active_tab == 'login' %}show active{% endif %}" id="login">
                         <h1 class="bg-dark p-3 rounded mb-3">Login</h1>
                         <form method="POST" action="">
                             {{ login_form.hidden_tag() }}
@@ -72,7 +72,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="tab-pane container fade text-white" id="register">
+                    <div class="tab-pane container fade text-white {% if active_tab == 'register' %}show active{% endif %}" id="register">
                         <h1 class="bg-dark text-white p-3 rounded mb-3">Register</h1>
                         <form method="POST" action="">
                             {{ register_form.hidden_tag() }}
