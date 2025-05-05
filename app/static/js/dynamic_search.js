@@ -1,6 +1,16 @@
 // app\static\js\dynamic_search.js
 
 document.addEventListener('DOMContentLoaded', function() {
+    // fetch exchange rate for conversion from USD to AUD
+    let usdToAud = 1.5;
+    fetch('https://api.exchangerate.host/latest?base=USD&symbols=AUD')
+        .then(res => res.json())
+        .then(data => {
+            usdToAud = data.rates.AUD;
+        })
+        .catch(err => console.error('Failed to load exchange rate:', err));
+
+    
     const searchInput = document.querySelector('.add-cards-search');
     const cardGrid = document.getElementById('card-grid');
     const filterButton = document.querySelector('.filter-button');
@@ -105,6 +115,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const rarity = card.rarity
                 ? card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)
                 : '';
+            
+            // Extract price and convert to AUD if possible
+            const usdPrice = card.prices?.usd;
+            const eurPrice = card.prices?.eur;
+
+            let priceText = 'N/A';
+
+            if (usdPrice) {
+                const audPrice = parseFloat(usdPrice) * usdToAud;
+                priceText = `A$${audPrice.toFixed(2)}`;
+            } else if (eurPrice) {
+                priceText = `€${parseFloat(eurPrice).toFixed(2)}`;
+            }
 
             const cardElement = document.createElement('div');
             cardElement.className = 'card bg-dark text-light m-3';
@@ -115,6 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <h5 class="card-title">${card.name}</h5>
                     <p class="card-text">${card.set_name || ''} (${setCode}) | <strong>${rarity}</strong></p>
+                    <p class="card-text">Price: ${priceText}</p>
                 </div>
                 <div class="card-footer d-flex justify-content-between pt-3">
                     <button class="card-footer-btn rounded-pill px-4 py-2" id="add-${card.id}">
