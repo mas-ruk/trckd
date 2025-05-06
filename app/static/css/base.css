@@ -1,0 +1,105 @@
+.bg-purple-dark {
+    background-color: #2f243a;
+}
+
+.bg-purple-black {
+    background-color: #121212;
+}
+
+/* Sidebar styling */
+.sidebar {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    width: 16.67%; /* For col-md-2/col-lg-2 */
+    min-width: 250px;
+}
+
+/* Collapsed sidebar - only shows icons */
+.sidebar.collapsed {
+    width: 70px;
+    min-width: 70px;
+}
+
+/* Hide text in collapsed mode */
+.sidebar.collapsed .menu-text {
+    display: none;
+}
+
+/* Center icons when collapsed */
+.sidebar.collapsed .nav-link {
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar.collapsed .nav-link i {
+    margin-right: 0 ;
+    font-size: 1.2rem;
+}
+
+/* Header in collapsed mode */
+.sidebar.collapsed h4 {
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+/* Content area styling */
+.content {
+    padding-left: 30px;
+    transition: all 0.3s ease;
+    width: 83.33%; /* 100% - sidebar width */
+}
+
+/* Expanded content when sidebar is collapsed */
+.content.expanded {
+    width: calc(100% - 70px);
+}
+
+/* Container for flexible layout */
+.flex-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Replace the existing sidebar-toggle styles with these */
+.sidebar-toggle {
+    position: absolute;
+    right: -15px;
+    top: 50%; /* Position at middle height */
+    transform: translateY(-50%); /* Center it vertically */
+    background-color: #2f243a;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 0 8px #513a69;
+}
+
+/* Also update this in the mobile styles section */
+@media (max-width: 767.98px) {
+    /* Keep existing styles... */
+    
+    .sidebar-toggle {
+        position: fixed;
+        left: 250px;
+        top: 50%; /* Position at middle height */
+        transform: translateY(-50%); /* Center it vertically */
+        transition: all 0.3s;
+    }
+    
+    .sidebar.collapsed .sidebar-toggle {
+        left: 10px;
+        /* Keep transform for vertical centering */
+        transform: translateY(-50%);
+    }
+}

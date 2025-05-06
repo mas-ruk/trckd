@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}trckd - Search by name{% endblock %}
+
+{% block content %}
+    <!-- Add cards and menu dropdown -->
+    <div class="d-flex justify-content-between align-items-center">
+        <h1 style="padding-top: 50px; padding-bottom: 20px; font-weight: bold; font-size: 4em"> Add cards </h1>
+        <div class="dropdown" style="padding-right: 50px;">
+            <button class="btn btn-purple-circle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#">Option 1</a></li>
+                <li><a class="dropdown-item" href="#">Option 2</a></li>
+                <li><a class="dropdown-item" href="#">Option 3</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Search bar and filter buttons -->
+    <div class="d-flex align-items-center gap-4" style="color: white;">
+        <!-- Search bar - Removed form to avoid page reload -->
+        <div class="search-bar">
+            <input type="search" 
+                class="form-control rounded-pill px-4 add-cards-search"
+                style="background-color: #2f243a; outline: none; border: none; color: white;"
+                placeholder="Search...">
+        </div>
+
+        <!-- Filter Dropdown -->
+        <div class="filter-dropdown-wrapper">
+            <button class="filter-button rounded-pill px-4 py-2" id="filterToggle"> <i class="bi bi-filter"></i> Filter </button>
+        
+            <div class="filter-popup" id="filterPopup">
+                <h6>Filter by Tag</h6>
+                <ul class="filter-list">
+            
+                    <!-- Colors -->
+                    <li><strong>Color</strong></li>
+                    <li><button class="dropdown-item filter-option" data-filter="color:white">White</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="color:blue">Blue</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="color:black">Black</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="color:red">Red</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="color:green">Green</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="color:multicolor">Multicolor</button></li>
+            
+                    <!-- Types -->
+                    <li><strong>Type</strong></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:creature">Creature</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:sorcery">Sorcery</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:instant">Instant</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:enchantment">Enchantment</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:planeswalker">Planeswalker</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:land">Land</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:battle">Battle</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:conspiracy">Conspiracy</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:tribal">Tribal</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:vanguard">Vanguard</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="type:scheme">Scheme</button></li>
+            
+                    <!-- Rarity -->
+                    <li><strong>Rarity</strong></li>
+                    <li><button class="dropdown-item filter-option" data-filter="rarity:common">Common</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="rarity:uncommon">Uncommon</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="rarity:rare">Rare</button></li>
+                    <li><button class="dropdown-item filter-option" data-filter="rarity:mythic">Mythic</button></li>
+            
+                    <!-- Clear Filters -->
+                    <li><hr class="dropdown-divider"></li>
+                    <li><button id="clear-filters-btn" class="dropdown-item text-danger">Clear Filters</button></li>
+                </ul>
+            </div>
+        </div>
+        <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-tags-fill"></i> Tags </button>
+        <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-list"></i> List View / <i class="bi bi-grid"></i> Grid View </button>
+    </div>
+    
+    <!-- Card Grid - Initially Empty, will be filled via JavaScript -->
+    <div class="card-grid row" id="card-grid">
+        <div class="text-center w-100">
+            <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Add your dynamic search JavaScript -->
+<script src="{{ url_for('static', filename='js/dynamic_search.js') }}"></script>
+<script src="{{ url_for('static', filename='js/filter.js') }}"></script>
+{% endblock %}
