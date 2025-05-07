@@ -7,7 +7,6 @@ def index():
 
 @app.route('/collection')
 def collection():
-    # Import Card only when this route is accessed
     from app.models import Card
     return render_template('visualize_data.html')
 
