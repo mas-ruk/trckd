@@ -1,0 +1,258 @@
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', sans-serif !important;
+    background-color: #121212 !important;
+    color: white !important;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+
+/* Sidebar */
+.sidebar {
+    height: 100vh;
+    width: 250px;
+    background-color: #2f243a;
+    transition: width 0.4s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    overflow: hidden;
+    z-index: 999;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+}
+
+.sidebar h2 {
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.sidebar ul li:hover {
+    background-color: #3a2f49;
+}
+
+.sidebar ul li i {
+    font-size: 1.2rem;
+}
+
+.sidebar ul li span {
+    transition: opacity 0.4s;
+}
+
+.sidebar.collapsed ul li span {
+    opacity: 0;
+}
+
+.toggle-btn {
+    position: absolute;
+    top: 50%;
+    right: -15px;
+    background-color: #4a3d56;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    z-index: 1000;
+}
+
+.toggle-btn:hover {
+    background-color: #6a5c7d;
+}
+
+/* Main Content */
+main {
+    margin-left: 250px;
+    padding: 2rem;
+    transition: margin-left 0.4s ease;
+}
+
+.sidebar.collapsed + main {
+    margin-left: 80px;
+}
+
+/* Filters */
+.filters-box {
+    margin-bottom: 2rem;
+}
+
+.form-label,
+.form-check-label,
+.form-select,
+.form-select option {
+    color: white;
+}
+
+.form-select {
+    background-color: #2f243a;
+    border: 1px solid #4a3d56;
+}
+
+.btn-primary {
+    background-color: #6a4dad;
+    border-color: #6a4dad;
+}
+
+.btn-primary:hover {
+    background-color: #7c5ed1;
+    border-color: #7c5ed1;
+}
+
+h1, h2, p {
+    color: #fff;
+}
+
+/* Cards */
+.card {
+    background-color: #1e1e1e;
+    border: none;
+    color: white;
+}
+
+.card:hover {
+    box-shadow: 0 0 15px #513a69, 0 0 30px #513a69, 0 0 45px #513a69;
+    transform: scale(1.03);
+    transition: 0.3s ease;
+}
+
+.card:not(:hover) {
+    transform: scale(1);
+    transition: 0.3s ease;
+}
+
+.card-image {
+    height: 180px;
+    background-color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+/* Stats Section */
+.stats-box {
+    margin-top: 3rem;
+}
+
+.chart-placeholder {
+    height: 300px;
+    background-color: #2f2f2f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #bbb;
+    border-radius: 8px;
+}
+
+/* Existing Styles from Second Code Block */
+.container {
+    width: 100%;
+    max-width: 900px;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.filters-box, .stats-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.filters-box form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filters-box input,
+.filters-box select,
+.filters-box button {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+}
+
+.card-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    text-align: left;
+}
+
+.card-image {
+    height: 100px;
+    background-color: #f0f2f5;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    margin: 0 0 10px 0;
+}
+
+.card p {
+    margin: 4px 0;
+}
+
+.card-actions button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+.chart-placeholder {
+    height: 150px;
+    background-color: #f0f2f5;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #999;
+}
+
