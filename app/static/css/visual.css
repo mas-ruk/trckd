@@ -7,7 +7,6 @@ body {
     overflow-x: hidden;
 }
 
-
 /* Sidebar */
 .sidebar {
     height: 100vh;
@@ -254,5 +253,50 @@ h1 {
     justify-content: center;
     align-items: center;
     color: #999;
+}
+
+/* Slider Styles */
+.slider-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 30px;
+}
+
+.card-slider {
+    display: flex;
+    overflow: hidden;
+    gap: 20px;
+    scroll-behavior: smooth;
+}
+
+.card-slider .card {
+    flex-shrink: 0;
+    width: 220px; /* Adjust card width if needed */
+    transition: transform 0.3s ease;
+}
+
+.slide-btn {
+    position: absolute;
+    top: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 2rem;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.left {
+    left: 10px;
+}
+
+.right {
+    right: 10px;
+}
+
+.slide-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7);
 }
 

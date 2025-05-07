@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <title>Visualize Data</title>
 
-    <!-- Main custom styles -->
-    <link rel="stylesheet" type="text/css" href="../static/css/visual.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../static/css/visual.css">
+    <link rel="stylesheet" href="../static/css/filters.css">
 
-    <!-- Filter styles -->
-    <link rel="stylesheet" type="text/css" href="../static/css/filters.css">
-
-    <!-- Font Awesome for icons -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Bootstrap CSS -->
@@ -36,55 +34,79 @@
         <div class="container">
             <h1>My Magic: The Gathering Collection</h1>
 
-         
             <!-- Filter Bar -->
-    <div class="filter-bar d-flex align-items-center justify-content-start p-3">
-        <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
+            <div class="filter-bar d-flex align-items-center justify-content-start p-3">
+                <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
 
-        <select id="typeFilter" class="form-control mr-2">
-            <option value="">All Types</option>
-            <option value="Creature">Creature</option>
-            <option value="Spell">Spell</option>
-          
-        </select>
+                <select id="typeFilter" class="form-control mr-2">
+                    <option value="">Types</option>
+                    <option value="Creature">Creature</option>
+                    <option value="Spell">Spell</option>
+                </select>
 
-        <select id="colorFilter" class="form-control mr-2">
-            <option value="">All Colours</option>
-            <option value="Blue">Blue</option>
-            <option value="Red">Red</option>
-            <option value="Black">Black</option>
-            <option value="Green">Green</option>
-            <option value="White">White</option>
-        </select>
+                <select id="colorFilter" class="form-control mr-2">
+                    <option value="">Colours</option>
+                    <option value="Blue">Blue</option>
+                    <option value="Red">Red</option>
+                    <option value="Black">Black</option>
+                    <option value="Green">Green</option>
+                    <option value="White">White</option>
+                </select>
 
-        <select id="rarityFilter" class="form-control mr-2">
-            <option value="">All Rarities</option>
-            <option value="Common">Common</option>
-            <option value="Rare">Rare</option>
-            <option value="Famous">Famous</option>
-            
-        </select>
+                <select id="rarityFilter" class="form-control mr-2">
+                    <option value="">Rarities</option>
+                    <option value="Common">Common</option>
+                    <option value="Rare">Rare</option>
+                    <option value="Famous">Famous</option>
+                </select>
 
-        <button id="applyFilters" class="btn btn-primary">Apply</button>
-    </div>
-
-       <!-- Cards Display -->
-       <section class="card-display row">
-        <div class="col-md-3 mb-4">
-            <div class="card p-3">
-                <div class="card-image">[Image]</div>
-                <h5>card.name</h5>
-                <p>Type: card.type</p>
-                <p>Colour: card.colour</p>
-                <p>Rarity: card.rarity</p>
-                <p>Qty: card.quantity</p>
-                <div class="card-actions">
-                    <button class="btn btn-secondary btn-sm">Edit</button>
-                    <button class="btn btn-danger btn-sm">Delete</button>
-                </div>
+                <button id="applyFilters" class="btn btn-primary">Apply</button>
             </div>
-        </div>
-    </section>
+
+            <!-- Featured Card Slider -->
+            <div class="slider-container my-4">
+                <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
+                <div class="card-slider" id="cardSlider">
+                    <div class="card">
+                        <div class="card-image">[Image]</div>
+                        <h6>Card 1</h6>
+                        <p>Type: Spell</p>
+                        <p>Colour: Blue</p>
+                        <p>Rarity: Rare</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-image">[Image]</div>
+                        <h6>Card 2</h6>
+                        <p>Type: Creature</p>
+                        <p>Colour: Red</p>
+                        <p>Rarity: Common</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-image">[Image]</div>
+                        <h6>Card 3</h6>
+                        <p>Type: Creature</p>
+                        <p>Colour: Green</p>
+                        <p>Rarity: Famous</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-image">[Image]</div>
+                        <h6>Card 4</h6>
+                        <p>Type: Creature</p>
+                        <p>Colour: Black</p>
+                        <p>Rarity: Rare</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-image">[Image]</div>
+                        <h6>Card 5</h6>
+                        <p>Type: Creature</p>
+                        <p>Colour: White</p>
+                        <p>Rarity: Common</p>
+                    </div>
+                    
+                </div>
+                <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
+            </div>
+
 
             <!-- Stats Section -->
             <section class="stats-box">
@@ -94,18 +116,10 @@
         </div>
     </main>
 
-    <!-- Scripts -->
+    <!-- External JS -->
+    <script src="../static/js/visualize.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script>
-        document.getElementById('toggleBtn').addEventListener('click', function () {
-            document.getElementById('sidebar').classList.toggle('collapsed');
-        });
-    </script>
 </body>
 </html>
-
-
-
