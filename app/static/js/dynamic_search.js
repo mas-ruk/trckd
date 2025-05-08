@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Fetch the USD price
             const usdPrice = card.prices?.usd;
-            let priceText = 'N/A';
+            let priceText = 'Price data not available';
 
             // Convert to AUD if USD price is available
             if (usdPrice) {
