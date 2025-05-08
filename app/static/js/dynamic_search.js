@@ -144,7 +144,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button class="card-footer-btn rounded-pill px-4 py-2" id="add-${card.id}">
                         <i class="bi bi-plus-lg"></i> Add
                     </button>
-                    <button class="card-footer-btn rounded-pill px-4 py-2" id="details-${card.id}">
+                    <button
+                        class="card-footer-btn rounded-pill px-4 py-2 open-details-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#detailsPage"
+                        data-card-id="${card.id}">
                         <i class="bi bi-info-circle"></i> Details
                     </button>
                 </div>
@@ -164,4 +168,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initial message
     cardGrid.innerHTML = '<p class="text-light">Start typing to search for Magic cards.</p>';
+
+    // Details Button Listener
+    document.addEventListener('click', function (event) {
+        const detailsButton = event.target.closest('.open-details-btn');
+        if (!detailsButton) return;
+    
+        // Get the card ID from the data attribute
+        const cardId = detailsButton.getAttribute('data-card-id');
+        
+        // Dynamically populate the modal content if needed (optional)
+        const modalBody = document.getElementById("details-modal-body");
+        modalBody.innerHTML = `<p>Details for card with ID: ${cardId}</p>`; // You can fetch more card details here
+    
+        // Find and show the modal
+        const modal = new bootstrap.Modal(document.getElementById("detailsPage"));
+        modal.show();
+    });
+    
 });
