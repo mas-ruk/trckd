@@ -185,5 +185,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const modal = new bootstrap.Modal(document.getElementById("detailsPage"));
         modal.show();
     });
+
+    // On Modal Cancel
+    const modalElement = document.getElementById('detailsPage');
+    const modal = new bootstrap.Modal(modalElement);
+
+    // Listen for the modal's 'hidden' event
+    modalElement.addEventListener('hidden.bs.modal', function () {
+        // This will ensure the backdrop is removed when the modal is closed
+        document.body.classList.remove('modal-open');
+        document.querySelector('.modal-backdrop').remove();
+    });
+
+    // You can also add your existing logic for opening the modal
+    document.querySelectorAll('.open-details-btn').forEach(button => {
+        button.addEventListener('click', function (event) {
+            modal.show();
+        });
+    });
     
 });
