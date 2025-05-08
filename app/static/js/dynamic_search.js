@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p class="card-text">${card.set_name || ''} (${setCode}) | <strong>${rarity}</strong></p>
                     <p class="card-text">Price: ${priceText}</p>
                 </div>
-                <div class="card-footer d-flex justify-content-between pt-3">
+                <div class="card-footer d-flex justify-content-between gap-3 pt-3">
                     <button class="card-footer-btn rounded-pill px-4 py-2" id="add-${card.id}">
                         <i class="bi bi-plus-lg"></i> Add
                     </button>
@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         ${legalityHtml}
                         
-                        <div class="mt-4 d-flex gap-2 flex-wrap">
+                        <div class="mt-4 d-flex gap-3 flex-wrap">
                             <button class="details-btn rounded-pill px-4 py-2" id="add-to-collection-${card.id}">
                                 <i class="bi bi-plus-lg"></i> Add to Collection
                             </button>
