@@ -1,399 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Visualize Data</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/visualize_data.css') }}">
+{% extends "base.html" %}
 
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+{% block title %}trckd - My Collection{% endblock %}
 
-    <!-- Font Awesome for sidebar icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% block extra_css %}
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../static/css/visual.css">
+    <link rel="stylesheet" href="../static/css/filters.css">
 
-    <style>
-        body {
-            background-color: #2f243a;
-            color: #fff;
-        }
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-        h1, h2, p {
-            color: #fff;
-        }
+{% endblock %}  
 
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 220px;
-            background-color: #1f1f2f;
-            padding: 1rem;
-            color: white;
-            z-index: 1000;
-        }
-
-        .sidebar h2 {
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar ul li {
-            padding: 0.5rem 0;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .sidebar ul li i {
-            margin-right: 10px;
-        }
-
-        .toggle-btn {
-            position: absolute;
-            top: 10px;
-            right: -30px;
-            background-color: #333;
-            color: white;
-            padding: 5px 10px;
-            cursor: pointer;
-            border-radius: 0 5px 5px 0;
-        }
-
-        #main-content {
-            margin-left: 240px;
-            padding: 2rem;
-        }
-
-        .sidebar.collapsed {
-            transform: translateX(-100%);
-        }
-
-        .sidebar.collapsed + #main-content {
-            margin-left: 0;
-        }
-
-        .carousel-inner {
-            display: flex;
-        }
-
-        .carousel-item {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            align-items: center;
-        }
-
-        .card {
-            width: 220px;
-            height: 320px;
-            background-color: #4a4e69;
-            color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 0 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            text-align: center;
-            transition: all 0.3s ease-in-out;
-            overflow: hidden;
-        }
-
-        .card img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .card h3 {
-            margin: 10px 0;
-            font-size: 20px;
-        }
-
-        .card p {
-            font-size: 16px;
-        }
-
-        .card-details {
-            display: none;
-            font-size: 14px;
-        }
-
-        .card.opened {
-            height: 360px;
-            background-color: #5c5470;
-        }
-
-        .card.opened .card-details {
-            display: block;
-            margin-top: 10px;
-        }
-
-        .carousel-control-prev,
-        .carousel-control-next {
-            width: 5%;
-            z-index: 10;
-        }
-
-        .carousel-control-prev-icon,
-        .carousel-control-next-icon {
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-        }
-
-        .chart-placeholder {
-            max-width: 300px;
-            margin-top: 30px;
-        }
-
-        canvas {
-            width: 100% !important;
-            height: auto !important;
-        }
-
-        .filters-box form input, .filters-box form select {
-            margin-bottom: 10px;
-            width: 100%;
-        }
-
-        .filters-box form button {
-            width: 100%;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 180px;
-            }
-
-            #main-content {
-                margin-left: 200px;
-            }
-
-            .chart-placeholder {
-                max-width: 100%;
-            }
-
-            .carousel-item {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-<!-- Sidebar -->
-<div class="sidebar" id="sidebar">
-    <h2>trckd</h2>
-    <ul>
-        <li><a href="#home" class="nav-link"><i class="fas fa-home"></i> <span>Home</span></a></li>
-        <li><a href="#share-cards" class="nav-link"><i class="fas fa-share-alt"></i> <span>Share Cards</span></a></li>
-        <li><a href="#my-collection" class="nav-link"><i class="fas fa-briefcase"></i> <span>My Collection</span></a></li>
-    </ul>
-    <div class="toggle-btn" id="toggleBtn">
-        <i class="fas fa-arrow-left"></i>
-    </div>
-</div>
-
-<!-- Main Content -->
-<main id="main-content">
+{% block content %}
+<div class="container">
     <h1>My Magic: The Gathering Collection</h1>
 
-    <!-- New Collection Form -->
-    <section class="new-collection-form mb-4" id="home">
-        <h2>Create New Collection</h2>
-        <form action="/create_collection" method="POST">
-            <div class="form-group">
-                <label for="collection_name">Collection Name:</label>
-                <input type="text" id="collection_name" name="collection_name" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Create Collection</button>
-        </form>
-    </section>
+    <!-- Filter Bar -->
+    <div class="filter-bar d-flex align-items-center justify-content-start p-3">
+        <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
 
-    <!-- Filter Box -->
-    <section class="filters-box mb-4" id="share-cards">
-        <h2>Filters</h2>
-        <form>
-            <input type="text" placeholder="Search by name..." class="form-control mb-2">
-            <select class="form-control mb-2">
-                <option value="">Type</option>
-                <option value="creature">Creature</option>
-                <option value="spell">Spell</option>
-            </select>
-            <select class="form-control mb-2">
-                <option value="">Colour</option>
-                <option value="red">Red</option>
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="black">Black</option>
-            </select>
-            <button type="submit" class="btn btn-primary">Apply Filters</button>
-        </form>
-    </section>
+        <select id="typeFilter" class="form-control mr-2">
+            <option value="">Types</option>
+            <option value="Creature">Creature</option>
+            <option value="Spell">Spell</option>
+        </select>
 
-    <!-- Carousel -->
-    <div id="cardCarousel" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            <!-- Carousel Item 1 -->
-            <div class="carousel-item active">
-                <div class="d-flex justify-content-center">
-                    <div class="card" id="card1">
-                        <img src="{{ url_for('static', filename='images/card_image.jpg') }}" alt="Card Name">
-                        <h3>Card Name</h3>
-                        <p>Click to Open</p>
-                        <div class="card-details">
-                            <h4>Details</h4>
-                            <p>Type: Creature</p>
-                            <p>Colour: Green</p>
-                            <p>Rarity: Rare</p>
-                            <p>Qty: 1</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <select id="colorFilter" class="form-control mr-2">
+            <option value="">Colours</option>
+            <option value="Blue">Blue</option>
+            <option value="Red">Red</option>
+            <option value="Black">Black</option>
+            <option value="Green">Green</option>
+            <option value="White">White</option>
+        </select>
 
-            <!-- Carousel Item 2 -->
-            <div class="carousel-item">
-                <div class="d-flex justify-content-center">
-                    <div class="card" id="card2">
-                        <img src="{{ url_for('static', filename='images/card_image2.jpg') }}" alt="Card Name 2">
-                        <h3>Card Name 2</h3>
-                        <p>Click to Open</p>
-                        <div class="card-details">
-                            <h4>Details</h4>
-                            <p>Type: Spell</p>
-                            <p>Colour: Red</p>
-                            <p>Rarity: Uncommon</p>
-                            <p>Qty: 2</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <select id="rarityFilter" class="form-control mr-2">
+            <option value="">Rarities</option>
+            <option value="Common">Common</option>
+            <option value="Rare">Rare</option>
+            <option value="Famous">Famous</option>
+        </select>
 
-            <!-- Carousel Item 3 -->
-            <div class="carousel-item">
-                <div class="d-flex justify-content-center">
-                    <div class="card" id="card3">
-                        <img src="{{ url_for('static', filename='images/card_image3.jpg') }}" alt="Card Name 3">
-                        <h3>Card Name 3</h3>
-                        <p>Click to Open</p>
-                        <div class="card-details">
-                            <h4>Details</h4>
-                            <p>Type: Artifact</p>
-                            <p>Colour: Blue</p>
-                            <p>Rarity: Common</p>
-                            <p>Qty: 3</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Carousel Item 4 -->
-            <div class="carousel-item">
-                <div class="d-flex justify-content-center">
-                    <div class="card" id="card4">
-                        <img src="{{ url_for('static', filename='images/card_image4.jpg') }}" alt="Card Name 4">
-                        <h3>Card Name 4</h3>
-                        <p>Click to Open</p>
-                        <div class="card-details">
-                            <h4>Details</h4>
-                            <p>Type: Creature</p>
-                            <p>Colour: Black</p>
-                            <p>Rarity: Rare</p>
-                            <p>Qty: 1</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Carousel Item 5 -->
-            <div class="carousel-item">
-                <div class="d-flex justify-content-center">
-                    <div class="card" id="card5">
-                        <img src="{{ url_for('static', filename='images/card_image5.jpg') }}" alt="Card Name 5">
-                        <h3>Card Name 5</h3>
-                        <p>Click to Open</p>
-                        <div class="card-details">
-                            <h4>Details</h4>
-                            <p>Type: Enchantment</p>
-                            <p>Colour: White</p>
-                            <p>Rarity: Mythic</p>
-                            <p>Qty: 2</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Carousel Controls -->
-        <a class="carousel-control-prev" href="#cardCarousel" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="carousel-control-next" href="#cardCarousel" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
+        <button id="applyFilters" class="btn btn-primary">Apply</button>
     </div>
 
-    <!-- Pie Chart -->
+    <!-- Featured Card Slider -->
+    <div class="slider-container my-4">
+        <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
+        <div class="card-slider" id="cardSlider">
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 1</h6>
+                <p>Type: Spell</p>
+                <p>Colour: Blue</p>
+                <p>Rarity: Rare</p>
+            </div>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 2</h6>
+                <p>Type: Creature</p>
+                <p>Colour: Red</p>
+                <p>Rarity: Common</p>
+            </div>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 3</h6>
+                <p>Type: Creature</p>
+                <p>Colour: Green</p>
+                <p>Rarity: Famous</p>
+            </div>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 4</h6>
+                <p>Type: Creature</p>
+                <p>Colour: Black</p>
+                <p>Rarity: Rare</p>
+            </div>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 5</h6>
+                <p>Type: Creature</p>
+                <p>Colour: White</p>
+                <p>Rarity: Common</p>
+            </div>
+        </div>
+        <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
+    </div>
+
+    <!-- Stats Section -->
     <section class="stats-box">
         <h2>Collection Stats</h2>
-        <div class="chart-placeholder">
-            <canvas id="myPieChart"></canvas>
-        </div>
+        <div class="chart-placeholder">[Chart will render here]</div>
     </section>
-</main>
+</div>
+{% endblock %}
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+{% block scripts %}
 <script>
-    // Toggle sidebar visibility
-    document.getElementById('toggleBtn').addEventListener('click', function () {
-        document.getElementById('sidebar').classList.toggle('collapsed');
-    });
+    // Card slider functionality
+    function slideLeft() {
+        const slider = document.getElementById('cardSlider');
+        slider.scrollBy({ left: -300, behavior: 'smooth' });
+    }
 
-    // Toggle card details on click
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        card.addEventListener('click', () => {
-            card.classList.toggle('opened');
-        });
-    });
-
-    // Chart.js Pie Chart
-    var ctx = document.getElementById('myPieChart').getContext('2d');
-    var myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Creature', 'Spell', 'Artifact'],
-            datasets: [{
-                data: [40, 35, 25],
-                backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe'],
-                borderColor: ['#fff', '#fff', '#fff'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
+    function slideRight() {
+        const slider = document.getElementById('cardSlider');
+        slider.scrollBy({ left: 300, behavior: 'smooth' });
+    }
 </script>
 
-</body>
-</html>
-
-
+<!-- External JS from original visualize.js file -->
+<script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
+{% endblock %}
