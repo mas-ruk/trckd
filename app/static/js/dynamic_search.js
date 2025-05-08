@@ -148,7 +148,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         class="card-footer-btn rounded-pill px-4 py-2 open-details-btn"
                         data-bs-toggle="modal"
                         data-bs-target="#detailsPage"
-                        data-card-id="${card.id}">
+                        data-card-id="${card.id}"
+                        data-card-data="${encodeURIComponent(JSON.stringify(card))}">
                         <i class="bi bi-info-circle"></i> Details
                     </button>
                 </div>
@@ -169,53 +170,166 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial message
     cardGrid.innerHTML = '<p class="text-light">Start typing to search for Magic cards.</p>';
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Single function to handle both opening and closing of the modal
-        function handleModal(cardId) {
-            const modalElement = document.getElementById('detailsPage');
-            const modalBody = document.getElementById("details-modal-body");
-    
-            // Dynamically populate modal content
-            modalBody.innerHTML = `
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <p>Card ID: ${cardId}</p>
+    // Handle modal opening and content loading
+    document.addEventListener('click', function(event) {
+        const detailsButton = event.target.closest('.open-details-btn');
+        if (!detailsButton) return;
+
+        // Get the card ID from the data attribute
+        const cardId = detailsButton.getAttribute('data-card-id');
+        
+        // Try to get the card data from the data attribute first
+        let cardData = null;
+        try {
+            const encodedCardData = detailsButton.getAttribute('data-card-data');
+            if (encodedCardData) {
+                cardData = JSON.parse(decodeURIComponent(encodedCardData));
+            }
+        } catch (error) {
+            console.error('Error parsing card data:', error);
+        }
+
+        // If we have the card data, show it immediately
+        if (cardData) {
+            showCardDetails(cardData);
+        } else {
+            // Otherwise fetch it from the API
+            fetchCardDetails(cardId);
+        }
+    });
+
+    function fetchCardDetails(cardId) {
+        const modalBody = document.getElementById("details-modal-body");
+        
+        // Show loading state
+        modalBody.innerHTML = `
+            <div class="text-center w-100 py-5">
+                <div class="spinner-border text-light" role="status">
+                    <span class="visually-hidden">Loading card details...</span>
+                </div>
+            </div>
+        `;
+
+        // Fetch the card details from Scryfall API
+        fetch(`https://api.scryfall.com/cards/${cardId}`)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(card => {
+                showCardDetails(card);
+            })
+            .catch(error => {
+                console.error('Error fetching card details:', error);
+                modalBody.innerHTML = '<p class="text-danger">Error loading card details. Please try again.</p>';
+            });
+    }
+
+    function showCardDetails(card) {
+        const modalBody = document.getElementById("details-modal-body");
+        
+        // Get image URL (handle double-faced cards)
+        let imageUrl = 'https://via.placeholder.com/223x310?text=No+Image';
+        let backImageHtml = '';
+        
+        if (card.image_uris && card.image_uris.normal) {
+            imageUrl = card.image_uris.normal;
+        } else if (card.card_faces && card.card_faces[0].image_uris) {
+            // For double-faced cards
+            imageUrl = card.card_faces[0].image_uris.normal;
+            
+            if (card.card_faces[1].image_uris) {
+                backImageHtml = `
+                    <div class="mt-3">
+                        <h6 class="text-light">Back Face:</h6>
+                        <img src="${card.card_faces[1].image_uris.normal}" class="img-fluid rounded" alt="${card.card_faces[1].name}">
+                    </div>
+                `;
+            }
+        }
+
+        // Calculate price in AUD
+        const usdPrice = card.prices?.usd;
+        let priceText = 'N/A';
+
+        if (usdPrice) {
+            const audPrice = (usdPrice * usdToAud).toFixed(2);
+            priceText = `A$${audPrice} (US$${usdPrice})`;
+        }
+
+        // Format legality information
+        let legalityHtml = '';
+        if (card.legalities) {
+            const formats = ['standard', 'modern', 'commander', 'legacy', 'vintage'];
+            legalityHtml = '<div class="mt-3"><h6>Legality:</h6><ul class="list-group">';
+            
+            formats.forEach(format => {
+                const status = card.legalities[format];
+                const statusClass = status === 'legal' ? 'text-success' : 'text-danger';
+                
+                legalityHtml += `
+                    <li class="list-group-item bg-dark text-light border-secondary">
+                        ${format.charAt(0).toUpperCase() + format.slice(1)}: 
+                        <span class="${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span>
+                    </li>
+                `;
+            });
+            
+            legalityHtml += '</ul></div>';
+        }
+
+        // Format mana cost and type line
+        const manaCost = card.mana_cost || '';
+        const typeLine = card.type_line || '';
+        
+        // Create card text content
+        let cardText = '';
+        if (card.oracle_text) {
+            cardText = `<div class="card bg-dark border-secondary mt-3">
+                <div class="card-body">
+                    <p class="card-text">${card.oracle_text.replace(/\n/g, '<br>')}</p>
+                </div>
+            </div>`;
+        }
+
+        // Populate the modal with card details
+        modalBody.innerHTML = `
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- Card Image Pane -->
+                    <div class="col-md-5">
+                        <img src="${imageUrl}" class="img-fluid rounded" alt="${card.name}">
+                        ${backImageHtml}
+                    </div>
+                    
+                    <!-- Details Pane -->
+                    <div class="col-md-7">
+                        <h3 style="font-weight: bold;" class="text-light">${card.name}</h3>
+                        <p class="text-light">${manaCost}</p>
+                        <p class="text-light">${typeLine}</p>
+                        
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-light">Set: ${card.set_name} (${card.set.toUpperCase()})</span>
+                            <span class="text-light">Rarity: ${card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)}</span>
+                        </div>
+                        
+                        <p class="text-light">Price: ${priceText}</p>
+                        
+                        ${cardText}
+                        
+                        ${legalityHtml}
+                        
+                        <div class="mt-4">
+                            <button class="btn btn-primary" id="add-to-collection-${card.id}">
+                                <i class="bi bi-plus-lg"></i> Add to Collection
+                            </button>
+                            <a href="${card.scryfall_uri}" target="_blank" class="btn btn-secondary ms-2">
+                                <i class="bi bi-link"></i> View on Scryfall
+                            </a>
                         </div>
                     </div>
                 </div>
-            `;
-    
-            // Initialize the modal using Bootstrap
-            const modal = new bootstrap.Modal(modalElement);
-    
-            // Show the modal
-            modal.show();
-    
-            // Event listener for when the modal is closed (hidden)
-            modalElement.addEventListener('hidden.bs.modal', function () {
-                // Remove modal-open class to restore scrolling
-                document.body.classList.remove('modal-open');
-                
-                // Remove the backdrop
-                const backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) {
-                    backdrop.remove();
-                }
-            });
-        }
-    
-        // Event listener for opening the modal when the details button is clicked
-        document.addEventListener('click', function (event) {
-            const detailsButton = event.target.closest('.open-details-btn');
-            if (!detailsButton) return;
-    
-            // Get the card ID from the data attribute
-            const cardId = detailsButton.getAttribute('data-card-id');
-            console.log('Opening modal for card ID:', cardId);  // Debugging line
-    
-            // Call the handleModal function to open and set the modal content
-            handleModal(cardId);
-        });
-    });
+            </div>
+        `;
+    }
 });
