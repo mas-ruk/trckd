@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Fetch the USD price
             const usdPrice = card.prices?.usd;
-            let priceText = 'Price data not available';
+            let priceText = 'N/A';
 
             // Convert to AUD if USD price is available
             if (usdPrice) {
@@ -169,39 +169,53 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial message
     cardGrid.innerHTML = '<p class="text-light">Start typing to search for Magic cards.</p>';
 
-    // Details Button Listener
-    document.addEventListener('click', function (event) {
-        const detailsButton = event.target.closest('.open-details-btn');
-        if (!detailsButton) return;
+    document.addEventListener('DOMContentLoaded', function () {
+        // Single function to handle both opening and closing of the modal
+        function handleModal(cardId) {
+            const modalElement = document.getElementById('detailsPage');
+            const modalBody = document.getElementById("details-modal-body");
     
-        // Get the card ID from the data attribute
-        const cardId = detailsButton.getAttribute('data-card-id');
-        
-        // Dynamically populate the modal content if needed (optional)
-        const modalBody = document.getElementById("details-modal-body");
-        modalBody.innerHTML = `<p>Details for card with ID: ${cardId}</p>`; // You can fetch more card details here
+            // Dynamically populate modal content
+            modalBody.innerHTML = `
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <p>Card ID: ${cardId}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
     
-        // Find and show the modal
-        const modal = new bootstrap.Modal(document.getElementById("detailsPage"));
-        modal.show();
-    });
-
-    // On Modal Cancel
-    const modalElement = document.getElementById('detailsPage');
-    const modal = new bootstrap.Modal(modalElement);
-
-    // Listen for the modal's 'hidden' event
-    modalElement.addEventListener('hidden.bs.modal', function () {
-        // This will ensure the backdrop is removed when the modal is closed
-        document.body.classList.remove('modal-open');
-        document.querySelector('.modal-backdrop').remove();
-    });
-
-    // You can also add your existing logic for opening the modal
-    document.querySelectorAll('.open-details-btn').forEach(button => {
-        button.addEventListener('click', function (event) {
+            // Initialize the modal using Bootstrap
+            const modal = new bootstrap.Modal(modalElement);
+    
+            // Show the modal
             modal.show();
+    
+            // Event listener for when the modal is closed (hidden)
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                // Remove modal-open class to restore scrolling
+                document.body.classList.remove('modal-open');
+                
+                // Remove the backdrop
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            });
+        }
+    
+        // Event listener for opening the modal when the details button is clicked
+        document.addEventListener('click', function (event) {
+            const detailsButton = event.target.closest('.open-details-btn');
+            if (!detailsButton) return;
+    
+            // Get the card ID from the data attribute
+            const cardId = detailsButton.getAttribute('data-card-id');
+            console.log('Opening modal for card ID:', cardId);  // Debugging line
+    
+            // Call the handleModal function to open and set the modal content
+            handleModal(cardId);
         });
     });
-    
 });
