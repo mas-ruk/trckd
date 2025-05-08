@@ -319,11 +319,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         ${legalityHtml}
                         
-                        <div class="mt-4">
-                            <button class="btn btn-primary" id="add-to-collection-${card.id}">
+                        <div class="mt-4 d-flex gap-2 flex-wrap">
+                            <button class="details-btn rounded-pill px-4 py-2" id="add-to-collection-${card.id}">
                                 <i class="bi bi-plus-lg"></i> Add to Collection
                             </button>
-                            <a href="${card.scryfall_uri}" target="_blank" class="btn btn-secondary ms-2">
+                            <a href="${card.scryfall_uri}" target="_blank" class="details-btn rounded-pill px-4 py-2">
                                 <i class="bi bi-link"></i> View on Scryfall
                             </a>
                         </div>

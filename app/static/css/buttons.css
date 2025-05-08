@@ -36,3 +36,25 @@
     background-color: #4b3760; 
     transform: scale(1.55); 
 }
+
+.details-btn {
+    background-color: #2f243a;
+    color: white;
+    outline: none !important;
+    border: none;
+    box-shadow: 0 0 8px 4px #513a69;
+    font-weight: bold;
+    display: inline-block;       /* Make <a> behave like a button */
+    text-align: center;
+    text-decoration: none;       /* Remove underline */
+    cursor: pointer;             /* Pointer cursor for both elements */  
+}
+
+.details-btn:hover {
+    transform: scale(1.05);
+    transition: 0.3s ease;
+}
+
+.details-btn:not(:hover) {
+    transition: 0.3s ease;
+}
