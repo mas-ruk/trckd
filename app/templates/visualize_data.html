@@ -9,7 +9,6 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 {% endblock %}  
 
 {% block content %}
@@ -56,78 +55,6 @@
                 <p>Colour: Blue</p>
                 <p>Rarity: Rare</p>
             </div>
-<<<<<<< HEAD
-
-            <!-- Featured Card Slider -->
-            <div class="slider-container my-4">
-                <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
-                <div class="card-slider" id="cardSlider">
-                    <div class="card">
-                        <div class="card-image">[Image]</div>
-                        <h6>Card 1</h6>
-                        <p>Type: Spell</p>
-                        <p>Colour: Blue</p>
-                        <p>Rarity: Rare</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-image">[Image]</div>
-                        <h6>Card 2</h6>
-                        <p>Type: Creature</p>
-                        <p>Colour: Red</p>
-                        <p>Rarity: Common</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-image">[Image]</div>
-                        <h6>Card 3</h6>
-                        <p>Type: Creature</p>
-                        <p>Colour: Green</p>
-                        <p>Rarity: Famous</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-image">[Image]</div>
-                        <h6>Card 4</h6>
-                        <p>Type: Creature</p>
-                        <p>Colour: Black</p>
-                        <p>Rarity: Rare</p>
-                    </div>
-                    <div class="card">
-                        <div class="card-image">[Image]</div>
-                        <h6>Card 5</h6>
-                        <p>Type: Creature</p>
-                        <p>Colour: White</p>
-                        <p>Rarity: Common</p>
-                    </div>
-                </div>
-                <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
-            </div>
-
-            <!-- Create Collection Form -->
-            <div class="container mt-4">
-                <h1 class="mb-4">Create a New Collection</h1>
-                
-                <div class="collection-form">
-                    <form id="createCollectionForm" method="POST">
-                        <div class="mb-3">
-                            <label for="collectionName" class="form-label">Collection Name</label>
-                            <input type="text" class="form-control" id="collectionName" name="collectionName" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="collectionDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="collectionDescription" name="collectionDescription" rows="4" required></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Create Collection</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Stats Section -->
-            <section class="stats-box">
-                <h2>Collection Stats</h2>
-                <div class="chart-placeholder">[Chart will render here]</div>
-            </section>
-=======
             <div class="card">
                 <div class="card-image">[Image]</div>
                 <h6>Card 2</h6>
@@ -156,13 +83,33 @@
                 <p>Colour: White</p>
                 <p>Rarity: Common</p>
             </div>
->>>>>>> 7fb848bd4ff4389e9dbef47ba71d7c5a58f8d150
         </div>
         <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
     </div>
 
+    <!-- Create Collection Form -->
+    <div class="mt-4">
+        <h2 class="mb-4">Create a New Collection</h2>
+        
+        <div class="collection-form">
+            <form id="createCollectionForm" method="POST">
+                <div class="mb-3">
+                    <label for="collectionName" class="form-label">Collection Name</label>
+                    <input type="text" class="form-control" id="collectionName" name="collectionName" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="collectionDescription" class="form-label">Description</label>
+                    <textarea class="form-control" id="collectionDescription" name="collectionDescription" rows="4" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Collection</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Stats Section -->
-    <section class="stats-box">
+    <section class="stats-box mt-4">
         <h2>Collection Stats</h2>
         <div class="chart-placeholder">[Chart will render here]</div>
     </section>
