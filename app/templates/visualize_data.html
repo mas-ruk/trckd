@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Visualize Data</title>
+{% extends "base.html" %}
 
+{% block title %}trckd - My Collection{% endblock %}
+
+{% block extra_css %}
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../static/css/visual.css">
     <link rel="stylesheet" href="../static/css/filters.css">
@@ -11,57 +10,53 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+{% endblock %}  
 
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <h2>trckd</h2>
-        <ul>
-            <li><i class="fas fa-home"></i> <span>Home</span></li>
-            <li><i class="fas fa-share-alt"></i> <span>Share Cards</span></li>
-            <li><i class="fas fa-briefcase"></i> <span>My Collection</span></li>
-        </ul>
-        <div class="toggle-btn" id="toggleBtn">
-            <i class="fas fa-arrow-left"></i>
-        </div>
+{% block content %}
+<div class="container">
+    <h1>My Magic: The Gathering Collection</h1>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar d-flex align-items-center justify-content-start p-3">
+        <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
+
+        <select id="typeFilter" class="form-control mr-2">
+            <option value="">Types</option>
+            <option value="Creature">Creature</option>
+            <option value="Spell">Spell</option>
+        </select>
+
+        <select id="colorFilter" class="form-control mr-2">
+            <option value="">Colours</option>
+            <option value="Blue">Blue</option>
+            <option value="Red">Red</option>
+            <option value="Black">Black</option>
+            <option value="Green">Green</option>
+            <option value="White">White</option>
+        </select>
+
+        <select id="rarityFilter" class="form-control mr-2">
+            <option value="">Rarities</option>
+            <option value="Common">Common</option>
+            <option value="Rare">Rare</option>
+            <option value="Famous">Famous</option>
+        </select>
+
+        <button id="applyFilters" class="btn btn-primary">Apply</button>
     </div>
 
-    <!-- Main Content -->
-    <main>
-        <div class="container">
-            <h1>My Magic: The Gathering Collection</h1>
-
-            <!-- Filter Bar -->
-            <div class="filter-bar d-flex align-items-center justify-content-start p-3">
-                <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
-
-                <select id="typeFilter" class="form-control mr-2">
-                    <option value="">Types</option>
-                    <option value="Creature">Creature</option>
-                    <option value="Spell">Spell</option>
-                </select>
-
-                <select id="colorFilter" class="form-control mr-2">
-                    <option value="">Colours</option>
-                    <option value="Blue">Blue</option>
-                    <option value="Red">Red</option>
-                    <option value="Black">Black</option>
-                    <option value="Green">Green</option>
-                    <option value="White">White</option>
-                </select>
-
-                <select id="rarityFilter" class="form-control mr-2">
-                    <option value="">Rarities</option>
-                    <option value="Common">Common</option>
-                    <option value="Rare">Rare</option>
-                    <option value="Famous">Famous</option>
-                </select>
-
-                <button id="applyFilters" class="btn btn-primary">Apply</button>
+    <!-- Featured Card Slider -->
+    <div class="slider-container my-4">
+        <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
+        <div class="card-slider" id="cardSlider">
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 1</h6>
+                <p>Type: Spell</p>
+                <p>Colour: Blue</p>
+                <p>Rarity: Rare</p>
             </div>
+<<<<<<< HEAD
 
             <!-- Featured Card Slider -->
             <div class="slider-container my-4">
@@ -132,13 +127,62 @@
                 <h2>Collection Stats</h2>
                 <div class="chart-placeholder">[Chart will render here]</div>
             </section>
+=======
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 2</h6>
+                <p>Type: Creature</p>
+                <p>Colour: Red</p>
+                <p>Rarity: Common</p>
+            </div>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 3</h6>
+                <p>Type: Creature</p>
+                <p>Colour: Green</p>
+                <p>Rarity: Famous</p>
+            </div>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 4</h6>
+                <p>Type: Creature</p>
+                <p>Colour: Black</p>
+                <p>Rarity: Rare</p>
+            </div>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 5</h6>
+                <p>Type: Creature</p>
+                <p>Colour: White</p>
+                <p>Rarity: Common</p>
+            </div>
+>>>>>>> 7fb848bd4ff4389e9dbef47ba71d7c5a58f8d150
         </div>
-    </main>
+        <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
+    </div>
 
-    <!-- External JS -->
-    <script src="../static/js/visualize.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <!-- Stats Section -->
+    <section class="stats-box">
+        <h2>Collection Stats</h2>
+        <div class="chart-placeholder">[Chart will render here]</div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Card slider functionality
+    function slideLeft() {
+        const slider = document.getElementById('cardSlider');
+        slider.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+
+    function slideRight() {
+        const slider = document.getElementById('cardSlider');
+        slider.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+</script>
+
+<!-- External JS from original visualize.js file -->
+<script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
+{% endblock %}
