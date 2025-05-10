@@ -1,5 +1,3 @@
-// app\static\js\dynamic_search.js
-
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('.add-cards-search');
     const cardGrid = document.getElementById('card-grid');
@@ -9,6 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let activeFilters = [];
     let usdToAud = 1.65; // Default fallback exchange rate (USD to AUD)
+
+    // Add a modal for version selection
+    createVersionSelectionModal();
 
     // Fetch real-time exchange rate from USD to AUD using Exchangerate-API
     fetch('https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD')
@@ -141,7 +142,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p class="card-text">Price: ${priceText}</p>
                 </div>
                 <div class="card-footer d-flex justify-content-between gap-3 pt-3">
-                    <button class="card-footer-btn rounded-pill px-4 py-2" id="add-${card.id}">
+                    <button class="card-footer-btn rounded-pill px-4 py-2 select-version-btn" 
+                        data-card-name="${card.name}" 
+                        data-card-id="${card.id}" 
+                        data-card-set="${setCode}">
                         <i class="bi bi-plus-lg"></i> Add
                     </button>
                     <button
@@ -157,6 +161,239 @@ document.addEventListener('DOMContentLoaded', function() {
 
             cardGrid.appendChild(cardElement);
         });
+
+        // Add event listeners for the Add buttons
+        document.querySelectorAll('.select-version-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const cardName = this.getAttribute('data-card-name');
+                const cardId = this.getAttribute('data-card-id');
+                openVersionSelector(cardName, cardId);
+            });
+        });
+    }
+
+    function openVersionSelector(cardName, cardId) {
+        const versionModal = document.getElementById('versionSelectorModal');
+        const versionModalBody = document.getElementById('version-selector-body');
+        const versionModalTitle = document.getElementById('versionModalLabel');
+        
+        // Update modal title
+        versionModalTitle.textContent = `Select Version: ${cardName}`;
+        
+        // Show loading state
+        versionModalBody.innerHTML = `
+            <div class="text-center w-100 py-5">
+                <div class="spinner-border text-light" role="status">
+                    <span class="visually-hidden">Loading versions...</span>
+                </div>
+            </div>
+        `;
+        
+        // Show the modal
+        const versionModalInstance = new bootstrap.Modal(versionModal);
+        versionModalInstance.show();
+        
+        // Fetch all printings of this card
+        fetch(`https://api.scryfall.com/cards/search?q=!"${cardName}" unique:prints`)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                populateVersionSelector(data.data || [], versionModalBody, versionModalInstance);
+            })
+            .catch(error => {
+                console.error('Error fetching card versions:', error);
+                versionModalBody.innerHTML = '<p class="text-danger">Error loading card versions. Please try again.</p>';
+            });
+    }
+
+    function populateVersionSelector(versions, modalBody, modalInstance) {
+        if (versions.length === 0) {
+            modalBody.innerHTML = '<p class="text-light">No versions found.</p>';
+            return;
+        }
+
+        // Sort versions by release date (newest first)
+        versions.sort((a, b) => {
+            return new Date(b.released_at) - new Date(a.released_at);
+        });
+
+        modalBody.innerHTML = `
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                ${versions.map(version => {
+                    const imageUrl = version.image_uris?.small || (version.card_faces && version.card_faces[0].image_uris?.small) || 'https://via.placeholder.com/146x204?text=No+Image';
+                    const setCode = (version.set || '').toUpperCase();
+                    const rarity = version.rarity
+                        ? version.rarity.charAt(0).toUpperCase() + version.rarity.slice(1)
+                        : '';
+                    
+                    // Fetch the USD price
+                    const usdPrice = version.prices?.usd;
+                    let priceText = 'N/A';
+
+                    // Convert to AUD if USD price is available
+                    if (usdPrice) {
+                        const audPrice = (usdPrice * usdToAud).toFixed(2);
+                        priceText = `A$${audPrice}`;
+                    }
+
+                    return `
+                        <div class="col">
+                            <div class="card bg-dark h-100">
+                                <div class="d-flex justify-content-center pt-3">
+                                    <img src="${imageUrl}" class="card-img-top" alt="${version.name}" style="width: 146px; height: 204px; object-fit: contain;">
+                                </div>
+                                <div class="card-body">
+                                    <h6 class="card-title">${version.set_name} (${setCode})</h6>
+                                    <p class="card-text"><strong>${rarity}</strong></p>
+                                    <p class="card-text">Price: ${priceText}</p>
+                                    ${version.collector_number ? `<p class="card-text">Collector #: ${version.collector_number}</p>` : ''}
+                                    ${version.frame_effects ? `<p class="card-text">Style: ${version.frame_effects.join(', ')}</p>` : ''}
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-primary w-100 add-version-btn" 
+                                        data-card-id="${version.id}" 
+                                        data-card-name="${version.name}"
+                                        data-set-code="${setCode}"
+                                        data-set-name="${version.set_name}"
+                                        data-rarity="${rarity}"
+                                        data-collector-number="${version.collector_number || ''}"
+                                        data-price="${usdPrice || ''}"
+                                        data-image="${imageUrl}">
+                                        Select This Version
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+
+        // Add event listeners for the version selection buttons
+        modalBody.querySelectorAll('.add-version-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const cardData = {
+                    id: this.getAttribute('data-card-id'),
+                    name: this.getAttribute('data-card-name'),
+                    setCode: this.getAttribute('data-set-code'),
+                    setName: this.getAttribute('data-set-name'),
+                    rarity: this.getAttribute('data-rarity'),
+                    collectorNumber: this.getAttribute('data-collector-number'),
+                    price: this.getAttribute('data-price'),
+                    image: this.getAttribute('data-image')
+                };
+                
+                addCardToCollection(cardData);
+                modalInstance.hide();
+            });
+        });
+    }
+
+    function addCardToCollection(cardData) {
+        // This is where you would add the card to your collection
+        console.log('Adding card to collection:', cardData);
+        
+        // Show a success message to the user
+        showToast(`Added ${cardData.name} (${cardData.setCode}) to your collection!`);
+        
+        // Here you would typically make an AJAX call to your backend
+        // to save this card to the user's collection
+        // For example:
+        /*
+        fetch('/api/collection/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(cardData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast(`Added ${cardData.name} (${cardData.setCode}) to your collection!`);
+            } else {
+                showToast('Failed to add card to collection.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error adding card to collection:', error);
+            showToast('Error adding card to collection.', 'error');
+        });
+        */
+    }
+
+    function showToast(message, type = 'success') {
+        // Create toast container if it doesn't exist
+        let toastContainer = document.getElementById('toast-container');
+        if (!toastContainer) {
+            toastContainer = document.createElement('div');
+            toastContainer.id = 'toast-container';
+            toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+            document.body.appendChild(toastContainer);
+        }
+
+        // Create toast element
+        const toastId = `toast-${Date.now()}`;
+        const toastEl = document.createElement('div');
+        toastEl.id = toastId;
+        toastEl.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'} border-0`;
+        toastEl.setAttribute('role', 'alert');
+        toastEl.setAttribute('aria-live', 'assertive');
+        toastEl.setAttribute('aria-atomic', 'true');
+
+        toastEl.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        `;
+
+        // Add toast to container
+        toastContainer.appendChild(toastEl);
+
+        // Initialize and show toast
+        const toast = new bootstrap.Toast(toastEl, { autohide: true, delay: 3000 });
+        toast.show();
+
+        // Remove toast after it's hidden
+        toastEl.addEventListener('hidden.bs.toast', function() {
+            toastEl.remove();
+        });
+    }
+
+    function createVersionSelectionModal() {
+        // Create modal element if it doesn't exist
+        if (!document.getElementById('versionSelectorModal')) {
+            const modalEl = document.createElement('div');
+            modalEl.className = 'modal fade';
+            modalEl.id = 'versionSelectorModal';
+            modalEl.tabIndex = '-1';
+            modalEl.setAttribute('aria-labelledby', 'versionModalLabel');
+            modalEl.setAttribute('aria-hidden', 'true');
+
+            modalEl.innerHTML = `
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content bg-dark text-light">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="versionModalLabel">Select Version</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body" id="version-selector-body">
+                            <!-- Content will be loaded dynamically -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modalEl);
+        }
     }
 
     function debounce(func, wait) {
@@ -170,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial message
     cardGrid.innerHTML = '<p class="text-light">Start typing to search for Magic cards.</p>';
 
-    // Handle modal opening and content loading
+    // Handle modal opening and content loading for details modal
     document.addEventListener('click', function(event) {
         const detailsButton = event.target.closest('.open-details-btn');
         if (!detailsButton) return;
@@ -305,22 +542,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     <!-- Details Pane -->
                     <div class="col-md-7">
                         <h3 style="font-weight: bold;" class="text-light">${card.name}</h3>
-                        <p class="text-light">${manaCost}</p>
-                        <p class="text-light">${typeLine}</p>
                         
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-light">Set: ${card.set_name} (${card.set.toUpperCase()})</span>
-                            <span class="text-light">Rarity: ${card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)}</span>
                         </div>
                         
                         <p class="text-light">Price: ${priceText}</p>
                         
-                        ${cardText}
-                        
                         ${legalityHtml}
                         
                         <div class="mt-4 d-flex gap-3 flex-wrap">
-                            <button class="details-btn rounded-pill px-4 py-2" id="add-to-collection-${card.id}">
+                            <button class="details-btn rounded-pill px-4 py-2 select-version-btn"
+                                data-card-name="${card.name}" 
+                                data-card-id="${card.id}">
                                 <i class="bi bi-plus-lg"></i> Add to Collection
                             </button>
                             <a href="${card.scryfall_uri}" target="_blank" class="details-btn rounded-pill px-4 py-2">
@@ -331,5 +565,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         `;
+
+        // Add event listener for the Add to Collection button in details modal
+        modalBody.querySelector('.select-version-btn').addEventListener('click', function() {
+            const cardName = this.getAttribute('data-card-name');
+            const cardId = this.getAttribute('data-card-id');
+            openVersionSelector(cardName, cardId);
+        });
     }
 });
