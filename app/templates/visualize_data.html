@@ -1,94 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    
-    <title>Visualize Data</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/visualize_data.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>My Magic: The Gathering Collection</h1>
+{% extends "base.html" %}
 
-        <!-- Filter Box -->
-        <section class="filters-box">
-            <h2>Filters</h2>
-            <form>
-                <input type="text" placeholder="Search by name...">
+{% block title %}trckd - My Collection{% endblock %}
 
-                <select>
-                    <option value="">Type</option>
-                    <option value="creature">Creature</option>
-                    <option value="spell">Spell</option>
-                </select>
+{% block extra_css %}
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../static/css/visual.css">
+    <link rel="stylesheet" href="../static/css/filters.css">
 
-                <select>
-                    <option value="">Colour</option>
-                    <option value="red">Red</option>
-                    <option value="blue">Blue</option>
-                    <option value="green">Green</option>
-                    <option value="black">Black</option>
-                </select>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-                <button type="submit">Apply Filters</button>
-            </form>
-        </section>
+{% endblock %}  
 
-        <!-- Cards Display -->
-        <section class="card-display">
+{% block content %}
+<div class="container">
+    <h1>My Magic: The Gathering Collection</h1>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar d-flex align-items-center justify-content-start p-3">
+        <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
+
+        <select id="typeFilter" class="form-control mr-2">
+            <option value="">Types</option>
+            <option value="Creature">Creature</option>
+            <option value="Spell">Spell</option>
+        </select>
+
+        <select id="colorFilter" class="form-control mr-2">
+            <option value="">Colours</option>
+            <option value="Blue">Blue</option>
+            <option value="Red">Red</option>
+            <option value="Black">Black</option>
+            <option value="Green">Green</option>
+            <option value="White">White</option>
+        </select>
+
+        <select id="rarityFilter" class="form-control mr-2">
+            <option value="">Rarities</option>
+            <option value="Common">Common</option>
+            <option value="Rare">Rare</option>
+            <option value="Famous">Famous</option>
+        </select>
+
+        <button id="applyFilters" class="btn btn-primary">Apply</button>
+    </div>
+
+    <!-- Featured Card Slider -->
+    <div class="slider-container my-4">
+        <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
+        <div class="card-slider" id="cardSlider">
             <div class="card">
-                <div class="card-image">Card Image</div>
-                <h3>Card Name</h3>
+                <div class="card-image">[Image]</div>
+                <h6>Card 1</h6>
+                <p>Type: Spell</p>
+                <p>Colour: Blue</p>
+                <p>Rarity: Rare</p>
+            </div>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 2</h6>
+                <p>Type: Creature</p>
+                <p>Colour: Red</p>
+                <p>Rarity: Common</p>
+            </div>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 3</h6>
                 <p>Type: Creature</p>
                 <p>Colour: Green</p>
-                <p>Rarity: Rare</p>
-                <p>Qty: 1</p>
-                <div class="card-actions">
-                    <button>Edit</button>
-                    <button>Delete</button>
-                </div>
-                <div class="card">
-                    <div class="card-image">Card Image</div>
-                    <h3>Card Name</h3>
-                    <p>Type: Creature</p>
-                    <p>Colour: Red</p>
-                    <p>Rarity: Rare</p>
-                    <p>Qty: 1</p>
-                    <div class="card-actions">
-                        <button>Edit</button>
-                        <button>Delete</button>
-                    </div>
-                    <div class="card">
-                        <div class="card-image">Card Image</div>
-                        <h3>Card Name</h3>
-                        <p>Type: Creature</p>
-                        <p>Colour: Blue</p>
-                        <p>Rarity: Rare</p>
-                        <p>Qty: 1</p>
-                        <div class="card-actions">
-                            <button>Edit</button>
-                            <button>Delete</button>
-                        </div>
-                        <div class="card">
-                            <div class="card-image">Card Image</div>
-                            <h3>Card Name</h3>
-                            <p>Type: Creature</p>
-                            <p>Colour: Black</p>
-                            <p>Rarity: Rare</p>
-                            <p>Qty: 1</p>
-                            <div class="card-actions">
-                                <button>Edit</button>
-                                <button>Delete</button>
-                            </div>
+                <p>Rarity: Famous</p>
             </div>
-
-        </section>
-
-        <!-- Stats Section -->
-        <section class="stats-box">
-            <h2>Collection Stats</h2>
-            <div class="chart-placeholder">[Chart goes here]</div>
-        </section>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 4</h6>
+                <p>Type: Creature</p>
+                <p>Colour: Black</p>
+                <p>Rarity: Rare</p>
+            </div>
+            <div class="card">
+                <div class="card-image">[Image]</div>
+                <h6>Card 5</h6>
+                <p>Type: Creature</p>
+                <p>Colour: White</p>
+                <p>Rarity: Common</p>
+            </div>
+        </div>
+        <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
     </div>
-</body>
-</html>
+
+    <!-- Stats Section -->
+    <section class="stats-box">
+        <h2>Collection Stats</h2>
+        <div class="chart-placeholder">[Chart will render here]</div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Card slider functionality
+    function slideLeft() {
+        const slider = document.getElementById('cardSlider');
+        slider.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+
+    function slideRight() {
+        const slider = document.getElementById('cardSlider');
+        slider.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+</script>
+
+<!-- External JS from original visualize.js file -->
+<script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
+{% endblock %}

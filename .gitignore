@@ -10,3 +10,9 @@ __pycache__/
 .vscode/
 *.swp
 .DS_Store
+
+# ignore downloaded card data
+scryfall_data.json
+/temp_downloads/
+card_import_cache/
+/instance/app.db

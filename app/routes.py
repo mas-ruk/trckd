@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, login, db
 from app.models import User
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     login_form = LoginForm(prefix='login')
@@ -85,6 +86,8 @@ def upload_csv():
 @app.route('/collection')
 @login_required
 def collection():
+    # Import Card only when this route is accessed
+    from app.models import Card
     return render_template('visualize_data.html')
 
 @login.user_loader
@@ -96,3 +99,4 @@ def load_user(id):
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
