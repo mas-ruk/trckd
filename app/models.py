@@ -16,9 +16,24 @@ class Card(db.Model):
     type = db.Column(db.String(100))
     color = db.Column(db.String(50))
     rarity = db.Column(db.String(50))
-    user_ID = db.Column(db.Integer, db.ForeignKey('user.user_ID'), nullable=False)  
+    user_ID = db.Column(db.Integer, db.ForeignKey('user.user_ID'), nullable=False)
+    
+    # Add the new fields here
+    set_code = db.Column(db.String(50))  
+    set_name = db.Column(db.String(100))  
+    collector_number = db.Column(db.String(20))  
+    mana_cost = db.Column(db.String(50))  
+    cmc = db.Column(db.Float)  
+    type_line = db.Column(db.String(100))  
+    oracle_text = db.Column(db.String(255))
+    power = db.Column(db.String(20))  
+    toughness = db.Column(db.String(20))  
+    image_uris = db.Column(db.JSON)  
+    color_identity = db.Column(db.String(50))  
+    lang = db.Column(db.String(10))  
 
     def __repr__(self):
         return f'<Card {self.name}>'
+
 
 

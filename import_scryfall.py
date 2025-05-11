@@ -39,7 +39,7 @@ def import_cards_to_db(cards_data, limit=200):
             
             # Prepare card data
             new_card = Card(
-                id=card_data['id'],
+                card_ID=card_data['id'], 
                 name=card_data['name'],
                 set_code=card_data['set'],
                 set_name=card_data['set_name'],
