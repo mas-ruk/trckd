@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, HiddenField, BooleanField
 from wtforms.validators import DataRequired, Email, EqualTo
-import email_validator
+#import email_validator
 
 class LoginForm(FlaskForm):
     form_name = HiddenField(default='login_form')

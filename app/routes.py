@@ -1,12 +1,14 @@
-from flask import render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from flask_login import login_user, login_required, logout_user
 from app.forms import LoginForm, RegisterForm
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import app, login, db
-from app.models import User
 
+from .models import User
+from .extensions import db
 
-@app.route('/', methods=['GET', 'POST'])
+main_bp = Blueprint('main', __name__)
+
+@main_bp.route('/', methods=['GET', 'POST'])
 def index():
     login_form = LoginForm(prefix='login')
     register_form = RegisterForm(prefix='register')
@@ -40,10 +42,12 @@ def index():
             db.session.add(new_user)
             db.session.commit()
             if register_remember:
+                session.permanent = True
                 login_user(user, remember=True)
             else:
-                login_user(user)
-            return redirect(url_for('collection'))
+                session.permanent = False
+                login_user(user, remember=False)
+            return redirect(url_for('main.collection'))
 
     elif login_form.submit.data and login_form.validate_on_submit():
         login_email = login_form.login_email.data
@@ -64,39 +68,35 @@ def index():
                 login_user(user, remember=True)
             else:
                 login_user(user)
-            return redirect(url_for('collection'))
+            return redirect(url_for('main.collection'))
 
     return render_template('homepage.html', login_form=login_form, register_form=register_form, active_tab=active_tab)
 
-@app.route('/upload') 
+@main_bp.route('/upload') 
 @login_required
 def upload_data_view():
     return render_template('upload_data.html')
 
-@app.route('/search')
+@main_bp.route('/search')
 @login_required
 def upload_search():
     return render_template('search.html')
 
-@app.route('/upload_csv')
+@main_bp.route('/upload_csv')
 @login_required
 def upload_csv():
     return render_template('upload_csv.html')
 
-@app.route('/collection')
+@main_bp.route('/collection')
 @login_required
 def collection():
     # Import Card only when this route is accessed
     from app.models import Card
     return render_template('visualize_data.html')
 
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
-
-@app.route('/logout')
+@main_bp.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 
