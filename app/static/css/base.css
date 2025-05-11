@@ -18,8 +18,8 @@
 
 /* Collapsed sidebar - only shows icons */
 .sidebar.collapsed {
-    width: 70px;
-    min-width: 70px;
+    width: 80px;
+    min-width: 80px;
 }
 
 /* Hide text in collapsed mode */
@@ -65,12 +65,9 @@
     overflow-x: hidden;
 }
 
-/* Replace the existing sidebar-toggle styles with these */
 .sidebar-toggle {
     position: absolute;
     right: -15px;
-    top: 50%; /* Position at middle height */
-    transform: translateY(-50%); /* Center it vertically */
     background-color: #2f243a;
     color: white;
     border: none;
