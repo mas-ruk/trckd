@@ -1,5 +1,6 @@
 # import_scryfall.py
 import requests
+import json
 from app import app, db
 from app.config import Config
 from app.models import Card
@@ -38,26 +39,26 @@ def import_cards_to_db(cards_data, limit=200):
                 continue
             
             # Prepare card data
-            new_card = Card(
-                card_ID=card_data['id'], 
-                name=card_data['name'],
-                set_code=card_data['set'],
-                set_name=card_data['set_name'],
-                collector_number=card_data['collector_number'],
-                rarity=card_data['rarity'],
-                mana_cost=card_data.get('mana_cost'),
-                cmc=card_data['cmc'],
-                type_line=card_data['type_line'],
-                oracle_text=card_data.get('oracle_text', ''),
-                power=card_data.get('power'),
-                toughness=card_data.get('toughness'),
-                image_uris=card_data['image_uris'],
-                color_identity=card_data['color_identity'],
-                lang=card_data['lang']
-            )
+          new_card = Card(
+          card_ID=card_data['id'], 
+          name=card_data['name'],
+          set_code=card_data['set'],
+          set_name=card_data['set_name'],
+          collector_number=card_data['collector_number'],
+          rarity=card_data['rarity'],
+          mana_cost=card_data.get('mana_cost'),
+          cmc=card_data['cmc'],
+          type_line=card_data['type_line'],
+          oracle_text=card_data.get('oracle_text', ''),
+          power=card_data.get('power'),
+          toughness=card_data.get('toughness'),
+          image_uris=json.dumps(card_data.get('image_uris', {})),  # Convert dict to string
+          color_identity=json.dumps(card_data.get('color_identity', [])),  # Convert list to string
+          lang=card_data['lang']
+         )
             
-            db.session.add(new_card)
-            
+    db.session.add(new_card)
+         
             if i % 100 == 0:
                 print(f"Processed {i} cards...")
                 db.session.commit()
