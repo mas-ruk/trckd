@@ -141,20 +141,44 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isDoubleFaced) {
                 // get the flip button as a var
                 const flipBtn = document.querySelector(`#flip-${card.id}`);
+                const imgElement = cardElement.querySelector('img');
+                
+                let isFlip = false;
+
+                // add animation to image
+                imgElement.classList.add('card-flip-animation');
 
                 // check if flip button of item is pressed - event listener
                 flipBtn.addEventListener('click', () => {
-                    if (cardElement.querySelector('img').getAttribute('data-flip') === '1') {
-                        // set the image to the other image
-                        cardElement.querySelector('img').src = card.card_faces[1].image_uris.normal;
+                    if (isFlip) return;
 
-                        // set the value of the data-flip attribute depending on the value of data-flip
-                        cardElement.querySelector('img').setAttribute('data-flip', '0');
+                    // animation initiate
+                    isFlip = true;
+                    imgElement.classList.add('flipping');
 
-                    } else if (cardElement.querySelector('img').getAttribute('data-flip') === '0') {
-                        cardElement.querySelector('img').src = card.card_faces[0].image_uris.normal;
-                        cardElement.querySelector('img').setAttribute('data-flip', '1');
-                    }
+                    // animation must complete before changing img
+                    setTimeout(() => {
+                        const img = cardElement.querySelector('img');
+                        const currFlip = cardElement.querySelector('img').getAttribute('data-flip');
+                        
+                        if (currFlip === '0') {
+                            // set the image to the other image
+                            img.src = card.card_faces[1].image_uris.normal || img.src;
+
+                            // set the value of the data-flip attribute depending on the value of data-flip
+                            img.setAttribute('data-flip', '1');
+
+                        } else if (currFlip === '1') {
+                            img.src = card.card_faces[0].image_uris.normal || img.src;
+                            img.setAttribute('data-flip', '1');
+                        }
+
+                        // Remove the flipping class after animation completes
+                        setTimeout(() => {
+                            imgElement.classList.remove('flipping');
+                            isFlip = false;
+                        }, 300); // Full animation duration
+                    }, 600); 
                 });
             }
         });
