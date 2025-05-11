@@ -1,7 +1,7 @@
 from flask import render_template
-from flask_login import login_required, current_user
 from app import app
-from app.models import Card
+import requests
+
 
 @app.route('/')
 def index():
@@ -21,8 +21,14 @@ def upload_csv():
 
 @app.route('/collection')
 def collection():
-    user_cards = Card.query_filter_by(user_ID=current_user.userID).all()
-    return render_template('visualize_data.html')
+    response = requests.get('https://api.scryfall.com/cards/search?q=f%3Astandard&order=popularity&page=1')
+    
+    cards = []
+    if response.status_code == 200:
+        data = response.json()
+        cards = data.get('data', [])
+
+    return render_template('visualize_data.html', cards=cards)
 
 
 

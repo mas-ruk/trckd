@@ -4,12 +4,11 @@
 
 {% block extra_css %}
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="../static/css/visual.css">
-    <link rel="stylesheet" href="../static/css/filters.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/visual.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/filters.css') }}">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 {% endblock %}  
 
 {% block content %}
@@ -46,44 +45,20 @@
     </div>
 
     <!-- Featured Card Slider -->
-    <div class="slider-container my-4">
+    <div class="card-slider-wrapper position-relative">
         <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
-        <div class="card-slider" id="cardSlider">
-            <div class="card">
-                <div class="card-image">[Image]</div>
-                <h6>Card 1</h6>
-                <p>Type: Spell</p>
-                <p>Colour: Blue</p>
-                <p>Rarity: Rare</p>
-            </div>
-            <div class="card">
-                <div class="card-image">[Image]</div>
-                <h6>Card 2</h6>
-                <p>Type: Creature</p>
-                <p>Colour: Red</p>
-                <p>Rarity: Common</p>
-            </div>
-            <div class="card">
-                <div class="card-image">[Image]</div>
-                <h6>Card 3</h6>
-                <p>Type: Creature</p>
-                <p>Colour: Green</p>
-                <p>Rarity: Famous</p>
-            </div>
-            <div class="card">
-                <div class="card-image">[Image]</div>
-                <h6>Card 4</h6>
-                <p>Type: Creature</p>
-                <p>Colour: Black</p>
-                <p>Rarity: Rare</p>
-            </div>
-            <div class="card">
-                <div class="card-image">[Image]</div>
-                <h6>Card 5</h6>
-                <p>Type: Creature</p>
-                <p>Colour: White</p>
-                <p>Rarity: Common</p>
-            </div>
+        <div class="card-slider d-flex" id="cardSlider">
+            {% for card in cards %}
+                <div class="card">
+                    <div class="card-image">
+                        <img src="{{ card.image_uris.normal if card.image_uris else '' }}" alt="{{ card.name }}" />
+                    </div>
+                    <h6>{{ card.name }}</h6>
+                    <p>Type: {{ card.type_line }}</p>
+                    <p>Colour: {{ card.colors | join(', ') }}</p>
+                    <p>Rarity: {{ card.rarity.title() }}</p>
+                </div>
+            {% endfor %}
         </div>
         <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
     </div>
@@ -110,6 +85,6 @@
     }
 </script>
 
-<!-- External JS from original visualize.js file -->
 <script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
 {% endblock %}
+
