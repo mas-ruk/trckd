@@ -100,7 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         cards.forEach(card => {
-            const imageUrl = card.image_uris?.normal || 'https://via.placeholder.com/223x310?text=No+Image';
+            // checks original face, if doesn't work (dual-sided cards) will print first face, and if all else fails, placeholder
+            const imageUrl = card.image_uris?.normal || card.card_faces?.[0]?.image_uris?.normal || 'https://via.placeholder.com/223x310?text=No+Image';
             const setCode = (card.set || '').toUpperCase();
             const rarity = card.rarity
                 ? card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)
