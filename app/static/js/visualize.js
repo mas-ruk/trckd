@@ -11,4 +11,22 @@ document.addEventListener("DOMContentLoaded", function () {
       slider.scrollBy({ left:220, behavior: 'smooth' });
     });
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("createCollectionForm");
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("collectionName").value.trim();
+        const desc = document.getElementById("collectionDescription").value.trim();
+
+        if (name === "" || desc === "") {
+            alert("Please fill in all fields.");
+        } else {
+            alert("Collection created successfully!");
+            
+        }
+    });
+});
+
   

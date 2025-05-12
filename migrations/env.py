@@ -1,6 +1,5 @@
 import logging
 from logging.config import fileConfig
-
 from flask import current_app
 from alembic import context
 
@@ -12,7 +11,6 @@ config = context.config
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
 logger = logging.getLogger('alembic.env')
-
 
 def get_engine():
     """
@@ -26,7 +24,6 @@ def get_engine():
         # Flask-SQLAlchemy >=3
         return current_app.extensions['migrate'].db.engine
 
-
 def get_engine_url():
     """
     Function to return the database URL as a string, safely escaping any percent signs.
@@ -36,14 +33,12 @@ def get_engine_url():
     except AttributeError:
         return str(get_engine().url).replace('%', '%%')
 
-
 # Set the SQLAlchemy URL dynamically in the Alembic config
 config.set_main_option('sqlalchemy.url', get_engine_url())
 
 # target_metadata should point to the metadata of your models
 # Make sure that your models are imported before this runs (e.g., by importing them in the app)
 target_db = current_app.extensions['migrate'].db
-
 
 def get_metadata():
     """
@@ -53,7 +48,6 @@ def get_metadata():
     if hasattr(target_db, 'metadatas'):
         return target_db.metadatas[None]
     return target_db.metadata
-
 
 def run_migrations_offline():
     """
@@ -67,7 +61,6 @@ def run_migrations_offline():
 
     with context.begin_transaction():
         context.run_migrations()
-
 
 def run_migrations_online():
     """
@@ -97,7 +90,6 @@ def run_migrations_online():
 
         with context.begin_transaction():
             context.run_migrations()
-
 
 # Run migrations based on the mode (offline or online)
 if context.is_offline_mode():
