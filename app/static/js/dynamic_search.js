@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         modalBody.innerHTML = `
             <div class="row row-cols-1 row-cols-md-3 g-4">
-                ${versions.map(version => {
+                ${versions.map((version, index) => {
                     const imageUrl = version.image_uris?.small || (version.card_faces && version.card_faces[0].image_uris?.small) || 'https://via.placeholder.com/146x204?text=No+Image';
                     const setCode = (version.set || '').toUpperCase();
                     const rarity = version.rarity
