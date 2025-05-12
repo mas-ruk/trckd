@@ -9,7 +9,7 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-{% endblock %}  
+{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -44,29 +44,33 @@
         <button id="applyFilters" class="btn btn-primary">Apply</button>
     </div>
 
-    <!-- Featured Card Slider -->
-    <div class="card-slider-wrapper position-relative">
+    <!-- Slider -->
+    <div class="slider-container d-flex align-items-center my-4">
         <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
-        <div class="card-slider d-flex" id="cardSlider">
+
+        <div id="cardSlider" class="d-flex overflow-auto" style="gap: 1rem; scroll-behavior: smooth;">
             {% for card in cards %}
-                <div class="card">
-                    <div class="card-image">
-                        <img src="{{ card.image_uris.normal if card.image_uris else '' }}" alt="{{ card.name }}" />
-                    </div>
-                    <h6>{{ card.name }}</h6>
-                    <p>Type: {{ card.type_line }}</p>
-                    <p>Colour: {{ card.colors | join(', ') }}</p>
-                    <p>Rarity: {{ card.rarity.title() }}</p>
+            <div class="card" style="width: 14rem; flex: 0 0 auto;">
+                <img src="{{ card.image_uris['normal'] if card.image_uris and 'normal' in card.image_uris else url_for('static', filename='img/placeholder.png') }}" 
+                     class="card-img-top" 
+                     alt="{{ card.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ card.name }}</h5>
+                    <p class="card-text">Type: {{ card.type_line }}</p>
+                    <p class="card-text">Colour: {{ card.colors | join(', ') }}</p>
+                    <p class="card-text">Rarity: {{ card.rarity.title() }}</p>
                 </div>
+            </div>
             {% endfor %}
         </div>
+
         <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
     </div>
 
     <!-- Create Collection Form -->
     <div class="mt-4">
         <h2 class="mb-4">Create a New Collection</h2>
-        
+
         <div class="collection-form">
             <form id="createCollectionForm" method="POST">
                 <div class="mb-3">
@@ -108,4 +112,3 @@
 
 <script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
 {% endblock %}
-
