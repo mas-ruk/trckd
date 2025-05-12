@@ -86,7 +86,6 @@ def upload_csv():
 @app.route('/collection')
 @login_required
 def collection():
-    # Import Card only when this route is accessed
     from app.models import Card
     return render_template('visualize_data.html')
 
