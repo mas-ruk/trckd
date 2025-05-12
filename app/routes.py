@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, login_required, logout_user
-from app import app, db, login  # Import app, db, and login from app (no need to import LoginManager here)
-from app.models import Card, User  # Import your models
+from app import app, db, login  
+from app.models import Card, User  
 from app.forms import LoginForm, RegisterForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
