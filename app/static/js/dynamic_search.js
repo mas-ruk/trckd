@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     return `
                         <div class="col">
-                            <div class="card bg-dark h-100">
+                            <div class="card bg-dark">
                                 <div class="d-flex justify-content-center pt-3">
                                     <img src="${imageUrl}" class="card-img-top" alt="${version.name}" style="width: 146px; height: 204px; object-fit: contain;">
                                 </div>
@@ -251,17 +251,48 @@ document.addEventListener('DOMContentLoaded', function() {
                                     ${version.collector_number ? `<p class="card-text">Collector #: ${version.collector_number}</p>` : ''}
                                     ${version.frame_effects ? `<p class="card-text">Style: ${version.frame_effects.join(', ')}</p>` : ''}
                                 </div>
-                                <div class="card-footer">
-                                    <button class="btn btn-primary w-100 add-version-btn" 
-                                        data-card-id="${version.id}" 
+                                <div class="card-footer flex-column align-items-start">
+                                    <div class="w-100 mb-3">
+                                        <!-- Language Section -->
+                                        <label for="language-${index}"> Language:</label>
+                                        <select name="language" id="language-${index}">
+                                            <option value="english"> English </option>
+                                            <option value="french"> French </option>
+                                            <option value="german"> German </option>
+                                            <option value="spanish"> Spanish </option>
+                                            <option value="italian"> Italian </option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Condition Section -->
+                                    <div class="w-100 mb-3">    
+                                        <label for="condition-${index}"> Condition:</label>
+                                        <select name="condition" id="condition-${index}">
+                                            <option value="near-mint"> Near Mint </option>
+                                            <option value="lightly-played"> Lightly Played </option>
+                                            <option value="moderately-played"> Moderately Played </option>
+                                            <option value="heavily-played"> Heavily Played </option>
+                                            <option value="damaged"> Damaged </option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Foiling Section -->
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" value="foil" id="foil-${index}">
+                                        <label class="form-check-label" for="foil-${index}">Foil</label>
+                                    </div>
+
+                                    <button class="details-btn w-100 py-2 rounded-pill mt-2 add-version-btn"
+                                        data-card-id="${version.id}"
                                         data-card-name="${version.name}"
                                         data-set-code="${setCode}"
                                         data-set-name="${version.set_name}"
                                         data-rarity="${rarity}"
                                         data-collector-number="${version.collector_number || ''}"
-                                        data-price="${usdPrice || ''}"
-                                        data-image="${imageUrl}">
-                                        Select This Version
+                                        data-price="${priceText}"
+                                        data-image="${imageUrl}"
+                                        data-index="${index}">
+                                        <i class="bi bi-plus-lg"></i> Add to Collection
                                     </button>
                                 </div>
                             </div>
@@ -274,6 +305,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add event listeners for the version selection buttons
         modalBody.querySelectorAll('.add-version-btn').forEach(button => {
             button.addEventListener('click', function() {
+                const index = this.getAttribute('data-index');
+                const language = document.getElementById(`language-${index}`).value;
+                const condition = document.getElementById(`condition-${index}`).value;
+                const isFoil = document.getElementById(`foil-${index}`).checked;
+
                 const cardData = {
                     id: this.getAttribute('data-card-id'),
                     name: this.getAttribute('data-card-name'),
@@ -282,7 +318,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     rarity: this.getAttribute('data-rarity'),
                     collectorNumber: this.getAttribute('data-collector-number'),
                     price: this.getAttribute('data-price'),
-                    image: this.getAttribute('data-image')
+                    image: this.getAttribute('data-image'),
+                    language,
+                    condition,
+                    foil: isFoil
                 };
                 
                 addCardToCollection(cardData);

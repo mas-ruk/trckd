@@ -58,3 +58,30 @@
 .details-btn:not(:hover) {
     transition: 0.3s ease;
 }
+
+#add-details-card-btn {
+  background-color: #2f243a;
+  color: white;
+  border: none;
+  border-radius: 50px !important;
+  padding: 10px 20px;
+  font-size: 0.9em;
+  font-weight: bold;
+  box-shadow: 0 0 8px 4px rgba(81, 58, 105, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+#add-details-card-btn:hover {
+  background-color: #3d2c4e;
+  box-shadow: 0 0 12px 6px rgba(81, 58, 105, 0.7);
+  transform: scale(1.03);
+}
+
+#add-details-card-btn i {
+  font-size: 1em;
+}
