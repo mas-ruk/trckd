@@ -1,24 +1,32 @@
 // app\static\js\dynamic_search.js
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize elements
     const searchInput = document.querySelector('.add-cards-search');
     const cardGrid = document.getElementById('card-grid');
     const filterButton = document.querySelector('.filter-button');
     const filterDropdown = document.getElementById('filter-dropdown');
     const clearFiltersButton = document.getElementById('clear-filters-btn');
-
+    const toggleViewBtn = document.getElementById('toggleViewBtn');
+    
+    // Track current view state (default: grid view)
+    let isGridView = true;
+    
+    // Track active filters
     let activeFilters = [];
-
+    
     // Toggle filter dropdown visibility
-    filterButton.addEventListener('click', function() {
-        filterDropdown.style.display = filterDropdown.style.display === 'block' ? 'none' : 'block';
-    });
-
+    if (filterButton && filterDropdown) {
+        filterButton.addEventListener('click', function() {
+            filterDropdown.style.display = filterDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+    }
+    
     // Handle filter option selection
     document.querySelectorAll('.filter-option').forEach(option => {
         option.addEventListener('click', function() {
             const filter = option.getAttribute('data-filter');
-
+            
             if (option.classList.contains('selected')) {
                 option.classList.remove('selected');
                 activeFilters = activeFilters.filter(f => f !== filter);
@@ -28,20 +36,47 @@ document.addEventListener('DOMContentLoaded', function() {
                     activeFilters.push(filter);
                 }
             }
-
+            
             fetchCards();
         });
     });
-
+    
     // Clear filters
-    clearFiltersButton.addEventListener('click', function() {
-        activeFilters = [];
-        document.querySelectorAll('.filter-option.selected').forEach(opt => opt.classList.remove('selected'));
-        fetchCards();
-    });
-
+    if (clearFiltersButton) {
+        clearFiltersButton.addEventListener('click', function() {
+            activeFilters = [];
+            document.querySelectorAll('.filter-option.selected').forEach(opt => opt.classList.remove('selected'));
+            fetchCards();
+        });
+    }
+    
     // Debounced input listener for search bar
-    searchInput.addEventListener('input', debounce(fetchCards, 300));
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(fetchCards, 300));
+    }
+    
+    // Toggle view functionality
+    if (toggleViewBtn) {
+        toggleViewBtn.addEventListener('click', function() {
+            isGridView = !isGridView;
+            
+            if (isGridView) {
+                cardGrid.classList.remove('list-view');
+                cardGrid.classList.add('grid-view');
+                toggleViewBtn.innerHTML = '<i class="bi bi-list"></i> List View / <i class="bi bi-grid"></i> Grid View';
+            } else {
+                cardGrid.classList.remove('grid-view'); 
+                cardGrid.classList.add('list-view');
+                toggleViewBtn.innerHTML = '<i class="bi bi-grid"></i> Grid View / <i class="bi bi-list"></i> List View';
+            }
+            
+            // If we have cards displayed, refresh the view without re-fetching
+            const cards = cardGrid.querySelectorAll('.card');
+            if (cards.length > 0 && !cardGrid.querySelector('.spinner-border')) {
+                updateCardDisplay();
+            }
+        });
+    }
 
     function fetchCards() {
         let query = searchInput.value.trim();
@@ -53,7 +88,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let filters = activeFilters.join(' ');
         let searchQuery = query ? `name:${query}` : '';
-
 
         // If both are empty, show default message and return
         if (!query && activeFilters.length === 0) {
@@ -98,6 +132,9 @@ document.addEventListener('DOMContentLoaded', function() {
             cardGrid.innerHTML = '<p class="text-light">No cards found.</p>';
             return;
         }
+        
+        // Apply current view class
+        cardGrid.classList.add(isGridView ? 'grid-view' : 'list-view');
 
         cards.forEach(card => {
             const imageUrl = card.image_uris?.normal || 'https://via.placeholder.com/223x310?text=No+Image';
@@ -107,8 +144,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 : '';
 
             const cardElement = document.createElement('div');
-            cardElement.className = 'card bg-dark text-light m-3';
-            cardElement.style.width = '18rem';
+            cardElement.className = 'card bg-dark text-light';
+            
+            // Different styles based on view
+            if (isGridView) {
+                cardElement.classList.add('m-3');
+                cardElement.style.width = '18rem';
+            }
 
             cardElement.innerHTML = `
                 <img src="${imageUrl}" class="card-img-top" alt="${card.name}">
@@ -127,6 +169,21 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
 
             cardGrid.appendChild(cardElement);
+        });
+    }
+    
+    // Function to update display without re-fetching cards
+    function updateCardDisplay() {
+        const cards = Array.from(cardGrid.querySelectorAll('.card'));
+        
+        cards.forEach(card => {
+            if (isGridView) {
+                card.classList.add('m-3');
+                card.style.width = '18rem';
+            } else {
+                card.classList.remove('m-3');
+                card.style.width = 'auto';
+            }
         });
     }
 
