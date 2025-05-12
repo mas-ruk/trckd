@@ -100,8 +100,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         cards.forEach(card => {
-            const imageUrl = card.image_uris?.normal || 'https://via.placeholder.com/223x310?text=No+Image';
+            // checks original face, if doesn't work (dual-sided cards) will print first face, and if all else fails, placeholder
+            const imageUrl = card.image_uris?.normal || card.card_faces?.[0]?.image_uris?.normal || 'https://via.placeholder.com/223x310?text=No+Image';
             const setCode = (card.set || '').toUpperCase();
+            const isDoubleFaced = !!card.card_faces?.[1]; // checks if API card faces return more than 1 to check if card is double faced
+
+            const flipButtonHTML = isDoubleFaced
+                ? `<button class="card-footer-btn rounded-pill px-4 py-2" id="flip-${card.id}">
+                    <i class="bi bi-arrow-repeat"></i> Flip
+                </button>`
+                : '';
+
             const rarity = card.rarity
                 ? card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)
                 : '';
@@ -111,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
             cardElement.style.width = '18rem';
 
             cardElement.innerHTML = `
-                <img src="${imageUrl}" class="card-img-top" alt="${card.name}">
+                <img src="${imageUrl}" class="card-img-top" alt="${card.name}" data-flip="0">
                 <div class="card-body">
                     <h5 class="card-title">${card.name}</h5>
                     <p class="card-text">${card.set_name || ''} (${setCode}) | <strong>${rarity}</strong></p>
@@ -123,10 +132,55 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button class="card-footer-btn rounded-pill px-4 py-2" id="details-${card.id}">
                         <i class="bi bi-info-circle"></i> Details
                     </button>
+                    ${flipButtonHTML}
                 </div>
             `;
 
             cardGrid.appendChild(cardElement);
+
+            if (isDoubleFaced) {
+                // get the flip button as a var
+                const flipBtn = document.querySelector(`#flip-${card.id}`);
+                const imgElement = cardElement.querySelector('img');
+                
+                let isFlip = false;
+
+                // add animation to image
+                imgElement.classList.add('card-flip-animation');
+
+                // check if flip button of item is pressed - event listener
+                flipBtn.addEventListener('click', () => {
+                    if (isFlip) return;
+
+                    // animation initiate
+                    isFlip = true;
+                    imgElement.classList.add('flipping');
+
+                    // animation must complete before changing img
+                    setTimeout(() => {
+                        const img = cardElement.querySelector('img');
+                        const currFlip = cardElement.querySelector('img').getAttribute('data-flip');
+                        
+                        if (currFlip === '0') {
+                            // set the image to the other image
+                            img.src = card.card_faces[1].image_uris.normal || img.src;
+
+                            // set the value of the data-flip attribute depending on the value of data-flip
+                            img.setAttribute('data-flip', '1');
+
+                        } else if (currFlip === '1') {
+                            img.src = card.card_faces[0].image_uris.normal || img.src;
+                            img.setAttribute('data-flip', '1');
+                        }
+
+                        // Remove the flipping class after animation completes
+                        setTimeout(() => {
+                            imgElement.classList.remove('flipping');
+                            isFlip = false;
+                        }, 300); // Full animation duration
+                    }, 600); 
+                });
+            }
         });
     }
 
