@@ -8,6 +8,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const clearFiltersButton = document.getElementById('clear-filters-btn');
 
     let activeFilters = [];
+    let usdToAud = 1.65; // Default fallback exchange rate (USD to AUD)
+
+    // Fetch real-time exchange rate from USD to AUD using Exchangerate-API
+    fetch('https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD')
+        .then(res => res.json())
+        .then(data => {
+            if (data.result === "success") {
+                usdToAud = data.rates.AUD; // Update the exchange rate if the API call is successful
+            } else {
+                console.error('Error fetching exchange rate');
+            }
+        })
+        .catch(err => console.error('Failed to load exchange rate:', err));
 
     // Toggle filter dropdown visibility
     filterButton.addEventListener('click', function() {
@@ -114,6 +127,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const rarity = card.rarity
                 ? card.rarity.charAt(0).toUpperCase() + card.rarity.slice(1)
                 : '';
+            
+            // Fetch the USD price
+            const usdPrice = card.prices?.usd;
+            let priceText = 'Price data not available';
+
+            // Convert to AUD if USD price is available
+            if (usdPrice) {
+                const audPrice = (usdPrice * usdToAud).toFixed(2);
+                priceText = `A$${audPrice}`;
+            }
 
             const cardElement = document.createElement('div');
             cardElement.className = 'card bg-dark text-light m-3';
@@ -124,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="card-body">
                     <h5 class="card-title">${card.name}</h5>
                     <p class="card-text">${card.set_name || ''} (${setCode}) | <strong>${rarity}</strong></p>
+                    <p class="card-text">Price: ${priceText}</p>
                 </div>
                 <div class="card-footer d-flex justify-content-between pt-3">
                     <button class="card-footer-btn rounded-pill px-4 py-2" id="add-${card.id}">
