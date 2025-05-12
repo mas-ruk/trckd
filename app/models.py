@@ -32,7 +32,7 @@ class Card(db.Model):
     power = db.Column(db.String(20))  
     toughness = db.Column(db.String(20))  
 
-    # for storing JSON as plain text in SQLite
+  
     image_uris = db.Column(db.Text)  
     color_identity = db.Column(db.String(50))  
     lang = db.Column(db.String(10))  
