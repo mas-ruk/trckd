@@ -79,7 +79,51 @@ document.addEventListener("DOMContentLoaded", function () {
             card.style.display = "block";
         });
     });
+
+    // === CHART FUNCTIONALITY ===
+    const chartCanvas = document.getElementById('chartCanvas').getContext('2d');
+
+    // Fetch collection stats for chart rendering (dummy data here, update from backend)
+    const rarityData = {
+        "Common": 5,
+        "Rare": 3,
+        "Famous": 2
+    };
+
+    const chartData = {
+        labels: Object.keys(rarityData),
+        datasets: [{
+            label: 'Rarity Distribution',
+            data: Object.values(rarityData),
+            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+            borderColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+            borderWidth: 1
+        }]
+    };
+
+    // Create chart
+    const myChart = new Chart(chartCanvas, {
+        type: 'pie', 
+        data: chartData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            return tooltipItem.label + ': ' + tooltipItem.raw + ' cards';
+                        }
+                    }
+                }
+            }
+        }
+    });
+
 });
+
 
 
   

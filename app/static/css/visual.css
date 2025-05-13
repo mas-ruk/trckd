@@ -147,9 +147,16 @@ h1, h2, p {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
 }
 
+/* Chart Styling */
+#collectionStatsChart {
+    width: 100% !important; 
+    height: 80px !important;          
+    margin: 0 auto;          
+}
+
 /* Placeholder Charts */
 .chart-placeholder {
-    height: 300px;
+    height: 200px;
     background-color: #2f2f2f;
     display: flex;
     align-items: center;
@@ -238,6 +245,7 @@ h1, h2, p {
     background-color: #7c5ed1;
     border-color: #7c5ed1;
 }
+
 
 
 

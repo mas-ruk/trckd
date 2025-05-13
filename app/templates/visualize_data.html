@@ -11,6 +11,9 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!--Chart JS-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -98,7 +101,7 @@
     <!-- Stats Section -->
     <section class="stats-box mt-5">
         <h2>Collection Stats</h2>
-        <div class="chart-placeholder">[Chart will render here]</div>
+        <canvas id="chartCanvas"></canvas>
     </section>
 </div>
 {% endblock %}
