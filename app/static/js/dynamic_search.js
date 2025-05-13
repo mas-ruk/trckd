@@ -275,6 +275,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <option value="damaged"> Damaged </option>
                                         </select>
                                     </div>
+
+                                    <!-- Quantity Section -->
+                                    <div class="w-100 mb-3">    
+                                        <label for="quantity-${index}"> Quantity:</label>
+                                        <input type="number" class="form-control" id="quantity-${index}" min="1" value="1">
+                                        <div class="invalid-feedback">
+                                            Please enter a quantity greater than 0.
+                                        </div>
+                                    </div>
                                     
                                     <!-- Foiling Section -->
                                     <div class="form-check mb-3">
@@ -309,6 +318,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 const language = document.getElementById(`language-${index}`).value;
                 const condition = document.getElementById(`condition-${index}`).value;
                 const isFoil = document.getElementById(`foil-${index}`).checked;
+                const quantityInput = document.getElementById(`quantity-${index}`);
+                const quantity = parseInt(quantityInput.value);
+                
+                // Validate quantity
+                if (!quantity || quantity < 1) {
+                    quantityInput.classList.add('is-invalid');
+                    return;
+                } else {
+                    quantityInput.classList.remove('is-invalid');
+                }
 
                 const cardData = {
                     id: this.getAttribute('data-card-id'),
@@ -321,7 +340,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     image: this.getAttribute('data-image'),
                     language,
                     condition,
-                    foil: isFoil
+                    foil: isFoil,
+                    quantity
                 };
                 
                 addCardToCollection(cardData);
@@ -334,8 +354,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // This is where you would add the card to your collection
         console.log('Adding card to collection:', cardData);
         
-        // Show a success message to the user
-        showToast(`Added ${cardData.name} (${cardData.setCode}) to your collection!`);
+        // Show a success message to the user with quantity information
+        const quantityText = cardData.quantity > 1 ? `${cardData.quantity}x ` : '';
+        showToast(`Added ${quantityText}${cardData.name} (${cardData.setCode}) to your collection!`);
         
         // Here you would typically make an AJAX call to your backend
         // to save this card to the user's collection
@@ -351,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showToast(`Added ${cardData.name} (${cardData.setCode}) to your collection!`);
+                showToast(`Added ${quantityText}${cardData.name} (${cardData.setCode}) to your collection!`);
             } else {
                 showToast('Failed to add card to collection.', 'error');
             }
