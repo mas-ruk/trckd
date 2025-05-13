@@ -13,7 +13,8 @@ class BasicTests(unittest.TestCase):
         self.testApp = create_app('test')
         self.app_context = self.testApp.app_context()
         self.app_context.push()
-        db.create_all()
+        with self.app_context:
+            db.create_all()
         new_user = User(email="test@gmail.com", username="test_user", password=generate_password_hash("password"))
         db.session.add(new_user)
         db.session.commit()
@@ -39,14 +40,14 @@ class SeleniumTests(unittest.TestCase):
         db.session.commit()
 
         def run_app(app):
-            app.run(port=5000)
+            app.run(port=5000, debug=True, use_reloader=False)
 
         self.server_thread = Thread(target=run_app, args=(self.testApp,))
         self.server_thread.daemon = True
         self.server_thread.start()
 
         options = webdriver.ChromeOptions()
-        #options.add_argument("--headless=new")
+        options.add_argument("--headless=new")
         self.driver = webdriver.Chrome(options=options)
         self.driver.get(localHost)
 
@@ -65,8 +66,8 @@ class SeleniumTests(unittest.TestCase):
         self.driver.find_element(By.ID, "submit").click()
 
         self.assertEqual(self.driver.current_url, "http://localhost:5000/collection")
-        # self.assertEqual(current_user.username, "test_user") Replace w/ check of sidebar username
-
+        self.assertEqual(self.driver.find_element(By.ID, "current_username").text, "test_user")
+    
     def test_register_form(self):
         self.driver.get(localHost)
         self.driver.find_element(By.ID, "register_link").click()
@@ -77,10 +78,10 @@ class SeleniumTests(unittest.TestCase):
         self.driver.find_element(By.ID, "password_confirm").send_keys("password2")
         self.driver.find_element(By.ID, "register_submit").click()
 
-        # self.assertEqual(self.driver.current_url, "http://localhost:5000/collection")
-        # self.assertEqual(current_user.username, "test_user2") Replace w/ check of sidebar username
-        # user = User.query.filter_by(email="test2@gmail.com").first()
-        # self.assertIsNotNone(user)
+        self.assertEqual(self.driver.current_url, "http://localhost:5000/collection")
+        self.assertEqual(self.driver.find_element(By.ID, "current_username").text, "test_user2")
+        user = User.query.filter_by(email="test2@gmail.com").first()
+        self.assertIsNotNone(user)
         
 
 
