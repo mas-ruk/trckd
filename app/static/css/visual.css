@@ -229,4 +229,40 @@ h1 {
 .slide-btn:hover {
     background-color: rgba(0, 0, 0, 0.7);
 }
+/* Collection Page Styles */
+.collection-form {
+    background-color: #2f243a;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    max-width: 600px;
+    margin: auto;
+    color: white;
+}
+
+.collection-form .form-label {
+    color: white;
+}
+
+.collection-form .form-control {
+    background-color: #1e1e1e;
+    color: white;
+    border: 1px solid #4a3d56;
+}
+
+.collection-form .form-control:focus {
+    border-color: #7c5ed1;
+    box-shadow: 0 0 5px #7c5ed1;
+}
+
+.collection-form .btn-primary {
+    background-color: #6a4dad;
+    border-color: #6a4dad;
+}
+
+.collection-form .btn-primary:hover {
+    background-color: #7c5ed1;
+    border-color: #7c5ed1;
+}
+
 
