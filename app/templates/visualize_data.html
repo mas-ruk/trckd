@@ -46,23 +46,24 @@
         <button id="applyFilters" class="btn btn-primary">Apply</button>
     </div>
 
-    <!-- Featured Card Slider -->
-    <div class="card-slider-wrapper position-relative mt-4">
+     <!-- Featured Card Slider -->
+    <div class="card-slider-wrapper position-relative">
+        <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
         <button class="filter-button rounded-pill slide-btn left" onclick="slideLeft()">&#8249;</button>
         <div class="card-slider d-flex" id="cardSlider">
             {% for card in cards %}
                 <div class="card">
                     <div class="card-image">
-                     <img src="{{ card.image_uris.normal if card.image_uris else '' }}" alt="{{ card.name }}" />
-                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ card.name }}</h5>
-                        <p class="card-text">{{ card.type }} - {{ card.color }}</p>
-                        <p class="card-text"><small class="text-muted">{{ card.rarity }}</small></p>
+                        <img src="{{ card.image_uris.normal if card.image_uris else '' }}" alt="{{ card.name }}" />
                     </div>
+                    <h6>{{ card.name }}</h6>
+                    <p>Type: {{ card.type_line }}</p>
+                    <p>Colour: {{ card.colors | join(', ') }}</p>
+                    <p>Rarity: {{ card.rarity.title() }}</p>
                 </div>
             {% endfor %}
         </div>
+        <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
         <button class="filter-button rounded-pill slide-btn right" onclick="slideRight()">&#8250;</button>
     </div>
 
