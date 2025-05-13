@@ -14,3 +14,4 @@ Flask-WTF==1.2.2
 Flask-Login==0.6.3
 email_validator==2.2.0
 requests==2.32.3
+selenium==4.32.0
