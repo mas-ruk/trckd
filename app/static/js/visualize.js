@@ -23,8 +23,6 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Please fill in all fields.");
         } else {
             alert("Collection created successfully!");
-            // Optionally: you could submit the form via AJAX or un-comment the line below
-            // form.submit();
         }
     });
 
@@ -34,6 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const colorFilter = document.getElementById("colorFilter");
     const rarityFilter = document.getElementById("rarityFilter");
     const applyBtn = document.getElementById("applyFilters");
+    const resetBtn = document.getElementById("resetFilters"); // Add the reset button element
     const cards = document.querySelectorAll(".card");
 
     function filterCards() {
@@ -61,8 +60,25 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Apply filters on click and input change
     applyBtn.addEventListener("click", filterCards);
-    searchBox.addEventListener("input", filterCards); // optional: live search
+    searchBox.addEventListener("input", filterCards);
+    typeFilter.addEventListener("change", filterCards);
+    colorFilter.addEventListener("change", filterCards);
+    rarityFilter.addEventListener("change", filterCards);
+
+    // === RESET FILTERS FUNCTIONALITY ===
+    resetBtn.addEventListener("click", () => {
+        searchBox.value = "";
+        typeFilter.value = "";
+        colorFilter.value = "";
+        rarityFilter.value = "";
+
+        // Shows all cards after resetting the filters
+        cards.forEach(card => {
+            card.style.display = "block";
+        });
+    });
 });
 
 
