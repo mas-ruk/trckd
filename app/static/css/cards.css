@@ -64,3 +64,12 @@
 .card-footer-btn:not(:hover) {
     transition: 0.3s ease;
 }
+
+.card-flip-animation {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flipping {
+  transform: rotateY(90deg);
+}

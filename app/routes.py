@@ -40,9 +40,9 @@ def index():
             db.session.add(new_user)
             db.session.commit()
             if register_remember:
-                login_user(user, remember=True)
+                login_user(new_user, remember=True)
             else:
-                login_user(user)
+                login_user(new_user)
             return redirect(url_for('home'))
 
     elif login_form.submit.data and login_form.validate_on_submit():
@@ -86,7 +86,6 @@ def upload_csv():
 @app.route('/collection')
 @login_required
 def collection():
-    # Import Card only when this route is accessed
     from app.models import Card
     return render_template('visualize_data.html')
 
