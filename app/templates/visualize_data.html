@@ -4,12 +4,14 @@
 
 {% block extra_css %}
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="../static/css/visualize.css">
-    <link rel="stylesheet" type="text/css" href="../css/filters.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/visual.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/filters.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/cards.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/buttons.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-{% endblock %}  
+{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -45,28 +47,29 @@
     </div>
 
     <!-- Featured Card Slider -->
-    <div class="card-slider-wrapper position-relative">
-        <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
+    <div class="card-slider-wrapper position-relative mt-4">
+        <button class="filter-button rounded-pill slide-btn left" onclick="slideLeft()">&#8249;</button>
         <div class="card-slider d-flex" id="cardSlider">
             {% for card in cards %}
                 <div class="card">
                     <div class="card-image">
-                        <img src="{{ card.image_uris.normal if card.image_uris else '' }}" alt="{{ card.name }}" />
+                     <img src="{{ card.image_uris.normal if card.image_uris else '' }}" alt="{{ card.name }}" />
+                     </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ card.name }}</h5>
+                        <p class="card-text">{{ card.type }} - {{ card.color }}</p>
+                        <p class="card-text"><small class="text-muted">{{ card.rarity }}</small></p>
                     </div>
-                    <h6>{{ card.name }}</h6>
-                    <p>Type: {{ card.type_line }}</p>
-                    <p>Colour: {{ card.colors | join(', ') }}</p>
-                    <p>Rarity: {{ card.rarity.title() }}</p>
                 </div>
             {% endfor %}
         </div>
-        <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
+        <button class="filter-button rounded-pill slide-btn right" onclick="slideRight()">&#8250;</button>
     </div>
 
     <!-- Create Collection Form -->
-    <div class="mt-4">
+    <div class="mt-5">
         <h2 class="mb-4">Create a New Collection</h2>
-        
+
         <div class="collection-form">
             <form id="createCollectionForm" method="POST">
                 <div class="mb-3">
@@ -85,7 +88,7 @@
     </div>
 
     <!-- Stats Section -->
-    <section class="stats-box mt-4">
+    <section class="stats-box mt-5">
         <h2>Collection Stats</h2>
         <div class="chart-placeholder">[Chart will render here]</div>
     </section>
@@ -105,7 +108,7 @@
         slider.scrollBy({ left: 300, behavior: 'smooth' });
     }
 </script>
+
 <script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
 {% endblock %}
-
 
