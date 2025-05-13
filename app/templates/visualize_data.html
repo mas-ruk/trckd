@@ -6,8 +6,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/visual.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/filters.css') }}">
-    <link rel="stylesheet" href=" {{ url_for('static' , filename='css/cards.css') }}">
-    <link rel="stylesheet" href=" {{ url_for('static' , filename='css/buttons.css') }}">
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 {% endblock %}  
@@ -47,7 +46,7 @@
 
     <!-- Featured Card Slider -->
     <div class="card-slider-wrapper position-relative">
-        <button class="filter-button rounded-pill slide-btn left" onclick="slideLeft()">&#8249;</button>
+        <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
         <div class="card-slider d-flex" id="cardSlider">
             {% for card in cards %}
                 <div class="card">
@@ -61,7 +60,7 @@
                 </div>
             {% endfor %}
         </div>
-        <button class="filter-button rounded-pill slide-btn right" onclick="slideRight()">&#8250;</button>
+        <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
     </div>
 
     <!-- Create Collection Form -->
