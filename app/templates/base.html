@@ -44,6 +44,10 @@
                 <li class="nav-item"> <a href="{{url_for('logout')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-arrow-left me-2"></i> <span class="menu-text">Logout</span></a> </li>
             </ul> 
         </div>
+      
+        <div class="position-fixed bottom-0 start-0 w-100 px-3 py-2">
+            <p class="menu-text"><i class="bi bi-person-fill me-2"></i><b>Logged in as: </b>{{ current_user.username }}</p>
+        </div>
 
         <!-- Content -->
         <div class="bg-purple-black text-white d-flex flex-column content" id="content">

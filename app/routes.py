@@ -1,9 +1,10 @@
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, login_required, logout_user
-from app import app, db, login  
-from app.models import Card, User  
 from app.forms import LoginForm, RegisterForm
 from werkzeug.security import generate_password_hash, check_password_hash
+from app import app, login, db
+from app.models import User
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -38,7 +39,10 @@ def index():
             new_user = User(email=register_email, username=username, password=generate_password_hash(register_password))
             db.session.add(new_user)
             db.session.commit()
-            login_user(new_user, remember=register_remember)
+            if register_remember:
+                login_user(new_user, remember=True)
+            else:
+                login_user(new_user)
             return redirect(url_for('collection'))
 
     elif login_form.submit.data and login_form.validate_on_submit():
@@ -48,15 +52,18 @@ def index():
         
         user = User.query.filter_by(email=login_email).first()
 
-        if not user:
-            login_form.login_email.errors.append("No user registered with that email address.")
+        if user == None:
+            login_form.login_email.errors.append("No user registered to that email address.")
             resubmit = True
         elif not check_password_hash(user.password, login_password):
             login_form.login_password.errors.append("Incorrect password.")
             resubmit = True
 
         if not resubmit:
-            login_user(user, remember=login_remember)
+            if login_remember:
+                login_user(user, remember=True)
+            else:
+                login_user(user)
             return redirect(url_for('collection'))
 
     return render_template('homepage.html', login_form=login_form, register_form=register_form, active_tab=active_tab)
@@ -79,8 +86,12 @@ def upload_csv():
 @app.route('/collection')
 @login_required
 def collection():
-    cards = Card.query.limit(200).all()
-    return render_template('visualize_data.html', cards=cards)
+    from app.models import Card
+    return render_template('visualize_data.html')
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 @app.route('/logout')
 @login_required
@@ -88,7 +99,3 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-# User loader function (this is correct)
-@login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
