@@ -46,13 +46,18 @@
         <button id="applyFilters" class="btn btn-primary">Apply</button>
     </div>
 
-     <!-- Featured Card Slider -->
+    <!-- Featured Card Slider -->
     <div class="card-slider-wrapper position-relative">
         <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
         <button class="filter-button rounded-pill slide-btn left" onclick="slideLeft()">&#8249;</button>
+
         <div class="card-slider d-flex" id="cardSlider">
             {% for card in cards %}
-                <div class="card">
+                <div class="card"
+                     data-name="{{ card.name | lower }}"
+                     data-type="{{ card.type_line | lower }}"
+                     data-color="{{ card.colors | join(',') | lower }}"
+                     data-rarity="{{ card.rarity | lower }}">
                     <div class="card-image">
                         <img src="{{ card.image_uris.normal if card.image_uris else '' }}" alt="{{ card.name }}" />
                     </div>
@@ -63,6 +68,7 @@
                 </div>
             {% endfor %}
         </div>
+
         <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
         <button class="filter-button rounded-pill slide-btn right" onclick="slideRight()">&#8250;</button>
     </div>
@@ -98,7 +104,7 @@
 
 {% block scripts %}
 <script>
-    // Card slider functionality
+    // Slider logic
     function slideLeft() {
         const slider = document.getElementById('cardSlider');
         slider.scrollBy({ left: -300, behavior: 'smooth' });
@@ -108,8 +114,37 @@
         const slider = document.getElementById('cardSlider');
         slider.scrollBy({ left: 300, behavior: 'smooth' });
     }
+
+    // Filter logic
+    document.getElementById("applyFilters").addEventListener("click", function () {
+        const search = document.getElementById("searchBox").value.toLowerCase();
+        const type = document.getElementById("typeFilter").value.toLowerCase();
+        const color = document.getElementById("colorFilter").value.toLowerCase();
+        const rarity = document.getElementById("rarityFilter").value.toLowerCase();
+
+        const cards = document.querySelectorAll(".card-slider .card");
+
+        cards.forEach(card => {
+            const name = card.getAttribute("data-name");
+            const cardType = card.getAttribute("data-type");
+            const cardColor = card.getAttribute("data-color");
+            const cardRarity = card.getAttribute("data-rarity");
+
+            const matchesSearch = !search || name.includes(search);
+            const matchesType = !type || cardType.includes(type);
+            const matchesColor = !color || cardColor.includes(color);
+            const matchesRarity = !rarity || cardRarity.includes(rarity);
+
+            if (matchesSearch && matchesType && matchesColor && matchesRarity) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
 </script>
 
 <script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
 {% endblock %}
+
 
