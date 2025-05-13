@@ -1,5 +1,6 @@
 from app import db
 from flask_login import UserMixin
+import datetime
 
 class User(UserMixin, db.Model):
     user_ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -20,3 +21,9 @@ class Card(db.Model):
 
     def __repr__(self):
         return f'<Card {self.name}>'
+
+class SharedLink(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    link_id = db.Column(db.String(8), unique=True, nullable=False)
+    cards_data = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)

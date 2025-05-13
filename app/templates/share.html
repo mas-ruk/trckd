@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}trckd - Share Cards{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Share Your Cards</h1>
+
+    <!-- Scryfall API Search -->
+    <div class="input-group mb-3">
+        <input type="text" class="form-control add-cards-search" placeholder="Search for cards...">
+        <button class="btn btn-secondary filter-button">Filters</button>
+    </div>
+
+    <!-- Scryfall API Cards Grid -->
+    <div id="card-grid" class="d-flex flex-wrap justify-content-center mt-3"></div>
+
+    <hr class="my-4">
+
+    <!-- User Uploaded Cards -->
+    <h3>Your Uploaded Cards</h3>
+    <div class="cards-grid">
+        {% for card in user_cards %}
+        <div class="card-item" data-card="{{ card.name }}">
+            <input type="checkbox" class="form-check-input">
+            <img src="{{ card.image_url or 'https://via.placeholder.com/250x350?text=No+Image' }}">
+            <label>{{ card.name }} ({{ card.rarity or 'Unknown' }})</label>
+        </div>
+        {% endfor %}
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Selected Cards -->
+    <h3>Selected Cards to Share</h3>
+    <ul id="selected-cards-list" class="list-group list-group-flush"></ul>
+
+    <!-- Share Button -->
+    <button class="btn btn-primary mt-4" id="shareBtn" data-bs-toggle="modal" data-bs-target="#shareOptionsModal">
+        <i class="fas fa-share"></i> Share Selected Cards
+    </button>
+
+    <!-- Upload Link -->
+    <div class="mt-4">
+        <a href="{{ url_for('upload_data_view') }}" class="btn btn-outline-info">
+            <i class="fas fa-upload"></i> Upload New Cards
+        </a>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal fade" id="shareOptionsModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5>Share Options</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <a id="facebookShare" class="btn btn-primary m-2">Facebook</a>
+                    <a id="whatsappShare" class="btn btn-success m-2">WhatsApp</a>
+                    <button id="copyLinkBtn" class="btn btn-warning m-2">Copy Link</button>
+                    <button id="downloadBtn" class="btn btn-info m-2">Download HTML</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dynamic_search.js') }}"></script>
+<script src="{{ url_for('static', filename='js/share.js') }}"></script>
+
+<script>
+    let selectedCards = [];
+
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.add-card-btn') || e.target.closest('.form-check-input')) {
+            const cardElement = e.target.closest('.card-item, .card');
+            const cardName = cardElement.dataset.card || cardElement.querySelector('.card-title').innerText;
+
+            if (!selectedCards.includes(cardName)) {
+                selectedCards.push(cardName);
+                const li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between';
+                li.innerHTML = `${cardName}
+                    <button class="btn btn-sm btn-danger remove-card" data-card="${cardName}">Remove</button>`;
+                document.getElementById('selected-cards-list').appendChild(li);
+            }
+        }
+
+        if (e.target.closest('.remove-card')) {
+            const cardName = e.target.closest('.remove-card').dataset.card;
+            selectedCards = selectedCards.filter(name => name !== cardName);
+            e.target.closest('li').remove();
+        }
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+        if (selectedCards.length === 0) {
+            alert("Select at least one card.");
+            return;
+        }
+        const res = await fetch('/generate_share_link', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ cards: selectedCards })
+        });
+        const data = await res.json();
+        const link = `${window.location.origin}/shared/${data.link_id}`;
+        document.getElementById('copyLinkBtn').onclick = () => {
+            navigator.clipboard.writeText(link);
+            alert("Link copied!");
+        };
+        document.getElementById('downloadBtn').onclick = () => {
+            window.location.href = `/download_shared/${data.link_id}`;
+        };
+        document.getElementById('facebookShare').href = `https://www.facebook.com/sharer.php?u=${encodeURIComponent(link)}`;
+        document.getElementById('whatsappShare').href = `https://wa.me/?text=${encodeURIComponent(link)}`;
+    });
+</script>
+{% endblock %}
