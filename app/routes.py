@@ -43,7 +43,7 @@ def index():
                 login_user(user, remember=True)
             else:
                 login_user(user)
-            return redirect(url_for('collection'))
+            return redirect(url_for('home'))
 
     elif login_form.submit.data and login_form.validate_on_submit():
         login_email = login_form.login_email.data
@@ -64,7 +64,7 @@ def index():
                 login_user(user, remember=True)
             else:
                 login_user(user)
-            return redirect(url_for('collection'))
+            return redirect(url_for('home'))
 
     return render_template('homepage.html', login_form=login_form, register_form=register_form, active_tab=active_tab)
 
@@ -99,4 +99,9 @@ def load_user(id):
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/home')
+@login_required
+def home():
+    return render_template('logged_in_home.html')
 
