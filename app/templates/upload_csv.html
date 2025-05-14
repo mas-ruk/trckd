@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}trckd - Uploading via CSV! {% endblock %}
+
+{% block content %}
+    <h1 style="font-weight: bold; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Import Collection! </h1>
+    <hr>
+
+    <!-- Find the collection on your computer -->
+    <div>
+        <label class="form-label" for="filename"> Find the collection on your computer </label>
+        <input id="filename" class="form-control" accept=".csv" required="" type="file">
+    </div>
+
+    <!-- or alternatively, copy/paste-->
+    <div>
+        <span>Paste your CSV text in the box below... </span>
+        <br>
+        <textarea id="csvPaste" placeholder="Paste your CSV formatted cards here!"></textarea>
+    </div>
+
+
+    <!-- Select which collection to add to (either new/existing) -->
+    <div>
+        <label class="form-label" for="collection"> Which collection? </label>
+        <select id="collection" class="form-select" name="collectionID">
+            <option value="">None</option>
+        </select>
+    </div>
+
+
+    <!--
+
+    Scryfall has CSV formatting allowed in request in the form
+    
+    multiverse_id,mtgo_id,set,collector_number,lang,rarity,
+    name,mana_cost,cmc,type_line,artist,usd_price,usd_foil_price,
+    eur_price,tix_price,image_uri,scryfall_uri,scryfall_id
+    
+    -->
+
+{% endblock %}
