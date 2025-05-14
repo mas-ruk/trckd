@@ -39,8 +39,11 @@ def index():
             new_user = User(email=register_email, username=username, password=generate_password_hash(register_password))
             db.session.add(new_user)
             db.session.commit()
-            login_user(new_user, remember=register_remember)
-            return redirect(url_for('collection'))
+            if register_remember:
+                login_user(new_user, remember=True)
+            else:
+                login_user(new_user)
+            return redirect(url_for('home'))
 
     elif login_form.submit.data and login_form.validate_on_submit():
         login_email = login_form.login_email.data
@@ -57,8 +60,11 @@ def index():
             resubmit = True
 
         if not resubmit:
-            login_user(user, remember=login_remember)
-            return redirect(url_for('collection'))
+            if login_remember:
+                login_user(user, remember=True)
+            else:
+                login_user(user)
+            return redirect(url_for('home'))
 
     return render_template('homepage.html', login_form=login_form, register_form=register_form, active_tab=active_tab)
 
@@ -99,4 +105,8 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+@app.route('/home')
+@login_required
+def home():
+    return render_template('logged_in_home.html')
 
