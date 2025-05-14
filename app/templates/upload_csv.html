@@ -2,26 +2,29 @@
 
 {% block title %}trckd - Uploading via CSV! {% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/upload_csv.css') }}">
+{% endblock %}
+
 {% block content %}
     <h1 style="font-weight: bold; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"> Import Collection! </h1>
     <hr>
 
     <!-- Find the collection on your computer -->
-    <div>
+    <div class="form-div">
         <label class="form-label" for="filename"> Find the collection on your computer </label>
         <input id="filename" class="form-control" accept=".csv" required="" type="file">
     </div>
 
     <!-- or alternatively, copy/paste-->
-    <div>
+    <div class="form-div d-flex flex-column" style="min-height: 200px;">
         <span>Paste your CSV text in the box below... </span>
-        <br>
-        <textarea id="csvPaste" placeholder="Paste your CSV formatted cards here!"></textarea>
+        <textarea id="csvPaste" class="flex-grow-1" placeholder="Paste your CSV formatted cards here!"></textarea>
     </div>
 
 
     <!-- Select which collection to add to (either new/existing) -->
-    <div>
+    <div class="form-div form-div">
         <label class="form-label" for="collection"> Which collection? </label>
         <select id="collection" class="form-select" name="collectionID">
             <option value="">None</option>
