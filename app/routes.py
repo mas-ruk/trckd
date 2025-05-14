@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from flask_login import login_user, login_required, logout_user
-from app.forms import LoginForm, RegisterForm
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from app.forms import LoginForm, RegisterForm 
 
-from .models import User
+from .models import User, Card
 from .extensions import db
 
 main_bp = Blueprint('main', __name__)
@@ -45,16 +45,16 @@ def index():
                 login_user(new_user, remember=True)
             else:
                 login_user(new_user)
-            return redirect(url_for('main.collection'))
+            return redirect(url_for('main.home'))
 
     elif login_form.submit.data and login_form.validate_on_submit():
         login_email = login_form.login_email.data
         login_password = login_form.login_password.data
         login_remember = login_form.login_remember_me.data
-        
+
         user = User.query.filter_by(email=login_email).first()
 
-        if user == None:
+        if user is None:
             login_form.login_email.errors.append("No user registered to that email address.")
             resubmit = True
         elif not check_password_hash(user.password, login_password):
@@ -66,7 +66,7 @@ def index():
                 login_user(user, remember=True)
             else:
                 login_user(user)
-            return redirect(url_for('main.collection'))
+            return redirect(url_for('main.home'))
 
     return render_template('homepage.html', login_form=login_form, register_form=register_form, active_tab=active_tab)
 
@@ -88,12 +88,18 @@ def upload_csv():
 @main_bp.route('/collection')
 @login_required
 def collection():
-    from app.models import Card
-    return render_template('visualize_data.html')
+    cards = Card.query.filter_by(user_ID=current_user.user_ID).all()
+    return render_template('visualize_data.html', cards=cards)
+
 
 @main_bp.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
+
+@main_bp.route('/home')
+@login_required
+def home():
+    return render_template('logged_in_home.html')
 

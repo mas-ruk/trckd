@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,4 +100,112 @@
     {% block extra_js %}{% endblock %}
     {% block scripts %}{% endblock %}
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}trckd{% endblock %}</title>
+    
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- jQuery CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Sidebar and Base CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cards.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dropdown.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-purple-black">
+    <div class="flex-container">
+        <!-- Sidebar -->
+        <div class="bg-purple-dark text-white sidebar p-3 d-flex flex-column" id="sidebar"> 
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="bi bi-chevron-left" id="toggleIcon"></i>
+            </button>
+            
+            <h4 style="font-weight: bold;"> trckd </h4>
+            <hr>
+
+            <!-- List items -->
+            <ul class="nav flex-column">
+                <li class="nav-item"> <a href="{{url_for('home')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-house me-2"></i> <span class="menu-text">Home</span></a> </li>
+                <li class="nav-item"> <a href="{{url_for('upload_data_view')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-plus me-2"></i> <span class="menu-text">Add Cards</span></a> </li>
+                <li class="nav-item"> <a href="{{url_for('collection')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-box2-fill me-2"></i> <span class="menu-text">My Collection</span></a> </li>
+                <li class="nav-item"> <a href="{{url_for('logout')}}" class="nav-link text-white fw-semibold"> <i class="bi bi-arrow-left me-2"></i> <span class="menu-text">Logout</span></a> </li>
+            </ul> 
+
+            <div class="position-fixed bottom-0 start-0 w-100 px-3 py-2">
+                <p class="menu-text text-white"><i class="bi bi-person-fill me-2"></i><b>Logged in as: </b>{{ current_user.username }}</p>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="bg-purple-black text-white d-flex flex-column content" id="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-5cmG4HDKDcrrk4cZWIRbXW1lgdPbH0osLOYTdSd5quN4dWQdvFeBk4MS7YjE4k0v" crossorigin="anonymous"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            function toggleSidebar() {
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('expanded');
+                
+                if (sidebar.classList.contains('collapsed')) {
+                    toggleIcon.classList.remove('bi-chevron-left');
+                    toggleIcon.classList.add('bi-chevron-right');
+                } else {
+                    toggleIcon.classList.remove('bi-chevron-right');
+                    toggleIcon.classList.add('bi-chevron-left');
+                }
+                
+                setTimeout(function() {
+                    window.dispatchEvent(new Event('resize'));
+                }, 300);
+            }
+            
+            toggleBtn.addEventListener('click', toggleSidebar);
+            
+            function checkWidth() {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.add('collapsed');
+                    content.classList.add('expanded');
+                    toggleIcon.classList.remove('bi-chevron-left');
+                    toggleIcon.classList.add('bi-chevron-right');
+                }
+            }
+            
+            checkWidth();
+            window.addEventListener('resize', checkWidth);
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+    {% block scripts %}{% endblock %}
+</body>
+>>>>>>> e1317e65c5c4a240d1f0e6b644f37a2e6b2778cc
 </html>

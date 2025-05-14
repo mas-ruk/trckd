@@ -30,3 +30,8 @@ A Magic the Gathering collection tracking and analysis tool. A CITS3403 - Agile 
 - [Sprint 2](docs/sprints/sprint2.md)
 - [Sprint 3](docs/sprints/sprint3.md)
 
+## References
+
+In regard to AI, various tools including that of ChatGPT, Claude AI, and GitHub Copilot were all utilised in this project. It was used in multiple cases throughout the project including that of breaking down Scryfalls API querying functionality, assisting in the production of the dynamic_search.js file as well as various bug fixes and head-scratching issues. It was also utilised in our documentation in the means of fleshing out our ideas and providing achieveable, maintable goals. 
+
+
