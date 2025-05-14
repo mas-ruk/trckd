@@ -87,7 +87,7 @@ class SeleniumTests(unittest.TestCase):
         self.driver.find_element(By.ID, "login_password").send_keys("password")
         self.driver.find_element(By.ID, "submit").click()
 
-        self.assertEqual(self.driver.current_url, "http://localhost:5000/collection")
+        self.assertEqual(self.driver.current_url, "http://localhost:5000/home")
         self.assertEqual(self.driver.find_element(By.ID, "current_username").text, "test_user")
     
     # Test the register form works (user logged in correctly, user added to the database)
@@ -101,7 +101,7 @@ class SeleniumTests(unittest.TestCase):
         self.driver.find_element(By.ID, "password_confirm").send_keys("password2")
         self.driver.find_element(By.ID, "register_submit").click()
 
-        self.assertEqual(self.driver.current_url, "http://localhost:5000/collection")
+        self.assertEqual(self.driver.current_url, "http://localhost:5000/home")
         self.assertEqual(self.driver.find_element(By.ID, "current_username").text, "test_user2")
         user = User.query.filter_by(email="test2@gmail.com").first()
         self.assertIsNotNone(user)
