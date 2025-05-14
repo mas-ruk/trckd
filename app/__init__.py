@@ -1,21 +1,27 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_login import LoginManager
-from app.config import Config
+from .config import DeploymentConfig, TestConfig
+from .extensions import db, login_manager, migrate
+from .models import User
+from .routes import main_bp
 
-# Initialize the app and extensions
-app = Flask(__name__)
-app.config.from_object(Config)
+config_map = {
+    'test': TestConfig,
+    'deployment': DeploymentConfig,
+}
 
-# Set up the database and migrations
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+def create_app(config_name='deployment'):
+    app = Flask(__name__)
+    app.config.from_object(config_map[config_name])
+    
+    db.init_app(app)
+    login_manager.init_app(app)
+    login_manager.login_view = ''
+    migrate.init_app(app, db)
 
-# Set up the login manager
-login = LoginManager(app)
-login.login_view = 'index'  
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
 
-# Import routes and models after app and db are set up
-from app import routes, models
+    app.register_blueprint(main_bp)
 
+    return app

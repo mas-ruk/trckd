@@ -1,3 +1,5 @@
+# I'm 99% sure we don't need this file since running the Flask app is handled by all the testing stuff I set up, but I'm keeping it here for now.
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
