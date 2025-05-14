@@ -62,7 +62,14 @@
                      data-color="{{ card.colors | join(',') | lower }}"
                      data-rarity="{{ card.rarity | lower }}">
                     <div class="card-image">
-                        <img src="{{ card.image_uris.normal if card.image_uris else '' }}" alt="{{ card.name }}" />
+                        {% if card.image_uris and card.image_uris.normal %}
+                            <img src="{{ card.image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
+                        {% elif card.card_faces and card.card_faces[0].image_uris %}
+                            {# Handle double-faced cards #}
+                            <img src="{{ card.card_faces[0].image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/card-back.jpg') }}" alt="Card Back" />
+                        {% endif %}
                     </div>
                     <h6>{{ card.name }}</h6>
                     <p>Type: {{ card.type_line }}</p>

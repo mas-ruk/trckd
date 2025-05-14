@@ -4,6 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, login, db
 from app.forms import LoginForm, RegisterForm
 from app.models import User, Card  
+import requests
+import time
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -84,8 +86,35 @@ def upload_csv():
 @app.route('/collection')
 @login_required
 def collection():
-    cards = Card.query.filter_by(user_ID=current_user.user_ID).all()
-    return render_template('visualize_data.html', cards=cards)
+    # Get user's cards from database
+    user_cards = Card.query.filter_by(user_ID=current_user.user_ID).all()
+    
+    # Convert stored data to template format
+    cards_with_images = []
+    for card in user_cards:
+        try:
+            # Convert stored image_uris string to dict if needed
+            image_uris = {}
+            if card.image_uris:
+                import json
+                try:
+                    image_uris = json.loads(card.image_uris)
+                except:
+                    print(f"Error parsing image URIs for card {card.name}")
+
+            card_data = {
+                'name': card.name,
+                'type_line': card.type_line or 'Unknown',
+                'colors': card.color_identity.split(',') if card.color_identity else [],
+                'rarity': card.rarity or 'common',
+                'image_uris': image_uris
+            }
+            cards_with_images.append(card_data)
+        except Exception as e:
+            print(f"Error processing card {card.name}: {str(e)}")
+            continue
+
+    return render_template('visualize_data.html', cards=cards_with_images)
 
 
 @login.user_loader
