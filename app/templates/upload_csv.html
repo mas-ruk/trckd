@@ -4,6 +4,7 @@
 
 {% block extra_css %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/upload_csv.css') }}">
+    <script src="{{ url_for('static', filename='js/upload_csv.js') }}"></script>
 {% endblock %}
 
 {% block content %}
@@ -20,6 +21,7 @@
     <div class="form-div d-flex flex-column" style="min-height: 200px;">
         <span>Paste your CSV text in the box below... </span>
         <textarea id="csvPaste" class="flex-grow-1" placeholder="Paste your CSV formatted cards here!"></textarea>
+        <button class="rounded-pill filter-button mt-3">Upload</button>
     </div>
 
 
