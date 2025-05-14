@@ -18,9 +18,24 @@ main {
     margin-left: 80px;
 }
 
+/* Headings & Text */
+h1, h2, p {
+    color: #fff;
+}
+
 /* Filters */
 .filters-box {
     margin-bottom: 2rem;
+    background-color: #2f243a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.filters-box form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .form-label,
@@ -30,14 +45,22 @@ main {
     color: white;
 }
 
-.form-select {
+.form-select,
+.filters-box input,
+.filters-box select,
+.filters-box button {
     background-color: #2f243a;
     border: 1px solid #4a3d56;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
 }
 
 .btn-primary {
     background-color: #6a4dad;
     border-color: #6a4dad;
+    color: white;
 }
 
 .btn-primary:hover {
@@ -45,26 +68,34 @@ main {
     border-color: #7c5ed1;
 }
 
-h1, h2, p {
-    color: #fff;
+/* Card Grid */
+.card-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
 }
 
 /* Cards */
 .card {
     background-color: #1e1e1e;
-    border: none;
     color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease;
+    text-align: left;
+    max-height: 350px;
+    overflow: hidden;
 }
 
 .card:hover {
     box-shadow: 0 0 15px #513a69, 0 0 30px #513a69, 0 0 45px #513a69;
     transform: scale(1.03);
-    transition: 0.3s ease;
 }
 
 .card:not(:hover) {
     transform: scale(1);
-    transition: 0.3s ease;
 }
 
 .card-image {
@@ -75,95 +106,27 @@ h1, h2, p {
     justify-content: center;
     font-size: 1rem;
     color: #aaa;
+    border-radius: 6px;
     margin-bottom: 10px;
+}
+
+.card h3, .card-title {
+    margin: 0 0 10px 0;
+    writing-mode: initial;
+    transform: none;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card p {
+    margin: 4px 0;
 }
 
 .card-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
-}
-
-/* Stats Section */
-.stats-box {
-    margin-top: 3rem;
-}
-
-.chart-placeholder {
-    height: 300px;
-    background-color: #2f2f2f;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #bbb;
-    border-radius: 8px;
-}
-
-/* Existing Styles from Second Code Block */
-.container {
-    width: 100%;
-    max-width: 900px;
-}
-
-h1 {
-    font-size: 2rem;
-    margin-bottom: 30px;
-}
-
-.filters-box, .stats-box {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.filters-box form {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.filters-box input,
-.filters-box select,
-.filters-box button {
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 0.9rem;
-}
-
-.card-display {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-}
-
-.card {
-    background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    text-align: left;
-}
-
-.card-image {
-    height: 100px;
-    background-color: #f0f2f5;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-    margin-bottom: 10px;
-}
-
-.card h3 {
-    margin: 0 0 10px 0;
-}
-
-.card p {
-    margin: 4px 0;
 }
 
 .card-actions button {
@@ -175,14 +138,31 @@ h1 {
     cursor: pointer;
 }
 
+/* Stats Section */
+.stats-box {
+    margin-top: 3rem;
+    background-color: #2f243a;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+/* Chart Styling */
+#collectionStatsChart {
+    width: 100% !important; 
+    height: 80px !important;          
+    margin: 0 auto;          
+}
+
+/* Placeholder Charts */
 .chart-placeholder {
-    height: 150px;
-    background-color: #f0f2f5;
-    border-radius: 8px;
+    height: 200px;
+    background-color: #2f2f2f;
     display: flex;
-    justify-content: center;
     align-items: center;
-    color: #999;
+    justify-content: center;
+    color: #bbb;
+    border-radius: 8px;
 }
 
 /* Slider Styles */
@@ -202,7 +182,7 @@ h1 {
 
 .card-slider .card {
     flex-shrink: 0;
-    width: 220px; /* Adjust card width if needed */
+    width: 220px;
     transition: transform 0.3s ease;
 }
 
@@ -229,7 +209,8 @@ h1 {
 .slide-btn:hover {
     background-color: rgba(0, 0, 0, 0.7);
 }
-/* Collection Page Styles */
+
+/* Collection Page Form */
 .collection-form {
     background-color: #2f243a;
     padding: 20px;
@@ -264,5 +245,7 @@ h1 {
     background-color: #7c5ed1;
     border-color: #7c5ed1;
 }
+
+
 
 
