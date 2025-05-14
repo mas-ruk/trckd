@@ -1,52 +1,102 @@
-from flask import render_template, jsonify, request
-from app import app
-from app.models import Card
+from flask import render_template, request, redirect, url_for
+from flask_login import login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from app import app, login, db
+from app.forms import LoginForm, RegisterForm
+from app.models import User, Card  
 
-@app.route('/')
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('homepage.html')
+    login_form = LoginForm(prefix='login')
+    register_form = RegisterForm(prefix='register')
+    resubmit = False
+    active_tab = 'home'
 
-@app.route('/upload') 
+    if register_form.register_submit.data:
+        active_tab = 'register'
+    elif login_form.submit.data:
+        active_tab = 'login'
+
+    if register_form.register_submit.data and register_form.validate_on_submit():
+        register_email = register_form.register_email.data
+        username = register_form.username.data
+        register_password = register_form.register_password.data
+        register_remember = register_form.register_remember_me.data
+
+        users = User.query.all()
+
+        for user in users:
+            if register_email == user.email:
+                register_form.register_email.errors.append("Email already in use. Choose a different email.")
+                resubmit = True
+
+            if username == user.username:
+                register_form.username.errors.append("Username already in use. Choose a different username.")
+                resubmit = True
+
+        if not resubmit:
+            new_user = User(email=register_email, username=username, password=generate_password_hash(register_password))
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user, remember=register_remember)
+            return redirect(url_for('collection'))
+
+    elif login_form.submit.data and login_form.validate_on_submit():
+        login_email = login_form.login_email.data
+        login_password = login_form.login_password.data
+        login_remember = login_form.login_remember_me.data
+
+        user = User.query.filter_by(email=login_email).first()
+
+        if user is None:
+            login_form.login_email.errors.append("No user registered to that email address.")
+            resubmit = True
+        elif not check_password_hash(user.password, login_password):
+            login_form.login_password.errors.append("Incorrect password.")
+            resubmit = True
+
+        if not resubmit:
+            login_user(user, remember=login_remember)
+            return redirect(url_for('collection'))
+
+    return render_template('homepage.html', login_form=login_form, register_form=register_form, active_tab=active_tab)
+
+
+@app.route('/upload')
+@login_required
 def upload_data_view():
     return render_template('upload_data.html')
 
+
 @app.route('/search')
+@login_required
 def upload_search():
     return render_template('search.html')
 
+
 @app.route('/upload_csv')
+@login_required
 def upload_csv():
     return render_template('upload_csv.html')
 
-@app.route('/collection')
-def collection():
-    return render_template('visualize_data.html')
 
-# disabled in search only branch
-# @app.route('/api/search_cards', methods=['GET'])
-# def search_cards():
-    """API endpoint to search cards by name"""
-    # search_query = request.args.get('query', '')
-    
-    # If empty query, return all cards
-    # if not search_query:
-    #     cards = Card.query.limit(100).all()  # Limit to 100 to avoid huge responses
-    # else:
-        # Search by name using LIKE query (case-insensitive)
-    #     cards = Card.query.filter(Card.name.ilike(f'%{search_query}%')).all()
-    
-    # Convert cards to JSON-serializable format
-    # results = []
-    # for card in cards:
-    #     card_data = {
-    #         'name': card.name,
-    #         'image_uris': card.image_uris if hasattr(card, 'image_uris') else {},
-    #         'oracle_text': card.oracle_text if hasattr(card, 'oracle_text') else '',
-    #         'set_name': card.set_name if hasattr(card, 'set_name') else '',
-    #         'set_code': card.set_code if hasattr(card, 'set_code') else '',
-    #         'rarity': card.rarity if hasattr(card, 'rarity') else '',
-    #         'mana_cost': card.mana_cost if hasattr(card, 'mana_cost') else '',
-    #     }
-    #     results.append(card_data)
-    
-    # return jsonify({'cards': results})
+@app.route('/collection')
+@login_required
+def collection():
+    cards = Card.query.filter_by(user_ID=current_user.user_ID).all()
+    return render_template('visualize_data.html', cards=cards)
+
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
