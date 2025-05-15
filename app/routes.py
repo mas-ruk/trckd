@@ -108,6 +108,7 @@ def collection():
                     print(f"Error parsing image URIs for card {card.name}")
 
             card_data = {
+                'card_ID': card.card_ID,
                 'name': card.name,
                 'type_line': card.type_line or 'Unknown',
                 'colors': card.color_identity.split(',') if card.color_identity else [],
