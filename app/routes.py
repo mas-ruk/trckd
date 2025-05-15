@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.forms import LoginForm, RegisterForm
-import requests
+#import requests
 import time
 
 from .models import User, Card
@@ -10,19 +10,24 @@ from .extensions import db
 
 main_bp = Blueprint('main', __name__)
 
+# Landing page route - handles logging in and registering
 @main_bp.route('/', methods=['GET', 'POST'])
 def index():
     login_form = LoginForm(prefix='login')
     register_form = RegisterForm(prefix='register')
     resubmit = False
-    active_tab = 'home'
 
+    # Change the active page depending if a form has just tried to be submitted incorrectly
+    active_tab = 'home'
     if register_form.register_submit.data:
         active_tab = 'register'
     elif login_form.submit.data:
         active_tab = 'login'
 
+    # Handle submission of registration form
     if register_form.register_submit.data and register_form.validate_on_submit():
+
+        # Get values from registration form fields
         register_email = register_form.register_email.data
         username = register_form.username.data
         register_password = register_form.register_password.data
@@ -30,6 +35,7 @@ def index():
 
         users = User.query.all()
 
+        # Check if the entered email or username are already taken
         for user in users:
             if register_email == user.email:
                 register_form.register_email.errors.append("Email already in use. Choose a different email.")
@@ -39,6 +45,7 @@ def index():
                 register_form.username.errors.append("Username already in use. Choose a different username.")
                 resubmit = True
 
+        # If the form doesn't have any errors, add the new user to the db, login the new user and load the logged-in home page
         if not resubmit:
             new_user = User(email=register_email, username=username, password=generate_password_hash(register_password))
             db.session.add(new_user)
@@ -49,13 +56,17 @@ def index():
                 login_user(new_user)
             return redirect(url_for('main.home'))
 
+    # Handle submission of login form
     elif login_form.submit.data and login_form.validate_on_submit():
+
+        # Get values from login form fields
         login_email = login_form.login_email.data
         login_password = login_form.login_password.data
         login_remember = login_form.login_remember_me.data
 
         user = User.query.filter_by(email=login_email).first()
 
+        # Check if the user exists/if their password is correct
         if user is None:
             login_form.login_email.errors.append("No user registered to that email address.")
             resubmit = True
@@ -63,6 +74,7 @@ def index():
             login_form.login_password.errors.append("Incorrect password.")
             resubmit = True
 
+        # If the form doesn't have any errors, login the user and load the logged-in home page
         if not resubmit:
             if login_remember:
                 login_user(user, remember=True)
@@ -70,6 +82,7 @@ def index():
                 login_user(user)
             return redirect(url_for('main.home'))
 
+    # Otherwise render the homepage again
     return render_template('homepage.html', login_form=login_form, register_form=register_form, active_tab=active_tab)
 
 @main_bp.route('/upload') 
@@ -120,15 +133,17 @@ def collection():
 
     return render_template('visualize_data.html', cards=cards_with_images)
 
-
+# Route for handling logout
 @main_bp.route('/logout')
 @login_required
 def logout():
+    # Logout user and return to the homepage
     logout_user()
     return redirect(url_for('main.index'))
 
 @main_bp.route('/home')
 @login_required
 def home():
+    # Load the homepage for logged-in users
     return render_template('logged_in_home.html')
 
