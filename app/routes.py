@@ -177,3 +177,20 @@ def add_card():
     return jsonify({"message": f"Added {quantity} card(s) successfully"}), 201
 
 
+@app.route('/remove_card/<int:card_id>', methods=['POST'])
+@login_required
+def remove_card(card_id):
+    # Find the card
+    card = Card.query.filter_by(card_ID=card_id, user_ID=current_user.user_ID).first()
+    
+    # Check if card exists and belongs to current user
+    if not card:
+        return jsonify({"error": "Card not found or you don't have permission"}), 404
+    
+    # Delete the card
+    db.session.delete(card)
+    db.session.commit()
+    
+    return jsonify({"message": "Card removed successfully", "card_id": card_id}), 200
+
+
