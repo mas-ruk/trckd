@@ -179,6 +179,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const cardElement = document.createElement('div');
             cardElement.className = 'card bg-dark text-light';
             
+            // Add metadata as data attributes for filtering
+            cardElement.setAttribute('data-color', card.color_identity?.join(',') || 'none');
+            cardElement.setAttribute('data-type', card.type_line || 'none');
+            cardElement.setAttribute('data-rarity', card.rarity || 'none');
+
             // Different styles based on view
             if (isGridView) {
                 cardElement.classList.add('m-3');
