@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}trckd - Share Cards{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Share Your Cards</h1>
+
+    <!-- Scryfall API Search -->
+    <div class="input-group mb-3">
+        <input type="text" class="form-control add-cards-search" placeholder="Search for cards...">
+        <button class="btn btn-secondary filter-button">Filters</button>
+    </div>
+
+    <!-- Scryfall API Cards Grid -->
+    <div id="card-grid" class="d-flex flex-wrap justify-content-center mt-3"></div>
+
+    <hr class="my-4">
+
+    <!-- User Uploaded Cards -->
+    <h3>Your Uploaded Cards</h3>
+    <div class="cards-grid">
+        {% for card in user_cards %}
+        <div class="card-item" data-card="{{ card.id }}">
+            <input type="checkbox" class="form-check-input">
+            <img src="{{ card.image or 'https://via.placeholder.com/250x350?text=No+Image' }}">
+            <label>{{ card.name }} ({{ card.rarity or 'Unknown' }})</label>
+        </div>
+        {% endfor %}
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Selected Cards -->
+    <h3>Selected Cards to Share</h3>
+    <ul id="selected-cards-list" class="list-group list-group-flush"></ul>
+
+    <!-- Share Button -->
+    <button class="btn btn-primary mt-4" id="shareBtn" >
+        <i class="fas fa-share"></i> Share Selected Cards
+    </button>
+
+    <!-- Upload Link -->
+    <div class="mt-4">
+        <a href="{{ url_for('main.upload_data_view') }}" class="btn btn-outline-info">
+            <i class="fas fa-upload"></i> Upload New Cards
+        </a>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal fade" id="shareOptionsModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-header">
+                    <h5>Share Options</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <a id="facebookShare" class="btn btn-primary m-2">Facebook</a>
+                    <a id="whatsappShare" class="btn btn-success m-2">WhatsApp</a>
+                    <button id="copyLinkBtn" class="btn btn-warning m-2">Copy Link</button>
+                    <button id="downloadBtn" class="btn btn-info m-2">Download HTML</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dynamic_search.js') }}"></script>
+<script src="{{ url_for('static', filename='js/share.js') }}"></script>
+
+
+{% endblock %}

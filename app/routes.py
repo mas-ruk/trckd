@@ -1,12 +1,27 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
-from flask_login import login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
-from app.forms import LoginForm, RegisterForm
-#import requests
+import uuid
 import time
 
-from .models import User, Card
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+    jsonify,
+    Response
+)
+from flask_login import (
+    login_user,
+    login_required,
+    logout_user,
+    current_user
+)
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from app.forms import LoginForm, RegisterForm
 from .extensions import db
+from .models import User, Card, SharedLink
 
 main_bp = Blueprint('main', __name__)
 
@@ -147,3 +162,50 @@ def home():
     # Load the homepage for logged-in users
     return render_template('logged_in_home.html')
 
+@main_bp.route('/share')
+@login_required
+def share():
+    # grab all of the current user’s cards
+    user_cards = Card.query.filter_by(user_ID=current_user.user_ID).all()
+    return render_template('share.html', user_cards=user_cards)
+
+@main_bp.route('/generate_share_link', methods=['POST'])
+@login_required
+def generate_share_link():
+    data = request.get_json() or {}
+    card_ids = data.get('card_ids', [])
+
+    if not card_ids:
+        return jsonify(success=False, message='No cards selected'), 400
+
+    new_link = SharedLink(
+        link_id = str(uuid.uuid4()),
+        user_ID = current_user.user_ID
+    )
+    db.session.add(new_link)
+    db.session.commit()  
+
+    for cid in card_ids:
+        card = Card.query.get(cid)
+        if card:
+            new_link.cards.append(card)
+    db.session.commit()
+
+    share_url = url_for('main.shared_cards', link_id=new_link.link_id, _external=True)
+    return jsonify(success=True, link_id=new_link.link_id, share_url=share_url)
+
+@main_bp.route('/shared/<link_id>')
+def shared_cards(link_id):
+    link = SharedLink.query.filter_by(link_id=link_id).first_or_404()
+    return render_template('shared_cards.html', cards=link.cards)
+
+@main_bp.route('/download_shared/<link_id>')
+def download_shared(link_id):
+    link = SharedLink.query.filter_by(link_id=link_id).first_or_404()
+    cards = link.cards
+    html  = render_template('shared_cards.html', cards=cards)
+    return Response(
+        html,
+        mimetype='text/html',
+        headers={'Content-Disposition':f'attachment; filename=shared-{link_id}.html'}
+    )

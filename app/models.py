@@ -44,4 +44,38 @@ class Card(db.Model):
     def __repr__(self):
         return f'<Card {self.name}>'
 
+collection_card = db.Table(
+    'collection_card',
+    db.Column('collection_id', db.Integer, db.ForeignKey('collection.id'), primary_key=True),
+    db.Column('card_id',       db.Integer, db.ForeignKey('card.card_ID'),   primary_key=True)
+)
 
+class Collection(db.Model):
+    __tablename__ = 'collection'
+    id          = db.Column(db.Integer, primary_key=True)
+    name        = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    user_ID     = db.Column(db.Integer, db.ForeignKey('user.user_ID'), nullable=False)
+
+    # link into Card via the join table
+    cards = db.relationship('Card', secondary=collection_card, backref='collections')
+
+    def __repr__(self):
+        return f'<Collection {self.name}>'
+    
+shared_link_card = db.Table(
+  'shared_link_card',
+  db.Column('link_id', db.String(36), db.ForeignKey('shared_link.link_id'), primary_key=True),
+  db.Column('card_id', db.Integer,    db.ForeignKey('card.card_ID'),   primary_key=True),
+)
+
+class SharedLink(db.Model):
+    __tablename__ = 'shared_link'
+    link_id = db.Column(db.String(36), primary_key=True)  # UUID4 string
+    user_ID = db.Column(db.Integer, db.ForeignKey('user.user_ID'), nullable=False)
+    created = db.Column(db.DateTime, server_default=db.func.now())
+
+    cards = db.relationship('Card', secondary=shared_link_card, backref='shared_links')
+
+    def __repr__(self):
+        return f'<SharedLink {self.link_id}>'
