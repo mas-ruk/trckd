@@ -4,8 +4,9 @@ A Magic the Gathering collection tracking and analysis tool. A CITS3403 - Agile 
 ## 🌟 Project Overview
 
 **trckd** will allow users to:
-- Add new cards to their collection either manually or via CSV upload
-- View, search, and sort through their current collection
+- Create a personal account within the app
+- Add new cards to various personal collections
+- View, search, and sort through their collections and a general collection of cards provided by the Scryfall API
 - Track cards by name, type, colour, rarity or even custom tags
 - Visualise collection insights (i.e. rarity distribution, card colour breakdown)
 
@@ -18,12 +19,20 @@ A Magic the Gathering collection tracking and analysis tool. A CITS3403 - Agile 
 | 23630652   | Zac Doruk Maslen | @mas-ruk         |
 
 ## 🧰 Tech Stack
-- **Frontend**: HTML, CSS, JavaScript, jQuery
+- **Frontend**: HTML, CSS, Bootstrap, WTForms, JavaScript, jQuery
 - **Backend**: Python Flask
 - **Database**: SQLite via SQLAlchemy
 
 ## 🚀 Running the Application
- TO BE DONE
+1. Unzip the repository file and cd into it through your terminal.
+2. Install the required packages by running `pip install -r requirements.txt` in your terminal.
+3. Run the Flask app using the command `flask run`.
+4. Open the webpage by navigating to `http://127.0.0.1:5000` in a web browser of your choice (the link should be printed in the terminal).
+
+## 🧪 Running the Tests
+1. Ensure you are in the top-level directory of the repository (i.e. you can see the `app` directory).
+2. Ensure you have installed the required packages by running `pip install -r requirements.txt` in your terminal.
+3. Run the tests using the command `python -m unittest run_test.py` - test results will be printed to the terminal.
 
 ## 🗓️ Sprint Logs
 - [Sprint 1](docs/sprints/sprint1.md)
@@ -31,7 +40,6 @@ A Magic the Gathering collection tracking and analysis tool. A CITS3403 - Agile 
 - [Sprint 3](docs/sprints/sprint3.md)
 
 ## References
-
 In regard to AI, various tools including that of ChatGPT, Claude AI, and GitHub Copilot were all utilised in this project. It was used in multiple cases throughout the project including that of breaking down Scryfalls API querying functionality, assisting in the production of the dynamic_search.js file as well as various bug fixes and head-scratching issues. It was also utilised in our documentation in the means of fleshing out our ideas and providing achieveable, maintable goals. 
 
 
