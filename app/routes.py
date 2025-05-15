@@ -3,10 +3,9 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, login, db
 from app.forms import LoginForm, RegisterForm
-from app.models import User, Card  
+from app.models import User, Card, Collection, CollectionCard
 import requests
 import time
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -134,8 +133,60 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
 @app.route('/home')
 @login_required
 def home():
     return render_template('logged_in_home.html')
+
+# to create collections
+@app.route('/collections/create', methods=['GET', 'POST'])
+@login_required
+def create_collection():
+    if request.method == 'POST':
+        collection_name = request.form.get('collection_name')
+        if collection_name:
+            new_collection = Collection(name=collection_name, user_ID=current_user.user_ID)
+            db.session.add(new_collection)
+            db.session.commit()
+            return redirect(url_for('view_collections'))
+    return render_template('create_collection.html')
+
+#to view all collections for the current user:
+@app.route('/collections')
+@login_required
+def view_collections():
+    user_collections = Collection.query.filter_by(user_ID=current_user.user_ID).all()
+    return render_template('collections.html', collections=user_collections)
+
+#to view cards inside a specific collection:
+@app.route('/collections/<int:collection_id>')
+@login_required
+def view_collection_cards(collection_id):
+    collection = Collection.query.filter_by(collection_ID=collection_id, user_ID=current_user.user_ID).first_or_404()
+    collection_cards = CollectionCard.query.filter_by(collection_ID=collection.collection_ID).all()
+    
+    cards = []
+    for cc in collection_cards:
+        card = Card.query.get(cc.card_ID)
+        if card:
+            cards.append(card)
+    
+    return render_template('collection_cards.html', collection=collection, cards=cards)
+
+#to add a card to a collection:
+@app.route('/collections/<int:collection_id>/add_card/<int:card_id>', methods=['POST'])
+@login_required
+def add_card_to_collection(collection_id, card_id):
+    collection = Collection.query.filter_by(collection_ID=collection_id, user_ID=current_user.user_ID).first_or_404()
+    card = Card.query.get_or_404(card_id)
+    
+    exists = CollectionCard.query.filter_by(collection_ID=collection.collection_ID, card_ID=card.card_ID).first()
+    if not exists:
+        new_link = CollectionCard(collection_ID=collection.collection_ID, card_ID=card.card_ID)
+        db.session.add(new_link)
+        db.session.commit()
+    
+    return redirect(url_for('view_collection_cards', collection_id=collection.collection_ID))
+
 
