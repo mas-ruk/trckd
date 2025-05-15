@@ -13,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import time
 
 # Setting the web address of our app
-localHost = "http://localhost:5003/"
+localHost = "http://localhost:5000/"
 
 # Define all the basic unit tests to be run
 class BasicTests(unittest.TestCase):
@@ -67,7 +67,7 @@ class SeleniumTests(unittest.TestCase):
         db.session.commit()
 
         def run_app(app):
-            app.run(port=5003, debug=True, use_reloader=False)
+            app.run(port=5000, debug=True, use_reloader=False)
 
         self.server_thread = Thread(target=run_app, args=(self.testApp,))
         self.server_thread.daemon = True
@@ -94,7 +94,7 @@ class SeleniumTests(unittest.TestCase):
         self.driver.find_element(By.ID, "login_password").send_keys("password")
         self.driver.find_element(By.ID, "submit").click()
 
-        self.assertEqual(self.driver.current_url, "http://localhost:5003/home")
+        self.assertEqual(self.driver.current_url, "http://localhost:5000/home")
         self.assertEqual(self.driver.find_element(By.ID, "current_username").text, "test_user")
     
     # Test the register form works (user logged in correctly, user added to the database)
@@ -108,7 +108,7 @@ class SeleniumTests(unittest.TestCase):
         self.driver.find_element(By.ID, "password_confirm").send_keys("password2")
         self.driver.find_element(By.ID, "register_submit").click()
 
-        self.assertEqual(self.driver.current_url, "http://localhost:5003/home")
+        self.assertEqual(self.driver.current_url, "http://localhost:5000/home")
         self.assertEqual(self.driver.find_element(By.ID, "current_username").text, "test_user2")
         user = User.query.filter_by(email="test2@gmail.com").first()
         self.assertIsNotNone(user)
@@ -153,6 +153,6 @@ class SeleniumTests(unittest.TestCase):
             # If error message not shown, check that no cards are present
             cards = self.driver.find_elements(By.CLASS_NAME, "card")
             self.assertEqual(len(cards), 0, "Expected no cards and no error message")
-    
+
 if __name__ == "__main__":
     unittest.main()
