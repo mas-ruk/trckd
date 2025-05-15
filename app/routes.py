@@ -1,33 +1,28 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from app import app, login, db
 from app.forms import LoginForm, RegisterForm
-#import requests
+from app.models import User, Card, Collection, collection_card
+from app.models import User, Card  
+import requests
 import time
+import json
 
-from .models import User, Card
-from .extensions import db
-
-main_bp = Blueprint('main', __name__)
-
-# Landing page route - handles logging in and registering
-@main_bp.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
     login_form = LoginForm(prefix='login')
     register_form = RegisterForm(prefix='register')
     resubmit = False
-
-    # Change the active page depending if a form has just tried to be submitted incorrectly
     active_tab = 'home'
+
     if register_form.register_submit.data:
         active_tab = 'register'
     elif login_form.submit.data:
         active_tab = 'login'
 
-    # Handle submission of registration form
     if register_form.register_submit.data and register_form.validate_on_submit():
-
-        # Get values from registration form fields
         register_email = register_form.register_email.data
         username = register_form.username.data
         register_password = register_form.register_password.data
@@ -35,7 +30,6 @@ def index():
 
         users = User.query.all()
 
-        # Check if the entered email or username are already taken
         for user in users:
             if register_email == user.email:
                 register_form.register_email.errors.append("Email already in use. Choose a different email.")
@@ -45,28 +39,24 @@ def index():
                 register_form.username.errors.append("Username already in use. Choose a different username.")
                 resubmit = True
 
-        # If the form doesn't have any errors, add the new user to the db, login the new user and load the logged-in home page
         if not resubmit:
             new_user = User(email=register_email, username=username, password=generate_password_hash(register_password))
             db.session.add(new_user)
             db.session.commit()
+            login_user(new_user, remember=register_remember)
             if register_remember:
                 login_user(new_user, remember=True)
             else:
                 login_user(new_user)
-            return redirect(url_for('main.home'))
+            return redirect(url_for('home'))
 
-    # Handle submission of login form
     elif login_form.submit.data and login_form.validate_on_submit():
-
-        # Get values from login form fields
         login_email = login_form.login_email.data
         login_password = login_form.login_password.data
         login_remember = login_form.login_remember_me.data
 
         user = User.query.filter_by(email=login_email).first()
 
-        # Check if the user exists/if their password is correct
         if user is None:
             login_form.login_email.errors.append("No user registered to that email address.")
             resubmit = True
@@ -74,42 +64,59 @@ def index():
             login_form.login_password.errors.append("Incorrect password.")
             resubmit = True
 
-        # If the form doesn't have any errors, login the user and load the logged-in home page
         if not resubmit:
+            login_user(user, remember=login_remember)
             if login_remember:
                 login_user(user, remember=True)
             else:
                 login_user(user)
-            return redirect(url_for('main.home'))
+            return redirect(url_for('home'))
 
-    # Otherwise render the homepage again
     return render_template('homepage.html', login_form=login_form, register_form=register_form, active_tab=active_tab)
 
-@main_bp.route('/upload') 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/home')
+@login_required
+def home():
+    return render_template('logged_in_home.html')
+
+@app.route('/upload')
 @login_required
 def upload_data_view():
     return render_template('upload_data.html')
 
-@main_bp.route('/search')
+
+@app.route('/search')
 @login_required
 def upload_search():
     return render_template('search.html')
 
-@main_bp.route('/upload_csv')
+
+@app.route('/upload_csv')
 @login_required
 def upload_csv():
     return render_template('upload_csv.html')
 
-@main_bp.route('/collection')
+# Unified view for user's cards and collections
+
+@app.route('/collection')
 @login_required
 def collection():
     # Get user's cards from database
     user_cards = Card.query.filter_by(user_ID=current_user.user_ID).all()
+    collections = Collection.query.filter_by(user_ID=current_user.user_ID).all()
+
     
     # Convert stored data to template format
     cards_with_images = []
     for card in user_cards:
         try:
+            image_uris = json.loads(card.image_uris) if card.image_uris else {}
             # Convert stored image_uris string to dict if needed
             image_uris = {}
             if card.image_uris:
@@ -120,6 +127,7 @@ def collection():
                     print(f"Error parsing image URIs for card {card.name}")
 
             card_data = {
+                'id': card.card_ID,
                 'name': card.name,
                 'type_line': card.type_line or 'Unknown',
                 'colors': card.color_identity.split(',') if card.color_identity else [],
@@ -131,19 +139,120 @@ def collection():
             print(f"Error processing card {card.name}: {str(e)}")
             continue
 
+    return render_template('visualize_data.html', cards=cards_with_images, collections=collections)
     return render_template('visualize_data.html', cards=cards_with_images)
 
-# Route for handling logout
-@main_bp.route('/logout')
+# View cards in a specific collection
+@app.route('/collection/<int:collection_id>')
 @login_required
-def logout():
-    # Logout user and return to the homepage
-    logout_user()
-    return redirect(url_for('main.index'))
+def view_collection_cards(collection_id):
+    collection = Collection.query.filter_by(collection_ID=collection_id, user_ID=current_user.user_ID).first_or_404()
+    
+    cards = []
+    for card in collection.cards:
+        try:
+            image_uris = json.loads(card.image_uris) if card.image_uris else {}
+            card_data = {
+                'id': card.card_ID,
+                'name': card.name,
+                'type_line': card.type_line or 'Unknown',
+                'colors': card.color_identity.split(',') if card.color_identity else [],
+                'rarity': card.rarity or 'common',
+                'image_uris': image_uris
+            }
+            cards.append(card_data)
+        except Exception as e:
+            print(f"Error parsing card in collection: {str(e)}")
 
-@main_bp.route('/home')
+    collections = Collection.query.filter_by(user_ID=current_user.user_ID).all()
+    return render_template('visualize_data.html', cards=cards, collections=collections, active_collection=collection.name)
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+# Create new collection from form in visualize_data.html
+@app.route('/create_collection', methods=['POST'])
+@login_required
+def create_collection():
+    name = request.form.get('collection_name')
+    if name:
+        new_collection = Collection(name=name, user_ID=current_user.user_ID)
+        db.session.add(new_collection)
+        db.session.commit()
+    return redirect(url_for('collection'))
+
+# Add card to specific collection
+@app.route('/collection/<int:collection_id>/add_card/<int:card_id>', methods=['POST'])
+
+@app.route('/logout')
+@login_required
+def add_card_to_collection(collection_id, card_id):
+    collection = Collection.query.filter_by(collection_ID=collection_id, user_ID=current_user.user_ID).first_or_404()
+    card = Card.query.get_or_404(card_id)
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+    if card not in collection.cards:
+        collection.cards.append(card)
+        db.session.commit()
+
+    return redirect(url_for('view_collection_cards', collection_id=collection.collection_ID))
+@app.route('/home')
 @login_required
 def home():
-    # Load the homepage for logged-in users
     return render_template('logged_in_home.html')
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+# New route to add a card for the logged-in user
+@app.route('/add_card', methods=['POST'])
+@login_required
+def add_card():
+    print("Received request to /add_card") 
+    data = request.json  # Expect JSON data from frontend
+
+    new_card = Card(
+        name=data.get('name'),
+        type=data.get('type'),
+        color=data.get('color'),
+        rarity=data.get('rarity'),
+        user_ID=current_user.user_ID,
+        set_code=data.get('set_code'),
+        set_name=data.get('set_name'),
+        collector_number=data.get('collector_number'),
+        mana_cost=data.get('mana_cost'),
+        cmc=data.get('cmc'),
+        type_line=data.get('type_line'),
+        oracle_text=data.get('oracle_text'),
+        power=data.get('power'),
+        toughness=data.get('toughness'),
+        image_uris=data.get('image_uris'),
+        color_identity=data.get('color_identity'),
+        lang=data.get('lang')
+    )
+
+    db.session.add(new_card)
+    db.session.commit()
+
+    return jsonify({"message": "Card added successfully"}), 201
+
+@app.route('/remove_card/<int:card_id>', methods=['POST'])
+@login_required
+def remove_card(card_id):
+    # Find the card
+    card = Card.query.filter_by(card_ID=card_id, user_ID=current_user.user_ID).first()
+    
+    # Check if card exists and belongs to current user
+    if not card:
+        return jsonify({"error": "Card not found or you don't have permission"}), 404
+    
+    # Delete the card
+    db.session.delete(card)
+    db.session.commit()
+    
+    return jsonify({"message": "Card removed successfully", "card_id": card_id}), 200
+
 
