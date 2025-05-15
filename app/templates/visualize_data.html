@@ -11,14 +11,16 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!--Chart JS-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <h1>My Magic: The Gathering Collection</h1>
 
-    {% if cards %}
-    <!-- Filter Bar - Only show if cards exist -->
+    <!-- Filter Bar -->
     <div class="filter-bar d-flex align-items-center justify-content-start p-3">
         <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
 
@@ -48,9 +50,11 @@
         <button id="resetFilters" class="btn btn-secondary">Reset Filters</button>
     </div>
 
-    <!-- Featured Card Slider - Only show if cards exist -->
+    <!-- Featured Card Slider -->
     <div class="card-slider-wrapper position-relative">
-        <button class="filter-button rounded-pill slide-btn left" onclick="slideLeft()">&#8249;</button>
+        <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
+
+
 
         <div class="card-slider d-flex" id="cardSlider">
             {% for card in cards %}
@@ -58,29 +62,21 @@
                      data-name="{{ card.name | lower }}"
                      data-type="{{ card.type_line | lower }}"
                      data-color="{{ card.colors | join(',') | lower }}"
-                     data-rarity="{{ card.rarity | lower }}"
-                     data-id="{{ card.card_ID }}">
+                     data-rarity="{{ card.rarity | lower }}">
                     <div class="card-image">
                         {% if card.image_uris and card.image_uris.normal %}
                             <img src="{{ card.image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
                         {% elif card.card_faces and card.card_faces[0].image_uris %}
+                            {# Handle double-faced cards #}
                             <img src="{{ card.card_faces[0].image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
                         {% else %}
                             <img src="{{ url_for('static', filename='images/card-back.jpg') }}" alt="Card Back" />
                         {% endif %}
                     </div>
-                    <div class="card-content">
-                        <h6>{{ card.name }}</h6>
-                        <p>Type: {{ card.type_line }}</p>
-                        <p>Colour: {{ card.colors | join(', ') }}</p>
-                        <p>Rarity: {{ card.rarity.title() }}</p>
-                    </div>
-                    
-                    <div class="card-actions">
-                        <button class="btn btn-danger btn-sm remove-card" data-id="{{ card.card_ID }}">
-                            <i class="fas fa-trash-alt"></i> Remove
-                        </button>
-                    </div>
+                    <h6>{{ card.name }}</h6>
+                    <p>Type: {{ card.type_line }}</p>
+                    <p>Colour: {{ card.colors | join(', ') }}</p>
+                    <p>Rarity: {{ card.rarity.title() }}</p>
                 </div>
             {% endfor %}
         </div>
@@ -88,19 +84,35 @@
 
 
         <button class="filter-button rounded-pill slide-btn right" onclick="slideRight()">&#8250;</button>
+
     </div>
-    {% else %}
-    <!-- Empty state display -->
-    <div class="empty-collection-state text-center p-5 my-4">
-        <div class="empty-icon mb-4">
-            <i class="fas fa-search fa-3x"></i>
+
+    <!-- Create Collection Form -->
+    <div class="mt-5">
+        <h2 class="mb-4">Create a New Collection</h2>
+
+        <div class="collection-form">
+            <form id="createCollectionForm" method="POST">
+                <div class="mb-3">
+                    <label for="collectionName" class="form-label">Collection Name</label>
+                    <input type="text" class="form-control" id="collectionName" name="collectionName" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="collectionDescription" class="form-label">Description</label>
+                    <textarea class="form-control" id="collectionDescription" name="collectionDescription" rows="4" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Collection</button>
+            </form>
         </div>
-        <h3 class="mb-3">Your collection is empty</h3>
-        <p class="lead mb-4">Start building your collection by adding cards from the search page.</p>
-
     </div>
-    {% endif %}
 
+    <!-- Stats Section -->
+    <section class="stats-box mt-5">
+        <h2>Collection Stats</h2>
+        <canvas id="chartCanvas"></canvas>
+    </section>
 </div>
 {% endblock %}
 
@@ -109,12 +121,12 @@
     // Slider logic
     function slideLeft() {
         const slider = document.getElementById('cardSlider');
-        slider.scrollBy({ left: -300, behavior: 'smooth' });  // Adjusted from -300
+        slider.scrollBy({ left: -300, behavior: 'smooth' });
     }
 
     function slideRight() {
         const slider = document.getElementById('cardSlider');
-        slider.scrollBy({ left: 300, behavior: 'smooth' });  // Adjusted from 300
+        slider.scrollBy({ left: 300, behavior: 'smooth' });
     }
 
     // Filter logic
@@ -137,63 +149,16 @@
             const matchesColor = !color || cardColor.includes(color);
             const matchesRarity = !rarity || cardRarity.includes(rarity);
 
-            card.style.display = (matchesSearch && matchesType && matchesColor && matchesRarity) ? "block" : "none";
-        });
-    });
-
-    // Card removal logic
-    document.addEventListener('DOMContentLoaded', function() {
-        // Find all remove buttons
-        document.querySelectorAll('.remove-card').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                if (!confirm('Are you sure you want to remove this card from your collection?')) {
-                    return;
-                }
-                
-                const cardId = this.getAttribute('data-id');
-                const cardElement = this.closest('.card');
-                
-                // Send deletion request
-                fetch(`/remove_card/${cardId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.message) {
-                        // Remove the card element from the DOM
-                        cardElement.remove();
-                        
-                        // Show success message
-                        const alertDiv = document.createElement('div');
-                        alertDiv.className = 'alert alert-success';
-                        alertDiv.textContent = data.message;
-                        document.querySelector('.container').prepend(alertDiv);
-                        
-                        // Hide alert after 3 seconds
-                        setTimeout(() => alertDiv.remove(), 3000);
-                        
-                        // If no cards left, reload page to show empty state
-                        if (document.querySelectorAll('.card-slider .card').length === 0) {
-                            location.reload();
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error removing card:', error);
-                    alert('There was an error removing the card.');
-                });
-            });
+            if (matchesSearch && matchesType && matchesColor && matchesRarity) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
         });
     });
 </script>
 
 <script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
 {% endblock %}
-
 
 
