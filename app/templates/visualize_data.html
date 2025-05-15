@@ -178,55 +178,50 @@
         </select>
 
         <button id="applyFilters" class="btn btn-primary">Apply</button>
+        <button id="resetFilters" class="btn btn-secondary">Reset Filters</button>
     </div>
 
     <!-- Featured Card Slider -->
-    <div class="slider-container my-4">
+    <div class="card-slider-wrapper position-relative">
         <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
-        <div class="card-slider" id="cardSlider">
-            <div class="card">
-                <div class="card-image">[Image]</div>
-                <h6>Card 1</h6>
-                <p>Type: Spell</p>
-                <p>Colour: Blue</p>
-                <p>Rarity: Rare</p>
-            </div>
-            <div class="card">
-                <div class="card-image">[Image]</div>
-                <h6>Card 2</h6>
-                <p>Type: Creature</p>
-                <p>Colour: Red</p>
-                <p>Rarity: Common</p>
-            </div>
-            <div class="card">
-                <div class="card-image">[Image]</div>
-                <h6>Card 3</h6>
-                <p>Type: Creature</p>
-                <p>Colour: Green</p>
-                <p>Rarity: Famous</p>
-            </div>
-            <div class="card">
-                <div class="card-image">[Image]</div>
-                <h6>Card 4</h6>
-                <p>Type: Creature</p>
-                <p>Colour: Black</p>
-                <p>Rarity: Rare</p>
-            </div>
-            <div class="card">
-                <div class="card-image">[Image]</div>
-                <h6>Card 5</h6>
-                <p>Type: Creature</p>
-                <p>Colour: White</p>
-                <p>Rarity: Common</p>
-            </div>
+
+
+
+        <div class="card-slider d-flex" id="cardSlider">
+            {% for card in cards %}
+                <div class="card"
+                     data-name="{{ card.name | lower }}"
+                     data-type="{{ card.type_line | lower }}"
+                     data-color="{{ card.colors | join(',') | lower }}"
+                     data-rarity="{{ card.rarity | lower }}">
+                    <div class="card-image">
+                        {% if card.image_uris and card.image_uris.normal %}
+                            <img src="{{ card.image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
+                        {% elif card.card_faces and card.card_faces[0].image_uris %}
+                            {# Handle double-faced cards #}
+                            <img src="{{ card.card_faces[0].image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/card-back.jpg') }}" alt="Card Back" />
+                        {% endif %}
+                    </div>
+                    <h6>{{ card.name }}</h6>
+                    <p>Type: {{ card.type_line }}</p>
+                    <p>Colour: {{ card.colors | join(', ') }}</p>
+                    <p>Rarity: {{ card.rarity.title() }}</p>
+                </div>
+            {% endfor %}
         </div>
-        <button class="slide-btn right" onclick="slideRight()">&#8250;</button>
+
+
+
+        <button class="filter-button rounded-pill slide-btn right" onclick="slideRight()">&#8250;</button>
+
     </div>
 
     <!-- Create Collection Form -->
-    <div class="mt-4">
+    <div class="mt-5">
         <h2 class="mb-4">Create a New Collection</h2>
-        
+
         <div class="collection-form">
             <form id="createCollectionForm" method="POST">
                 <div class="mb-3">

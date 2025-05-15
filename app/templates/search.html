@@ -71,8 +71,9 @@
                 </ul>
             </div>
         </div>
-        <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-tags-fill"></i> Tags </button>
-        <button class="filter-button rounded-pill px-4 py-2"> <i class="bi bi-list"></i> List View / <i class="bi bi-grid"></i> Grid View </button>
+        <button class="filter-button toggle-view-btn rounded-pill px-4 py-2" id="toggleViewBtn">
+            <i class="bi bi-list"></i> List View / <i class="bi bi-grid"></i> Grid View
+        </button>
     </div>
     
     <!-- Card Grid - Initially Empty, will be filled via JavaScript -->
@@ -83,10 +84,28 @@
             </div>
         </div>
     </div>
+
+    <!-- Details Page (Bootstrap Modal Component) -->
+    <div class="modal fade" id="detailsPage" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content bg-purple-dark">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="color: white; padding-top: 30px; padding-bottom: 10px; font-weight: bold; font-size: 2em">Add your card details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="details-modal-body">
+                    <!-- JS INJECTED CONTENT -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block scripts %}
-<!-- Add your dynamic search JavaScript -->
 <script src="{{ url_for('static', filename='js/dynamic_search.js') }}"></script>
 <script src="{{ url_for('static', filename='js/filter.js') }}"></script>
 {% endblock %}

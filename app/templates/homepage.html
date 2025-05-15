@@ -6,12 +6,45 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- Import Bootstrap 4 -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="..\static\styles\login.css">
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Import Bootstrap Icons CDN -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+        <style>
+            body {
+                background-color: #121212;
+            }
+
+            .menu {
+                background-color: #2f243a;
+            }
+
+            .btn {
+                background-color: crimson;
+                border-color: white;
+            }
+
+            .btn:hover {
+                background-color: lightslategray;
+                border-color: white;
+            }
+
+            .homepage-form {
+                background-color: #2f243a;
+                color: white;
+            }
+
+            .nav-link {
+                color: white;
+            }
+
+            .nav-link:hover {
+                background-color: lightslategray;
+                border-radius: 5px;
+                color: white;
+            }
+        </style>
     </head>
     <body>
         <div class="container-fluid">
@@ -23,10 +56,10 @@
                         <a class="nav-link {% if active_tab == 'home' %}active{% endif %}" data-toggle="tab" href="#home"><i class="bi bi-house me-2"></i> Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if active_tab == 'login' %}active{% endif %}" data-toggle="tab" href="#login"><i class="bi bi-arrow-right me-2"></i> Login</a>
+                        <a class="nav-link {% if active_tab == 'login' %}active{% endif %}" data-toggle="tab" href="#login" id="login_link"><i class="bi bi-arrow-right me-2"></i> Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if active_tab == 'register' %}active{% endif %}" data-toggle="tab" href="#register"><i class="bi bi-plus me-2"></i> Register</a>
+                        <a class="nav-link {% if active_tab == 'register' %}active{% endif %}" data-toggle="tab" href="#register" id="register_link"><i class="bi bi-plus me-2"></i> Register</a>
                     </li>
                 </ul>
                 <div class="tab-content col-10">
@@ -44,7 +77,7 @@
                                     {{ login_form.login_email.label(class="form-label font-weight-bold") }} 
                                 </div>
                                 <div class="col">
-                                    {{ login_form.login_email(class="form-control") }}
+                                    {{ login_form.login_email(class="form-control", id="login_email") }}
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -57,7 +90,7 @@
                                     {{ login_form.login_password.label(class="form-label font-weight-bold") }} 
                                 </div>
                                 <div class="col">
-                                    {{ login_form.login_password(class="form-control") }}
+                                    {{ login_form.login_password(class="form-control", id="login_password") }}
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -75,7 +108,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                    {{ login_form.submit(class="btn btn-primary float-right") }}
+                                    {{ login_form.submit(class="btn btn-primary float-right", id="submit") }}
                                 </div>
                             </div>
                         </form>
@@ -89,7 +122,7 @@
                                     {{ register_form.register_email.label(class="form-label font-weight-bold") }} 
                                 </div>
                                 <div class="col">
-                                    {{ register_form.register_email(class="form-control") }}
+                                    {{ register_form.register_email(class="form-control", id="register_email") }}
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -102,7 +135,7 @@
                                     {{ register_form.username.label(class="form-label font-weight-bold") }} 
                                 </div>
                                 <div class="col">
-                                    {{ register_form.username(class="form-control") }}
+                                    {{ register_form.username(class="form-control", id="username") }}
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -115,7 +148,7 @@
                                     {{ register_form.register_password.label(class="form-label font-weight-bold") }} 
                                 </div>
                                 <div class="col">
-                                    {{ register_form.register_password(class="form-control") }}
+                                    {{ register_form.register_password(class="form-control", id="register_password") }}
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -128,7 +161,7 @@
                                     {{ register_form.password_confirm.label(class="form-label font-weight-bold") }} 
                                 </div>
                                 <div class="col">
-                                    {{ register_form.password_confirm(class="form-control") }}
+                                    {{ register_form.password_confirm(class="form-control", id="password_confirm") }}
                                 </div>
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -146,7 +179,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col">
-                                    {{ register_form.register_submit(class="btn btn-primary float-right") }}
+                                    {{ register_form.register_submit(class="btn btn-primary float-right", id="register_submit") }}
                                 </div>
                             </div>
                         </form>
