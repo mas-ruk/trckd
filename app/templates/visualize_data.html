@@ -11,9 +11,6 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-    <!--Chart JS-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -65,7 +62,6 @@
                         {% if card.image_uris and card.image_uris.normal %}
                             <img src="{{ card.image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
                         {% elif card.card_faces and card.card_faces[0].image_uris %}
-                            {# Handle double-faced cards #}
                             <img src="{{ card.card_faces[0].image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
                         {% else %}
                             <img src="{{ url_for('static', filename='images/card-back.jpg') }}" alt="Card Back" />
@@ -79,9 +75,7 @@
             {% endfor %}
         </div>
 
-
         <button class="filter-button rounded-pill slide-btn right" onclick="slideRight()">&#8250;</button>
-
     </div>
 
     <!-- Create Collection Form -->
@@ -104,12 +98,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Stats Section -->
-    <section class="stats-box mt-5">
-        <h2>Collection Stats</h2>
-        <canvas id="chartCanvas"></canvas>
-    </section>
 </div>
 {% endblock %}
 
@@ -146,16 +134,13 @@
             const matchesColor = !color || cardColor.includes(color);
             const matchesRarity = !rarity || cardRarity.includes(rarity);
 
-            if (matchesSearch && matchesType && matchesColor && matchesRarity) {
-                card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
+            card.style.display = (matchesSearch && matchesType && matchesColor && matchesRarity) ? "block" : "none";
         });
     });
 </script>
 
 <script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
 {% endblock %}
+
 
 
