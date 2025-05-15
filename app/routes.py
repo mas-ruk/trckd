@@ -146,30 +146,34 @@ def home():
 def add_card():
     print("Received request to /add_card") 
     data = request.json  # Expect JSON data from frontend
-
-    new_card = Card(
-        name=data.get('name'),
-        type=data.get('type'),
-        color=data.get('color'),
-        rarity=data.get('rarity'),
-        user_ID=current_user.user_ID,
-        set_code=data.get('set_code'),
-        set_name=data.get('set_name'),
-        collector_number=data.get('collector_number'),
-        mana_cost=data.get('mana_cost'),
-        cmc=data.get('cmc'),
-        type_line=data.get('type_line'),
-        oracle_text=data.get('oracle_text'),
-        power=data.get('power'),
-        toughness=data.get('toughness'),
-        image_uris=data.get('image_uris'),
-        color_identity=data.get('color_identity'),
-        lang=data.get('lang')
-    )
-
-    db.session.add(new_card)
+    
+    # Get quantity from the request, default to 1 if not provided
+    quantity = data.get('quantity', 1)
+    
+    # Create cards based on quantity
+    for _ in range(int(quantity)):
+        new_card = Card(
+            name=data.get('name'),
+            type=data.get('type'),
+            color=data.get('color'),
+            rarity=data.get('rarity'),
+            user_ID=current_user.user_ID,
+            set_code=data.get('set_code'),
+            set_name=data.get('set_name'),
+            collector_number=data.get('collector_number'),
+            mana_cost=data.get('mana_cost'),
+            cmc=data.get('cmc'),
+            type_line=data.get('type_line'),
+            oracle_text=data.get('oracle_text'),
+            power=data.get('power'),
+            toughness=data.get('toughness'),
+            image_uris=data.get('image_uris'),
+            color_identity=data.get('color_identity'),
+            lang=data.get('lang')
+        )
+        db.session.add(new_card)
+    
     db.session.commit()
-
-    return jsonify({"message": "Card added successfully"}), 201
+    return jsonify({"message": f"Added {quantity} card(s) successfully"}), 201
 
 
