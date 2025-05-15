@@ -17,7 +17,8 @@
 <div class="container">
     <h1>My Magic: The Gathering Collection</h1>
 
-    <!-- Filter Bar -->
+    {% if cards %}
+    <!-- Filter Bar - Only show if cards exist -->
     <div class="filter-bar d-flex align-items-center justify-content-start p-3">
         <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
 
@@ -47,7 +48,7 @@
         <button id="resetFilters" class="btn btn-secondary">Reset Filters</button>
     </div>
 
-    <!-- Featured Card Slider -->
+    <!-- Featured Card Slider - Only show if cards exist -->
     <div class="card-slider-wrapper position-relative">
         <button class="filter-button rounded-pill slide-btn left" onclick="slideLeft()">&#8249;</button>
 
@@ -77,8 +78,18 @@
 
         <button class="filter-button rounded-pill slide-btn right" onclick="slideRight()">&#8250;</button>
     </div>
+    {% else %}
+    <!-- Empty state display -->
+    <div class="empty-collection-state text-center p-5 my-4">
+        <div class="empty-icon mb-4">
+            <i class="fas fa-search fa-3x"></i>
+        </div>
+        <h3 class="mb-3">Your collection is empty</h3>
+        <p class="lead mb-4">Start building your collection by adding cards from the search page.</p>
+    </div>
+    {% endif %}
 
-    <!-- Create Collection Form -->
+    <!-- Create Collection Form - Always show this part -->
     <div class="mt-5">
         <h2 class="mb-4">Create a New Collection</h2>
 

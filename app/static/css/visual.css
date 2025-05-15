@@ -246,6 +246,68 @@ h1, h2, p {
     border-color: #7c5ed1;
 }
 
+/* Empty Collection State */
+.empty-collection-state {
+    background-color: #2f243a;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    padding: 3rem !important;
+    max-width: 600px;
+    margin: 2rem auto !important;
+    transition: transform 0.3s ease;
+}
+
+.empty-collection-state:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(106, 77, 173, 0.3);
+}
+
+.empty-icon {
+    background-color: rgba(106, 77, 173, 0.2);
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.empty-icon i {
+    color: #7c5ed1;
+    font-size: 2.5rem;
+}
+
+.empty-collection-state h3 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.empty-collection-state p {
+    color: #b8b8b8;
+    font-size: 1.1rem;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.empty-collection-state .search-link {
+    display: inline-block;
+    background-color: #6a4dad;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.empty-collection-state .search-link:hover {
+    background-color: #7c5ed1;
+    transform: scale(1.05);
+}
+
 
 
 
