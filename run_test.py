@@ -77,6 +77,7 @@ class SeleniumTests(unittest.TestCase):
         options.add_argument("--headless=new") # Comment this out if you want to see your webpage pop up and run the tests
         self.driver = webdriver.Chrome(options=options)
         self.driver.get(localHost)
+        self.wait = WebDriverWait(self.driver, 10)
 
     # Function to remove testing data after the tests are complete
     def tearDown(self):
@@ -94,6 +95,9 @@ class SeleniumTests(unittest.TestCase):
         self.driver.find_element(By.ID, "login_password").send_keys("password")
         self.driver.find_element(By.ID, "submit").click()
 
+        # Ensures all page elements are loaded
+        self.wait.until(EC.visibility_of_element_located((By.ID, "current_username")))
+
         self.assertEqual(self.driver.current_url, "http://localhost:5000/home")
         self.assertEqual(self.driver.find_element(By.ID, "current_username").text, "test_user")
     
@@ -107,6 +111,9 @@ class SeleniumTests(unittest.TestCase):
         self.driver.find_element(By.ID, "register_password").send_keys("password2")
         self.driver.find_element(By.ID, "password_confirm").send_keys("password2")
         self.driver.find_element(By.ID, "register_submit").click()
+
+        # Ensures all page elements are loaded
+        self.wait.until(EC.visibility_of_element_located((By.ID, "current_username")))
 
         self.assertEqual(self.driver.current_url, "http://localhost:5000/home")
         self.assertEqual(self.driver.find_element(By.ID, "current_username").text, "test_user2")
