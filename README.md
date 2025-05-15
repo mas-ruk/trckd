@@ -3,7 +3,7 @@ A Magic the Gathering collection tracking and analysis tool. A CITS3403 - Agile 
 
 ## 🌟 Project Overview
 
-**trckd** will allow users to:
+**trckd** allows users to:
 - Create a personal account within the app
 - Add new cards to various personal collections
 - View, search, and sort through their collections and a general collection of cards provided by the Scryfall API
