@@ -82,7 +82,7 @@
                             </div>
                             <div class="row mb-3 align-items-center">
                                 {% for error in login_form.login_email.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
+                                <span style="color:red;" id="login_email_error">[{{ error}}]</span>
                                 {% endfor %}
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -95,7 +95,7 @@
                             </div>
                             <div class="row mb-3 align-items-center">
                                 {% for error in login_form.login_password.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
+                                <span style="color:red;" id="login_password_error">[{{ error}}]</span>
                                 {% endfor %}
                             </div>
                             <div class="row mb-3">
@@ -127,7 +127,7 @@
                             </div>
                             <div class="row mb-3 align-items-center">
                                 {% for error in register_form.register_email.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
+                                <span style="color:red;" id="register_email_error">[{{ error}}]</span>
                                 {% endfor %}
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -140,7 +140,7 @@
                             </div>
                             <div class="row mb-3 align-items-center">
                                 {% for error in register_form.username.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
+                                <span style="color:red;" id="register_username_error">[{{ error}}]</span>
                                 {% endfor %}
                             </div>
                             <div class="row mb-3 align-items-center">
@@ -153,7 +153,7 @@
                             </div>
                             <div class="row mb-3 align-items-center">
                                 {% for error in register_form.register_password.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
+                                <span style="color:red;" id="register_password_error">[{{ error}}]</span>
                                 {% endfor %}
                             </div>
                             <div class="row mb-3 align-items-center">
