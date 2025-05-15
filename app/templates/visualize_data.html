@@ -58,7 +58,8 @@
                      data-name="{{ card.name | lower }}"
                      data-type="{{ card.type_line | lower }}"
                      data-color="{{ card.colors | join(',') | lower }}"
-                     data-rarity="{{ card.rarity | lower }}">
+                     data-rarity="{{ card.rarity | lower }}"
+                     data-id="{{ card.card_ID }}">
                     <div class="card-image">
                         {% if card.image_uris and card.image_uris.normal %}
                             <img src="{{ card.image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
@@ -68,10 +69,18 @@
                             <img src="{{ url_for('static', filename='images/card-back.jpg') }}" alt="Card Back" />
                         {% endif %}
                     </div>
-                    <h6>{{ card.name }}</h6>
-                    <p>Type: {{ card.type_line }}</p>
-                    <p>Colour: {{ card.colors | join(', ') }}</p>
-                    <p>Rarity: {{ card.rarity.title() }}</p>
+                    <div class="card-content">
+                        <h6>{{ card.name }}</h6>
+                        <p>Type: {{ card.type_line }}</p>
+                        <p>Colour: {{ card.colors | join(', ') }}</p>
+                        <p>Rarity: {{ card.rarity.title() }}</p>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button class="btn btn-danger btn-sm remove-card" data-id="{{ card.card_ID }}">
+                            <i class="fas fa-trash-alt"></i> Remove
+                        </button>
+                    </div>
                 </div>
             {% endfor %}
         </div>
@@ -89,26 +98,6 @@
     </div>
     {% endif %}
 
-    <!-- Create Collection Form - Always show this part -->
-    <div class="mt-5">
-        <h2 class="mb-4">Create a New Collection</h2>
-
-        <div class="collection-form">
-            <form id="createCollectionForm" method="POST">
-                <div class="mb-3">
-                    <label for="collectionName" class="form-label">Collection Name</label>
-                    <input type="text" class="form-control" id="collectionName" name="collectionName" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="collectionDescription" class="form-label">Description</label>
-                    <textarea class="form-control" id="collectionDescription" name="collectionDescription" rows="4" required></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Create Collection</button>
-            </form>
-        </div>
-    </div>
 </div>
 {% endblock %}
 
@@ -117,12 +106,12 @@
     // Slider logic
     function slideLeft() {
         const slider = document.getElementById('cardSlider');
-        slider.scrollBy({ left: -300, behavior: 'smooth' });
+        slider.scrollBy({ left: -300, behavior: 'smooth' });  // Adjusted from -300
     }
 
     function slideRight() {
         const slider = document.getElementById('cardSlider');
-        slider.scrollBy({ left: 300, behavior: 'smooth' });
+        slider.scrollBy({ left: 300, behavior: 'smooth' });  // Adjusted from 300
     }
 
     // Filter logic
@@ -146,6 +135,56 @@
             const matchesRarity = !rarity || cardRarity.includes(rarity);
 
             card.style.display = (matchesSearch && matchesType && matchesColor && matchesRarity) ? "block" : "none";
+        });
+    });
+
+    // Card removal logic
+    document.addEventListener('DOMContentLoaded', function() {
+        // Find all remove buttons
+        document.querySelectorAll('.remove-card').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (!confirm('Are you sure you want to remove this card from your collection?')) {
+                    return;
+                }
+                
+                const cardId = this.getAttribute('data-id');
+                const cardElement = this.closest('.card');
+                
+                // Send deletion request
+                fetch(`/remove_card/${cardId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        // Remove the card element from the DOM
+                        cardElement.remove();
+                        
+                        // Show success message
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success';
+                        alertDiv.textContent = data.message;
+                        document.querySelector('.container').prepend(alertDiv);
+                        
+                        // Hide alert after 3 seconds
+                        setTimeout(() => alertDiv.remove(), 3000);
+                        
+                        // If no cards left, reload page to show empty state
+                        if (document.querySelectorAll('.card-slider .card').length === 0) {
+                            location.reload();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error removing card:', error);
+                    alert('There was an error removing the card.');
+                });
+            });
         });
     });
 </script>
