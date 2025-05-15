@@ -16,6 +16,12 @@
 {% block content %}
 <div class="container">
     <h1>My Magic: The Gathering Collection</h1>
+    
+    <div class="d-flex justify-content-between mb-3">
+        <button id="updatePricesBtn" class="btn btn-info">
+            <i class="fas fa-sync-alt"></i> Update Card Prices
+        </button>
+    </div>
 
     {% if cards %}
     <!-- Filter Bar - Only show if cards exist -->
@@ -74,6 +80,20 @@
                         <p>Type: {{ card.type_line }}</p>
                         <p>Colour: {{ card.colors | join(', ') }}</p>
                         <p>Rarity: {{ card.rarity.title() }}</p>
+                        
+                        {% if card.acquisition_price != 'N/A' %}
+                        <div class="card-pricing">
+                            <p>Purchase Price: ${{ card.acquisition_price }}</p>
+                            <p>Current Price: ${{ card.current_price }}</p>
+                            
+                            {% if card.price_difference is not none %}
+                                <p class="price-change {% if card.price_difference > 0 %}text-success{% elif card.price_difference < 0 %}text-danger{% endif %}">
+                                    {% if card.price_difference > 0 %}+{% endif %}${{ "%.2f"|format(card.price_difference) }} 
+                                    ({{ "%.1f"|format(card.price_percent) }}%)
+                                </p>
+                            {% endif %}
+                        </div>
+                        {% endif %}
                     </div>
                     
                     <div class="card-actions">
@@ -185,6 +205,35 @@
                     alert('There was an error removing the card.');
                 });
             });
+        });
+    });
+
+    document.getElementById('updatePricesBtn').addEventListener('click', function() {
+        // Show loading indicator
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating Prices...';
+        this.disabled = true;
+        
+        // Send request to update prices
+        fetch('/update_prices', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            // Reload the page to show updated prices
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error updating prices:', error);
+            alert('There was an error updating prices.');
+        })
+        .finally(() => {
+            // Reset button state
+            this.innerHTML = '<i class="fas fa-sync-alt"></i> Update Card Prices';
+            this.disabled = false;
         });
     });
 </script>

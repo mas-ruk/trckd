@@ -40,6 +40,11 @@ class Card(db.Model):
     image_uris = db.Column(db.Text)
     color_identity = db.Column(db.String(50))
     lang = db.Column(db.String(10))
+    price = db.Column(db.String(20))
+
+    acquisition_price = db.Column(db.String(20))  # Price when added to collection
+    current_price = db.Column(db.String(20))      # Current market price
+    acquisition_date = db.Column(db.DateTime, default=db.func.current_timestamp())  # When it was added
 
     def __repr__(self):
         return f'<Card {self.name}>'

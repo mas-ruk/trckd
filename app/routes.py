@@ -113,8 +113,25 @@ def collection():
                 'type_line': card.type_line or 'Unknown',
                 'colors': card.color_identity.split(',') if card.color_identity else [],
                 'rarity': card.rarity or 'common',
-                'image_uris': image_uris
+                'image_uris': image_uris,
+                'acquisition_price': card.acquisition_price or 'N/A',
+                'current_price': card.current_price or 'N/A'
             }
+            
+            # Calculate price difference for display
+            if card.acquisition_price and card.current_price:
+                try:
+                    acq_price = float(card.acquisition_price)
+                    curr_price = float(card.current_price)
+                    diff = curr_price - acq_price
+                    percent = (diff / acq_price) * 100 if acq_price else 0
+                    
+                    card_data['price_difference'] = diff
+                    card_data['price_percent'] = percent
+                except ValueError:
+                    card_data['price_difference'] = None
+                    card_data['price_percent'] = None
+            
             cards_with_images.append(card_data)
         except Exception as e:
             print(f"Error processing card {card.name}: {str(e)}")
@@ -170,7 +187,9 @@ def add_card():
             toughness=data.get('toughness'),
             image_uris=data.get('image_uris'),
             color_identity=data.get('color_identity'),
-            lang=data.get('lang')
+            lang=data.get('lang'),
+            acquisition_price=data.get('price'),  # Store as acquisition price
+            current_price=data.get('price')       # Initialize current price to match acquisition price
         )
         db.session.add(new_card)
     
@@ -193,5 +212,36 @@ def remove_card(card_id):
     db.session.commit()
     
     return jsonify({"message": "Card removed successfully", "card_id": card_id}), 200
+
+
+@app.route('/update_prices', methods=['POST'])
+@login_required
+def update_prices():
+    """Update current prices for all cards in user's collection"""
+    cards = Card.query.filter_by(user_ID=current_user.user_ID).all()
+    updated_count = 0
+    
+    for card in cards:
+        try:
+            # Use Scryfall API to get current price
+            if card.set_code and card.collector_number:
+                api_url = f"https://api.scryfall.com/cards/{card.set_code}/{card.collector_number}"
+                response = requests.get(api_url)
+                if response.status_code == 200:
+                    card_data = response.json()
+                    # Get price in USD if available
+                    if 'prices' in card_data and 'usd' in card_data['prices'] and card_data['prices']['usd']:
+                        card.current_price = card_data['prices']['usd']
+                        updated_count += 1
+            
+            # Prevent too many requests per second to the API
+            time.sleep(0.1)
+            
+        except Exception as e:
+            print(f"Error updating price for {card.name}: {str(e)}")
+            continue
+    
+    db.session.commit()
+    return jsonify({"message": f"Updated prices for {updated_count} cards"}), 200
 
 
