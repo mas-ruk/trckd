@@ -15,10 +15,10 @@
 
 {% block content %}
 <div class="container">
-    <h1>My Magic: The Gathering Collection</h1>
+    <h1 style="text-align: center; font-weight: bold">My Magic: The Gathering Collection</h1>
     
     <div class="d-flex justify-content-between mb-3">
-        <button id="updatePricesBtn" class="btn btn-info">
+        <button id="updatePricesBtn" class="rounded-pill filter-button px-2 py-2">
             <i class="fas fa-sync-alt"></i> Update Card Prices
         </button>
     </div>
@@ -29,13 +29,20 @@
         <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
 
         <select id="typeFilter" class="form-control mr-2">
-            <option value="">Types</option>
             <option value="Creature">Creature</option>
-            <option value="Spell">Spell</option>
+            <option value="Instant">Instant</option>
+            <option value="Sorcery">Sorcery</option>
+            <option value="Enchantment">Enchantment</option>
+            <option value="Planeswalker">Planeswalker</option>
+            <option value="Land">Land</option>
+            <option value="Battle">Battle</option>
+            <option value="Conspiracy">Conspiracy</option>
+            <option value="Tribal">Tribal</option>
+            <option value="Vanguard">Vanguard</option>
+            <option value="Scheme">Scheme</option>
         </select>
 
         <select id="colorFilter" class="form-control mr-2">
-            <option value="">Colours</option>
             <option value="Blue">Blue</option>
             <option value="Red">Red</option>
             <option value="Black">Black</option>
@@ -44,10 +51,10 @@
         </select>
 
         <select id="rarityFilter" class="form-control mr-2">
-            <option value="">Rarities</option>
             <option value="Common">Common</option>
+            <option value="Uncommon">Uncommon</option>
             <option value="Rare">Rare</option>
-            <option value="Famous">Famous</option>
+            <option value="Mythic">Mythic</option>
         </select>
 
         <button id="applyFilters" class="btn btn-primary">Apply</button>
