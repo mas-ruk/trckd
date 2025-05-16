@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shared Card Collection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #1a1a1d, #2d2d34);
+      color: #f1f1f1;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 3rem 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      text-align: center;
+      background: linear-gradient(90deg, #ff4ecd, #6c63ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #bbbbbb;
+      margin-bottom: 2.5rem;
+    }
+
+    .card-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      justify-items: center;
+    }
+
+    .flip-card {
+      perspective: 1000px;
+      width: 100%;
+      max-width: 300px;
+      aspect-ratio: 2.5 / 4.2;
+      cursor: pointer;
+    }
+
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s ease;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card.flipped .flip-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flip-front, .flip-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flip-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border: 2px solid #444;
+      border-radius: 12px;
+    }
+
+    .flip-back {
+      background: linear-gradient(135deg, #444, #1e1e1e);
+      color: #fff;
+      font-size: 0.9rem;
+      transform: rotateY(180deg);
+      text-align: left;
+      padding: 1rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-y: auto;
+    }
+
+    .footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+    }
+
+    .card-description {
+      max-height: 80%;
+      overflow-y: auto;
+    }
+
+    .flip-back {
+    background: linear-gradient(135deg, #444, #1e1e1e);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    }
+
+    .back-header {
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-back-title {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .card-back-subtitle {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #bbb;
+    }
+
+    .card-description {
+      flex: 1;
+      width: 100%;
+      max-width: 260px;
+      overflow-y: auto;
+      text-align: justify;
+      line-height: 1.4;
+      font-size: 0.9rem;
+      word-wrap: break-word;
+      white-space: pre-wrap; 
+      margin: 0;
+    }
+
+    .card-description p {
+      margin: 0;
+    }
+
+  </style>
+</head>
+<body>
+
+ <h1>Shared Card Collection</h1>
+  <p class="subtitle">Here’s a cool collection someone shared with you!</p>
+
+  {% if cards %}
+    <div class="card-gallery">
+      {% for card in cards %}
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+          <div class="flip-inner">
+            <div class="flip-front">
+              <img src="{{ card.image_url }}" alt="{{ card.name }}">
+            </div>
+              <div class="flip-back">
+                <div class="back-header">
+                  <h5 class="card-back-title">{{ card.name }}</h5>
+                  <h6 class="card-back-subtitle">Description</h6>
+                </div>
+                <div class="card-description">
+                  <p>{{ card.oracle_text }}</p>
+                </div>
+              </div>    
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-muted">No cards found for this shared link.</p>
+  {% endif %}
+
+  <div class="footer">
+    Built with ❤️ using <strong>trckd</strong> · Share your collection, your way.
+  </div>
+</body>
+</html>

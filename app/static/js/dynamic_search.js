@@ -395,6 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <button class="details-btn w-100 py-2 rounded-pill mt-2 add-version-btn"
                                         data-card-id="${version.id}"
                                         data-card-name="${version.name}"
+                                        data-oracle-text="${version.oracle_text.replace(/"/g,'&quot;')}"
                                         data-set-code="${setCode}"
                                         data-set-name="${version.set_name}"
                                         data-rarity="${rarity}"
@@ -415,13 +416,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add event listeners for the version selection buttons
         modalBody.querySelectorAll('.add-version-btn').forEach(button => {
             button.addEventListener('click', function() {
-                const index = this.getAttribute('data-index');
+                const index      = this.getAttribute('data-index');
                 const language = document.getElementById(`language-${index}`).value;
                 const condition = document.getElementById(`condition-${index}`).value;
                 const isFoil = document.getElementById(`foil-${index}`).checked;
                 const quantityInput = document.getElementById(`quantity-${index}`);
                 const quantity = parseInt(quantityInput.value);
                 
+                // pull the description straight off the button
+                const description = this.getAttribute('data-oracle-text') || '';
+
                 // Validate quantity
                 if (!quantity || quantity < 1) {
                     quantityInput.classList.add('is-invalid');
@@ -442,7 +446,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     language,
                     condition,
                     foil: isFoil,
-                    quantity
+                    quantity,
+                    oracle_text:    description
                 };
                 
                 addCardToCollection(cardData);

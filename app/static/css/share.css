@@ -1,0 +1,79 @@
+/* === CARD GRID LAYOUT === */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 220px);
+  justify-content: center;  /* center cards horizontally */
+  gap: 2rem;                /* spacing between cards */
+}
+
+/* === INDIVIDUAL CARD STYLING === */
+.card-item {
+  background-color: #332940;
+  position: relative;
+  padding: 2.5rem 1rem 1rem; /* space at top for checkbox */
+  border-radius: 10px;
+  transition: transform 0.3s;
+}
+
+/* === CARD IMAGE SIZING + GLOW ANIMATION === */
+.card-item img {
+  width: auto;
+  max-width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.3s ease-in-out;
+  cursor: pointer;
+}
+.card-item img:hover {
+  transform: scale(1.05);
+  animation: pulse-glow 1.5s infinite alternate;
+}
+
+@keyframes pulse-glow {
+  from {
+    box-shadow: 0 0 10px rgba(128, 90, 213, 0.5);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(128, 90, 213, 0.9);
+  }
+}
+
+/* === CHECKBOX STYLING (SMALLER) === */
+.card-item .form-check-input {
+  position: absolute;
+  top: 0.75rem;             /* slight adjustment */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.2rem;            /* reduced size */
+  height: 1.2rem;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* === CARD NAME FONT STYLING === */
+.card-item label {
+  display: block;
+  margin-top: 0.75rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f5f5f5;
+  text-align: center;
+}
+
+/* === OPTIONAL: SHARE OPTIONS MODAL BUTTONS === */
+.modal-content {
+  background-color: #2f243a;
+  color: white;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+.modal-header {
+  border-bottom: none;
+}
+.modal-body .btn {
+  margin: 0.4rem;
+  width: 140px;
+}
+
