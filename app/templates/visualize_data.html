@@ -12,26 +12,208 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-    <!--Chart JS-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .stats-box {
+            background-color: #2f243a !important;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 2rem;
+        }
+        .stats-box h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+        .stats-box canvas {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 10px;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            display: block;
+        }
+
+        .slider-container {
+            position: relative;
+            overflow-x: visible;
+            overflow-y: visible;
+            padding-top: 50px;  
+            padding-bottom: 50px; 
+        }
+
+        .card-slider {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            overflow-y: visible;
+            padding: 0 20px;
+        }
+
+        .card-slider .card {
+            flex: 0 0 250px;
+            background-color: #2f243a;
+            border-radius: 10px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 0 rgba(0,0,0,0);
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-slider::-webkit-scrollbar {
+        height: 6px;
+        }
+
+        .card-slider::-webkit-scrollbar-thumb {
+        background: rgba(129, 80, 225, 0.5);
+        border-radius: 5px;
+        }
+
+        .slide-btn {
+            display: none;
+        }
+
+        .stats-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat-card {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            width: 180px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.03);
+        }
+
+        .stat-icon {
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background: #333;
+            border-radius: 6px;
+            overflow: hidden;
+            height: 10px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            border-radius: 6px;
+        }
+
+        @keyframes slideFadeUp {
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-grid .stat-card {
+        opacity: 0;
+        animation: slideFadeUp 0.6s forwards;
+        }
+
+        .stats-grid .stat-card:nth-child(1) { animation-delay: 0.2s; }
+        .stats-grid .stat-card:nth-child(2) { animation-delay: 0.4s; }
+        .stats-grid .stat-card:nth-child(3) { animation-delay: 0.6s; }
+        .stats-grid .stat-card:nth-child(4) { animation-delay: 0.8s; }
+
+        .progress-bar {
+            width: 0;
+            transition: width 1s ease-in-out;
+        }
+
+        .stats-grid .stat-card:hover {
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+
+        .financial-stats-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .financial-stat-card {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            width: 220px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
+            animation: slideFadeUp 0.6s forwards;
+            opacity: 0;
+        }
+        
+        .financial-stats-grid .financial-stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .financial-stats-grid .financial-stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .financial-stats-grid .financial-stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .financial-stats-grid .financial-stat-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .financial-stat-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1>My Magic: The Gathering Collection</h1>
+    <h1 style="text-align: center; font-weight: bold">My Magic: The Gathering Collection</h1>
+    
+    <div class="d-flex justify-content-between mb-3">
+        <button id="updatePricesBtn" class="rounded-pill filter-button px-2 py-2">
+            <i class="fas fa-sync-alt"></i> Update Card Prices
+        </button>
+    </div>
 
-    <!-- Filter Bar -->
+    {% if cards %}
+    <!-- Filter Bar - Only show if cards exist -->
     <div class="filter-bar d-flex align-items-center justify-content-start p-3">
         <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
 
         <select id="typeFilter" class="form-control mr-2">
-            <option value="">Types</option>
+            <option value="" selected>Type</option>
             <option value="Creature">Creature</option>
-            <option value="Spell">Spell</option>
+            <option value="Instant">Instant</option>
+            <option value="Sorcery">Sorcery</option>
+            <option value="Enchantment">Enchantment</option>
+            <option value="Planeswalker">Planeswalker</option>
+            <option value="Land">Land</option>
+            <option value="Battle">Battle</option>
+            <option value="Conspiracy">Conspiracy</option>
+            <option value="Tribal">Tribal</option>
+            <option value="Vanguard">Vanguard</option>
+            <option value="Scheme">Scheme</option>
         </select>
 
         <select id="colorFilter" class="form-control mr-2">
-            <option value="">Colours</option>
+            <option value="" selected>Color</option>
             <option value="Blue">Blue</option>
             <option value="Red">Red</option>
             <option value="Black">Black</option>
@@ -40,21 +222,20 @@
         </select>
 
         <select id="rarityFilter" class="form-control mr-2">
-            <option value="">Rarities</option>
+            <option value="" selected>Rarity</option>
             <option value="Common">Common</option>
+            <option value="Uncommon">Uncommon</option>
             <option value="Rare">Rare</option>
-            <option value="Famous">Famous</option>
+            <option value="Mythic">Mythic</option>
         </select>
 
         <button id="applyFilters" class="btn btn-primary">Apply</button>
         <button id="resetFilters" class="btn btn-secondary">Reset Filters</button>
     </div>
 
-    <!-- Featured Card Slider -->
+    <!-- Featured Card Slider - Only show if cards exist -->
     <div class="card-slider-wrapper position-relative">
-        <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
-
-
+        <button class="filter-button rounded-pill slide-btn left" onclick="slideLeft()">&#8249;</button>
 
         <div class="card-slider d-flex" id="cardSlider">
             {% for card in cards %}
@@ -62,63 +243,171 @@
                      data-name="{{ card.name | lower }}"
                      data-type="{{ card.type_line | lower }}"
                      data-color="{{ card.colors | join(',') | lower }}"
-                     data-rarity="{{ card.rarity | lower }}">
+                     data-rarity="{{ card.rarity | lower }}"
+                     data-id="{{ card.card_ID }}">
                     <div class="card-image">
                         {% if card.image_uris and card.image_uris.normal %}
                             <img src="{{ card.image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
                         {% elif card.card_faces and card.card_faces[0].image_uris %}
-                            {# Handle double-faced cards #}
                             <img src="{{ card.card_faces[0].image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
                         {% else %}
                             <img src="{{ url_for('static', filename='images/card-back.jpg') }}" alt="Card Back" />
                         {% endif %}
                     </div>
-                    <h6>{{ card.name }}</h6>
-                    <p>Type: {{ card.type_line }}</p>
-                    <p>Colour: {{ card.colors | join(', ') }}</p>
-                    <p>Rarity: {{ card.rarity.title() }}</p>
+                    <div class="card-content">
+                        <h6>{{ card.name }}</h6>
+                        <p>Type: {{ card.type_line }}</p>
+                        <p>Colour: {{ card.colors | join(', ') }}</p>
+                        <p>Rarity: {{ card.rarity.title() }}</p>
+                        
+                        <!-- Always show the pricing section -->
+                        <div class="card-pricing">
+                            <p>Purchase Price: {% if card.acquisition_price != 'N/A' %}${{ card.acquisition_price }}{% else %}N/A{% endif %}</p>
+                            <p>Current Price: {% if card.current_price != 'N/A' %}${{ card.current_price }}{% else %}N/A{% endif %}</p>
+                            
+                            {% if card.price_difference is defined and card.price_difference is not none %}
+                                <!-- If we have price difference data -->
+                                <p class="price-change {% if card.price_difference > 0 %}text-success{% elif card.price_difference < 0 %}text-danger{% endif %}">
+                                    {% if card.price_difference > 0 %}+{% endif %}${{ "%.2f"|format(card.price_difference) }} 
+                                    ({{ "%.1f"|format(card.price_percent|default(0)) }}%)
+                                </p>
+                            {% elif card.acquisition_price != 'N/A' and card.current_price != 'N/A' %}
+                                <!-- If both prices are the same (no difference calculated) -->
+                                <p class="price-change text-secondary">
+                                    $0.00 (0.0%)
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button class="remove-card rounded-pill px-2 py-2 filter-button" data-id="{{ card.card_ID }}">
+                            <i class="fas fa-trash-alt"></i> Remove
+                        </button>
+                    </div>
                 </div>
             {% endfor %}
         </div>
-
-
-
         <button class="filter-button rounded-pill slide-btn right" onclick="slideRight()">&#8250;</button>
-
     </div>
-
-    <!-- Create Collection Form -->
-    <div class="mt-5">
-        <h2 class="mb-4">Create a New Collection</h2>
-
-        <div class="collection-form">
-            <form id="createCollectionForm" method="POST">
-                <div class="mb-3">
-                    <label for="collectionName" class="form-label">Collection Name</label>
-                    <input type="text" class="form-control" id="collectionName" name="collectionName" required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="collectionDescription" class="form-label">Description</label>
-                    <textarea class="form-control" id="collectionDescription" name="collectionDescription" rows="4" required></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Create Collection</button>
-            </form>
+    {% else %}
+    <!-- Empty state display -->
+    <div class="empty-collection-state text-center p-5 my-4">
+        <div class="empty-icon mb-4">
+            <i class="fas fa-search fa-3x"></i>
         </div>
+        <h3 class="mb-3">Your collection is empty</h3>
+        <p class="lead mb-4">Start building your collection by adding cards from the search page.</p>
     </div>
+    {% endif %}
 
     <!-- Stats Section -->
-    <section class="stats-box mt-5">
-        <h2>Collection Stats</h2>
-        <canvas id="chartCanvas"></canvas>
+    <section class="stats-box mt-4">
+        <h2>Type Breakdown</h2>
+        <div class="stats-grid">
+            {% for type_name, type_data in type_stats.items() %}
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: {{ type_data.color }};">
+                        <i class="fas {{ type_data.icon }} fa-2x"></i>
+                    </div>
+                    <div class="stat-value">{{ "%.1f"|format(type_data.percentage) }}%</div>
+                    <div class="stat-label">{{ type_name }}</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ type_data.percentage }}%; background-color: {{ type_data.color }};"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </section>
-</div>
+
+    <section class="stats-box mt-4">
+        <h2>Color Breakdown</h2>
+        <div class="stats-grid">
+            {% for color_name, color_data in color_stats.items() %}
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: {{ color_data.color }};">
+                        <i class="fas {{ color_data.icon }} fa-2x"></i>
+                    </div>
+                    <div class="stat-value">{{ "%.1f"|format(color_data.percentage) }}%</div>
+                    <div class="stat-label">{{ color_name }}</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ color_data.percentage }}%; background-color: {{ color_data.color }};"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="stats-box mt-4">
+        <h2>Rarity Breakdown</h2>
+        <div class="stats-grid">
+            {% for rarity_name, rarity_data in rarity_stats.items() %}
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: {{ rarity_data.color }};">
+                        <i class="fas {{ rarity_data.icon }} fa-2x"></i>
+                    </div>
+                    <div class="stat-value">{{ "%.1f"|format(rarity_data.percentage) }}%</div>
+                    <div class="stat-label">{{ rarity_name }}</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ rarity_data.percentage }}%; background-color: {{ rarity_data.color }};"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Financial Stats Box - Only show if cards exist -->
+    <section class="stats-box mt-4 mb-4" id="financial-stats">
+        <h2>Collection Value</h2>
+        <div class="financial-stats-container">
+            <div class="financial-stats-grid">
+                <div class="financial-stat-card">
+                    <div class="stat-icon" style="color: #f39c12;">
+                        <i class="fas fa-coins fa-2x"></i>
+                    </div>
+                    <div class="stat-value">${{ "%.2f"|format(financial_stats.total_current) }}</div>
+                    <div class="stat-label">Current Value</div>
+                </div>
+                
+                <div class="financial-stat-card">
+                    <div class="stat-icon" style="color: #3498db;">
+                        <i class="fas fa-receipt fa-2x"></i>
+                    </div>
+                    <div class="stat-value">${{ "%.2f"|format(financial_stats.total_acquisition) }}</div>
+                    <div class="stat-label">Acquisition Cost</div>
+                </div>
+                
+                <div class="financial-stat-card">
+                    <div class="stat-icon" style="color: {{ financial_stats.color }};">
+                        <i class="fas {{ financial_stats.icon }} fa-2x"></i>
+                    </div>
+                    <div class="stat-value" style="color: {{ financial_stats.color }};">
+                        {% if financial_stats.difference > 0 %}+{% endif %}${{ "%.2f"|format(financial_stats.difference) }}
+                    </div>
+                    <div class="stat-label">Total Growth</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ financial_stats.progress_width }}%; background-color: {{ financial_stats.color }};"></div>
+                    </div>
+                </div>
+                
+                <div class="financial-stat-card">
+                    <div class="stat-icon" style="color: {{ financial_stats.color }};">
+                        <i class="fas fa-percentage fa-2x"></i>
+                    </div>
+                    <div class="stat-value" style="color: {{ financial_stats.color }};">
+                        {% if financial_stats.growth_percent > 0 %}+{% endif %}{{ "%.2f"|format(financial_stats.growth_percent) }}%
+                    </div>
+                    <div class="stat-label">Return on Investment</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
 {% endblock %}
 
 {% block scripts %}
 <script>
-    // Slider logic
+    // Card slider functionality
     function slideLeft() {
         const slider = document.getElementById('cardSlider');
         slider.scrollBy({ left: -300, behavior: 'smooth' });
@@ -130,35 +419,266 @@
     }
 
     // Filter logic
-    document.getElementById("applyFilters").addEventListener("click", function () {
-        const search = document.getElementById("searchBox").value.toLowerCase();
-        const type = document.getElementById("typeFilter").value.toLowerCase();
-        const color = document.getElementById("colorFilter").value.toLowerCase();
-        const rarity = document.getElementById("rarityFilter").value.toLowerCase();
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get filter elements
+        const searchBox = document.getElementById("searchBox");
+        const typeFilter = document.getElementById("typeFilter");
+        const colorFilter = document.getElementById("colorFilter");
+        const rarityFilter = document.getElementById("rarityFilter");
+        const applyBtn = document.getElementById("applyFilters");
+        const resetBtn = document.getElementById("resetFilters");
 
-        const cards = document.querySelectorAll(".card-slider .card");
+        // Apply filters function
+        function applyFilters() {
+            const search = searchBox.value.toLowerCase();
+            const type = typeFilter.value.toLowerCase();
+            const color = colorFilter.value.toLowerCase();
+            const rarity = rarityFilter.value.toLowerCase();
 
-        cards.forEach(card => {
-            const name = card.getAttribute("data-name");
-            const cardType = card.getAttribute("data-type");
-            const cardColor = card.getAttribute("data-color");
-            const cardRarity = card.getAttribute("data-rarity");
+            const cards = document.querySelectorAll(".card-slider .card");
 
-            const matchesSearch = !search || name.includes(search);
-            const matchesType = !type || cardType.includes(type);
-            const matchesColor = !color || cardColor.includes(color);
-            const matchesRarity = !rarity || cardRarity.includes(rarity);
+            cards.forEach(card => {
+                const name = card.getAttribute("data-name");
+                const cardType = card.getAttribute("data-type");
+                const cardColor = card.getAttribute("data-color");
+                const cardRarity = card.getAttribute("data-rarity");
 
-            if (matchesSearch && matchesType && matchesColor && matchesRarity) {
+                // Fix for color matching - map color names to their single-letter codes
+                let matchesColor = !color || color === ""; // Default if no color selected
+                if (color) {
+                    const colorMap = {
+                        "white": "w",
+                        "blue": "u",
+                        "black": "b",
+                        "red": "r",
+                        "green": "g"
+                    };
+                    // If looking for a specific color, check if it's in the card colors
+                    matchesColor = cardColor.includes(colorMap[color] || color);
+                }
+
+                const matchesSearch = !search || name.includes(search);
+                const matchesType = !type || cardType.includes(type);
+                const matchesRarity = !rarity || cardRarity.includes(rarity);
+
+                card.style.display = (matchesSearch && matchesType && matchesColor && matchesRarity) ? "block" : "none";
+            });
+        }
+
+        // Reset filters function
+        function resetFilters() {
+            searchBox.value = "";
+            typeFilter.value = "";
+            colorFilter.value = "";
+            rarityFilter.value = "";
+            
+            // Reset display for all cards
+            document.querySelectorAll(".card-slider .card").forEach(card => {
                 card.style.display = "block";
-            } else {
-                card.style.display = "none";
-            }
+            });
+        }
+
+        // Add event listeners
+        applyBtn.addEventListener("click", applyFilters);
+        resetBtn.addEventListener("click", resetFilters);
+
+        // Card removal logic
+        document.querySelectorAll('.remove-card').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (!confirm('Are you sure you want to remove this card from your collection?')) {
+                    return;
+                }
+                
+                const cardId = this.getAttribute('data-id');
+                const cardElement = this.closest('.card');
+                
+                // Send deletion request
+                fetch(`/remove_card/${cardId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        // Remove the card element from the DOM
+                        cardElement.remove();
+                        
+                        // Show success message
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success';
+                        alertDiv.textContent = data.message;
+                        document.querySelector('.container').prepend(alertDiv);
+                        
+                        // Hide alert after 3 seconds
+                        setTimeout(() => alertDiv.remove(), 3000);
+                        
+                        // If no cards left, reload page to show empty state
+                        if (document.querySelectorAll('.card-slider .card').length === 0) {
+                            location.reload();
+                        } else {
+                            // Update stats via AJAX
+                            updateCollectionStats();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error removing card:', error);
+                    alert('There was an error removing the card.');
+                });
+            });
         });
     });
+
+    // Update prices button
+    document.getElementById('updatePricesBtn').addEventListener('click', function() {
+        // Show loading indicator
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating Prices...';
+        this.disabled = true;
+        
+        // Send request to update prices
+        fetch('/update_prices', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            // Reload the page to show updated prices
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error updating prices:', error);
+            alert('There was an error updating prices.');
+        })
+        .finally(() => {
+            // Reset button state
+            this.innerHTML = '<i class="fas fa-sync-alt"></i> Update Card Prices';
+            this.disabled = false;
+        });
+    });
+
+    // Animate progress bars after cards appear
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.progress-bar').forEach(bar => {
+            const targetWidth = bar.style.width;
+            bar.style.width = '0'; // Reset to 0 first
+            setTimeout(() => {
+                bar.style.width = targetWidth; // Animate to final width
+            }, 600); // Delay to sync with stat-card fade-in
+        });
+    });
+
+    // Add new function to update stats
+    function updateCollectionStats() {
+        fetch('/api/collection_stats', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update each stat section
+            updateStatSection('Type Breakdown', data.type_stats);
+            updateStatSection('Color Breakdown', data.color_stats);
+            updateStatSection('Rarity Breakdown', data.rarity_stats);
+            
+            // Update financial stats
+            updateFinancialStats(data.financial_stats);
+            
+            // Re-animate progress bars
+            document.querySelectorAll('.progress-bar').forEach(bar => {
+                const targetWidth = bar.style.width;
+                bar.style.width = '0'; // Reset to 0 first
+                setTimeout(() => {
+                    bar.style.width = targetWidth; // Animate to final width
+                }, 100);
+            });
+        })
+        .catch(error => {
+            console.error('Error updating stats:', error);
+        });
+    }
+
+    // Helper function to update a specific stat section
+    function updateStatSection(title, stats) {
+        const section = Array.from(document.querySelectorAll('.stats-box')).find(box => 
+            box.querySelector('h2').textContent === title
+        );
+        
+        if (!section) return;
+        
+        const grid = section.querySelector('.stats-grid');
+        grid.innerHTML = ''; // Clear existing stats
+        
+        // Add new stat cards
+        for (const [name, data] of Object.entries(stats)) {
+            grid.innerHTML += `
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: ${data.color};">
+                        <i class="fas ${data.icon} fa-2x"></i>
+                    </div>
+                    <div class="stat-value">${data.percentage.toFixed(1)}%</div>
+                    <div class="stat-label">${name}</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${data.percentage}%; background-color: ${data.color};"></div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // Add new function to update financial stats
+    function updateFinancialStats(stats) {
+        const financialStatsContainer = document.querySelector('#financial-stats .financial-stats-grid');
+        if (!financialStatsContainer) return;
+        
+        financialStatsContainer.innerHTML = `
+            <div class="financial-stat-card">
+                <div class="stat-icon" style="color: #f39c12;">
+                    <i class="fas fa-coins fa-2x"></i>
+                </div>
+                <div class="stat-value">$${stats.total_current.toFixed(2)}</div>
+                <div class="stat-label">Current Value</div>
+            </div>
+            
+            <div class="financial-stat-card">
+                <div class="stat-icon" style="color: #3498db;">
+                    <i class="fas fa-receipt fa-2x"></i>
+                </div>
+                <div class="stat-value">$${stats.total_acquisition.toFixed(2)}</div>
+                <div class="stat-label">Acquisition Cost</div>
+            </div>
+            
+            <div class="financial-stat-card">
+                <div class="stat-icon" style="color: ${stats.color};">
+                    <i class="fas ${stats.icon} fa-2x"></i>
+                </div>
+                <div class="stat-value" style="color: ${stats.color};">
+                    ${stats.difference > 0 ? '+' : ''}$${stats.difference.toFixed(2)}
+                </div>
+                <div class="stat-label">Total Growth</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${stats.progress_width}%; background-color: ${stats.color};"></div>
+                </div>
+            </div>
+            
+            <div class="financial-stat-card">
+                <div class="stat-icon" style="color: ${stats.color};">
+                    <i class="fas fa-percentage fa-2x"></i>
+                </div>
+                <div class="stat-value" style="color: ${stats.color};">
+                    ${stats.growth_percent > 0 ? '+' : ''}${stats.growth_percent.toFixed(2)}%
+                </div>
+                <div class="stat-label">Return on Investment</div>
+            </div>
+        `;
+    }
 </script>
-
-<script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
 {% endblock %}
-
-
