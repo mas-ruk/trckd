@@ -81,19 +81,24 @@
                         <p>Colour: {{ card.colors | join(', ') }}</p>
                         <p>Rarity: {{ card.rarity.title() }}</p>
                         
-                        {% if card.acquisition_price != 'N/A' %}
+                        <!-- Always show the pricing section -->
                         <div class="card-pricing">
-                            <p>Purchase Price: ${{ card.acquisition_price }}</p>
-                            <p>Current Price: ${{ card.current_price }}</p>
+                            <p>Purchase Price: {% if card.acquisition_price != 'N/A' %}${{ card.acquisition_price }}{% else %}N/A{% endif %}</p>
+                            <p>Current Price: {% if card.current_price != 'N/A' %}${{ card.current_price }}{% else %}N/A{% endif %}</p>
                             
                             {% if card.price_difference is not none %}
+                                <!-- If we have price difference data -->
                                 <p class="price-change {% if card.price_difference > 0 %}text-success{% elif card.price_difference < 0 %}text-danger{% endif %}">
                                     {% if card.price_difference > 0 %}+{% endif %}${{ "%.2f"|format(card.price_difference) }} 
                                     ({{ "%.1f"|format(card.price_percent) }}%)
                                 </p>
+                            {% elif card.acquisition_price != 'N/A' and card.current_price != 'N/A' %}
+                                <!-- If both prices are the same (no difference calculated) -->
+                                <p class="price-change text-secondary">
+                                    $0.00 (0.0%)
+                                </p>
                             {% endif %}
                         </div>
-                        {% endif %}
                     </div>
                     
                     <div class="card-actions">
