@@ -197,15 +197,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p class="card-text">${card.set_name || ''} (${setCode}) | <strong>${rarity}</strong></p>
                     <p class="card-text">Price: ${priceText}</p>
                 </div>
-                <div class="card-footer d-flex justify-content-between gap-3 pt-3">
-                    <button class="card-footer-btn rounded-pill px-4 py-2 select-version-btn" 
+                <div class="card-footer d-flex flex-wrap justify-content-center gap-2 pt-3">
+                    <button class="card-footer-btn rounded-pill px-3 py-2 select-version-btn" 
                         data-card-name="${card.name}" 
                         data-card-id="${card.id}" 
                         data-card-set="${setCode}">
                         <i class="bi bi-plus-lg"></i> Add
                     </button>
                     <button
-                        class="card-footer-btn rounded-pill px-4 py-2 open-details-btn"
+                        class="card-footer-btn rounded-pill px-3 py-2 open-details-btn"
                         data-bs-toggle="modal"
                         data-bs-target="#detailsPage"
                         data-card-id="${card.id}"
