@@ -464,7 +464,8 @@ document.addEventListener('DOMContentLoaded', function() {
             toughness: "", // Will be populated from API if needed
             image_uris: JSON.stringify({normal: cardData.image}),
             color_identity: "", // Will be populated from API if needed
-            lang: cardData.language
+            lang: cardData.language,
+            price: cardData.price.replace('A$', '').trim() // Extract the price without currency symbol
         };
 
         // Get additional card details from Scryfall API

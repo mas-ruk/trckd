@@ -93,11 +93,11 @@
                             <p>Purchase Price: {% if card.acquisition_price != 'N/A' %}${{ card.acquisition_price }}{% else %}N/A{% endif %}</p>
                             <p>Current Price: {% if card.current_price != 'N/A' %}${{ card.current_price }}{% else %}N/A{% endif %}</p>
                             
-                            {% if card.price_difference is not none %}
+                            {% if card.price_difference is defined and card.price_difference is not none %}
                                 <!-- If we have price difference data -->
                                 <p class="price-change {% if card.price_difference > 0 %}text-success{% elif card.price_difference < 0 %}text-danger{% endif %}">
                                     {% if card.price_difference > 0 %}+{% endif %}${{ "%.2f"|format(card.price_difference) }} 
-                                    ({{ "%.1f"|format(card.price_percent) }}%)
+                                    ({{ "%.1f"|format(card.price_percent|default(0)) }}%)
                                 </p>
                             {% elif card.acquisition_price != 'N/A' and card.current_price != 'N/A' %}
                                 <!-- If both prices are the same (no difference calculated) -->
