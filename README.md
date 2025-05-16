@@ -25,10 +25,51 @@ A Magic the Gathering collection tracking and analysis tool. A CITS3403 - Agile 
 - **Database**: SQLite via SQLAlchemy
 
 ## 🚀 Running the Application
-1. Unzip the repository file and cd into it through your terminal.
-2. Install the required packages by running `pip install -r requirements.txt` in your terminal. (NOTE: in some cases, running this command may print an error message telling you to run a different command. If this happens, run that command instead.)
-3. Run the Flask app using the command `flask run`.
-4. Open the webpage by navigating to `http://127.0.0.1:5000` in a web browser of your choice (the link should be printed in the terminal).
+
+### 1. Unzip and Navigate
+Unzip the repository and open a terminal in the project directory.
+
+### 2. Set Up a Virtual Environment
+
+**macOS / Linux:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+**Windows:**
+```cmd
+python -m venv venv
+venv\Scripts\activate
+```
+
+### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Run the Flask App
+
+**macOS / Linux:**
+```bash
+export FLASK_APP=app
+flask run
+```
+
+**Windows (Command Prompt):**
+```cmd
+set FLASK_APP=app
+flask run
+```
+
+**Windows (PowerShell):**
+```powershell
+$env:FLASK_APP = "app"
+flask run
+```
+
+### 5. Open the App
+Go to [http://127.0.0.1:5000](http://127.0.0.1:5000) in your web browser.
 
 ## 🧪 Running the Tests
 1. Ensure you are in the top-level directory of the repository (i.e. you can see the `app` directory when you run the `ls` command).
