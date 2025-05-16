@@ -1,191 +1,221 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>trckd - Login</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Import Bootstrap 4 -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Import Bootstrap Icons CDN -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-        <style>
-            body {
-                background-color: #121212;
-            }
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>trckd - Login</title>
+    
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
 
-            .menu {
-                background-color: #2f243a;
-            }
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 
-            .btn {
-                background-color: crimson;
-                border-color: white;
-            }
+    <!-- Bootstrap Icons CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-            .btn:hover {
-                background-color: lightslategray;
-                border-color: white;
-            }
+    <!-- jQuery CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
 
-            .homepage-form {
-                background-color: #2f243a;
-                color: white;
-            }
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Sidebar and Base CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/visual.css') }}">
+</head>
 
-            .nav-link {
-                color: white;
-            }
+<body class="bg-purple-black">
+    <div class="flex-container">
+        <!-- Sidebar -->
+        <div class="bg-purple-dark text-white sidebar p-3 d-flex flex-column" id="sidebar"> 
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="bi bi-chevron-left" id="toggleIcon"></i>
+            </button>
+            
+            <h4 style="font-weight: bold;"> trckd </h4>
+            <hr>
 
-            .nav-link:hover {
-                background-color: lightslategray;
-                border-radius: 5px;
-                color: white;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container-fluid">
-            <div class="row min-vh-100">
-                <ul class="nav text-white flex-column col-2 p-2 menu rounded">
-                    <h4 style="margin-left: 15px; margin-top: 15px;"> <b>trckd</b> </h4>
-                    <hr style="border: 1px solid white; width: 96%;">
-                    <li class="nav-item">
-                        <a class="nav-link {% if active_tab == 'home' %}active{% endif %}" data-toggle="tab" href="#home"><i class="bi bi-house me-2"></i> Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if active_tab == 'login' %}active{% endif %}" data-toggle="tab" href="#login" id="login_link"><i class="bi bi-arrow-right me-2"></i> Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if active_tab == 'register' %}active{% endif %}" data-toggle="tab" href="#register" id="register_link"><i class="bi bi-plus me-2"></i> Register</a>
-                    </li>
-                </ul>
-                <div class="tab-content col-10">
-                    <div class="tab-pane container {% if active_tab == 'home' %}show active{% endif %}" id="home">
-                        <h1 class="bg-dark text-white p-3 rounded">Home</h1>
-                        <img class="p-3 img-thumbnail text-center" src="https://dnm.nflximg.net/api/v6/BvVbc2Wxr2w6QuoANoSpJKEIWjQ/AAAAQWCQSRUcuxcg36x-fAfduhyZgCN1mHUBMGq0OEDmIQM8NU-xKpoWNjs2QxnrzxDYjDlqqhl9ftxXCoYbruqQFFFhkvQd3eABBb-v2z9_FTNAxHVcY-oGgc58sqdUTMf5YrQUMdlRjZrtq7tDB5j6uVR6bFA.jpg?r=91f">
-                        <p class="border bg-light p-3 rounded" style="margin: 20px;"><b>trckd</b> is a web-based application that serves as a collecting tool for the popular trading card game <b>Magic: The Gathering</b>, published by Wizards of the Coast. It provides the ability to upload cards from your collection, sort them and then visualiase data about your entire library. Login or register to get started.</p>
-                    </div>
-                    <div class="tab-pane container fade text-white {% if active_tab == 'login' %}show active{% endif %}" id="login">
-                        <h1 class="bg-dark p-3 rounded mb-3">Login</h1>
-                        <form method="POST" action="">
-                            {{ login_form.hidden_tag() }}
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-auto">                           
-                                    {{ login_form.login_email.label(class="form-label font-weight-bold") }} 
-                                </div>
-                                <div class="col">
-                                    {{ login_form.login_email(class="form-control", id="login_email") }}
-                                </div>
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                {% for error in login_form.login_email.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
-                                {% endfor %}
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-auto">                           
-                                    {{ login_form.login_password.label(class="form-label font-weight-bold") }} 
-                                </div>
-                                <div class="col">
-                                    {{ login_form.login_password(class="form-control", id="login_password") }}
-                                </div>
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                {% for error in login_form.login_password.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
-                                {% endfor %}
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-auto">
-                                    {{ login_form.login_remember_me.label(class="form-label font-weight-bold") }}
-                                </div>
-                                <div class="col">
-                                    {{ login_form.login_remember_me }}
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    {{ login_form.submit(class="btn btn-primary float-right", id="submit") }}
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="tab-pane container fade text-white {% if active_tab == 'register' %}show active{% endif %}" id="register">
-                        <h1 class="bg-dark text-white p-3 rounded mb-3">Register</h1>
-                        <form method="POST" action="">
-                            {{ register_form.hidden_tag() }}
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-auto">                           
-                                    {{ register_form.register_email.label(class="form-label font-weight-bold") }} 
-                                </div>
-                                <div class="col">
-                                    {{ register_form.register_email(class="form-control", id="register_email") }}
-                                </div>
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                {% for error in register_form.register_email.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
-                                {% endfor %}
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-auto">                           
-                                    {{ register_form.username.label(class="form-label font-weight-bold") }} 
-                                </div>
-                                <div class="col">
-                                    {{ register_form.username(class="form-control", id="username") }}
-                                </div>
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                {% for error in register_form.username.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
-                                {% endfor %}
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-auto">                           
-                                    {{ register_form.register_password.label(class="form-label font-weight-bold") }} 
-                                </div>
-                                <div class="col">
-                                    {{ register_form.register_password(class="form-control", id="register_password") }}
-                                </div>
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                {% for error in register_form.register_password.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
-                                {% endfor %}
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                <div class="col-auto">                           
-                                    {{ register_form.password_confirm.label(class="form-label font-weight-bold") }} 
-                                </div>
-                                <div class="col">
-                                    {{ register_form.password_confirm(class="form-control", id="password_confirm") }}
-                                </div>
-                            </div>
-                            <div class="row mb-3 align-items-center">
-                                {% for error in register_form.password_confirm.errors %}
-                                <span style="color:red;">[{{ error}}]</span>
-                                {% endfor %}
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-auto">
-                                    {{ register_form.register_remember_me.label(class="form-label font-weight-bold") }}
-                                </div>
-                                <div class="col">
-                                    {{ register_form.register_remember_me }}
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col">
-                                    {{ register_form.register_submit(class="btn btn-primary float-right", id="register_submit") }}
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+            <!-- List items -->
+            <ul class="nav flex-column">
+                <li class="nav-item"> <a class="nav-link text-white fw-semibold {% if active_tab == 'home' %}active{% endif %}" data-toggle="tab" href="#home"><i class="bi bi-house me-2"></i><span class=menu-text>Home</span></a> </li>
+                <li class="nav-item"> <a class="nav-link text-white fw-semibold {% if active_tab == 'login' %}active{% endif %}" data-toggle="tab" href="#login" id="login_link"><i class="bi bi-arrow-right me-2"></i> <span class=menu-text>Login</span></a> </li>
+                <li class="nav-item"> <a class="nav-link text-white fw-semibold {% if active_tab == 'register' %}active{% endif %}" data-toggle="tab" href="#register" id="register_link"><i class="bi bi-plus me-2"></i><span class=menu-text>Register</span></a> </li>
+            </ul> 
+        </div>
+
+        <!-- Content -->
+        <div class="bg-purple-black text-white d-flex flex-column content tab-content" id="content">
+            <div class="tab-pane container {% if active_tab == 'home' %}show active{% endif %}" id="home">
+                <h1 class="bg-dark text-white p-3 rounded"><b>Home</b></h1>
+                <p class="border bg-light p-3 rounded text-black" style="margin: 20px;"><b>trckd</b> is a web-based application that serves as a collecting tool for the popular trading card game <b>Magic: The Gathering</b>, published by Wizards of the Coast. It provides the ability to upload cards from your collection, sort them and then visualiase data about your entire library. Login or register to get started.</p>
+                <div class="text-center">
+                    <img class="p-3 img-thumbnail w-75 h-auto" src="https://dnm.nflximg.net/api/v6/BvVbc2Wxr2w6QuoANoSpJKEIWjQ/AAAAQWCQSRUcuxcg36x-fAfduhyZgCN1mHUBMGq0OEDmIQM8NU-xKpoWNjs2QxnrzxDYjDlqqhl9ftxXCoYbruqQFFFhkvQd3eABBb-v2z9_FTNAxHVcY-oGgc58sqdUTMf5YrQUMdlRjZrtq7tDB5j6uVR6bFA.jpg?r=91f">
                 </div>
             </div>
+            <div class="tab-pane container fade text-white {% if active_tab == 'login' %}show active{% endif %}" id="login">
+                <h1 class="bg-dark p-3 rounded mb-3">Login</h1>
+                <form method="POST" action="">
+                    {{ login_form.hidden_tag() }}
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">                           
+                            <b>{{ login_form.login_email.label(class="form-label") }}</b> 
+                        </div>
+                        <div class="col">
+                            {{ login_form.login_email(class="form-control w-75", id="login_email") }}
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        {% for error in login_form.login_email.errors %}
+                        <span style="color:red;">[{{ error}}]</span>
+                        {% endfor %}
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">                           
+                            <b>{{ login_form.login_password.label(class="form-label") }}</b>
+                        </div>
+                        <div class="col">
+                            {{ login_form.login_password(class="form-control w-50", id="login_password") }}
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        {% for error in login_form.login_password.errors %}
+                        <span style="color:red;">[{{ error}}]</span>
+                        {% endfor %}
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <b>{{ login_form.login_remember_me.label(class="form-label") }}</b>
+                        </div>
+                        <div class="col">
+                            {{ login_form.login_remember_me }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-9"></div>
+                        <div class="col-3">
+                            {{ login_form.submit(class="details-btn p-2 rounded", id="submit") }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane container fade text-white {% if active_tab == 'register' %}show active{% endif %}" id="register">
+                <h1 class="bg-dark text-white p-3 rounded mb-3">Register</h1>
+                <form method="POST" action="">
+                    {{ register_form.hidden_tag() }}
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">                           
+                            <b>{{ register_form.register_email.label(class="form-label") }}</b>
+                        </div>
+                        <div class="col">
+                            {{ register_form.register_email(class="form-control w-75", id="register_email") }}
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        {% for error in register_form.register_email.errors %}
+                        <span style="color:red;">[{{ error}}]</span>
+                        {% endfor %}
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">                           
+                            <b>{{ register_form.username.label(class="form-label") }}</b>
+                        </div>
+                        <div class="col">
+                            {{ register_form.username(class="form-control w-75", id="username") }}
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        {% for error in register_form.username.errors %}
+                        <span style="color:red;">[{{ error}}]</span>
+                        {% endfor %}
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">                           
+                            <b>{{ register_form.register_password.label(class="form-label") }}</b>
+                        </div>
+                        <div class="col">
+                            {{ register_form.register_password(class="form-control w-50", id="register_password") }}
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        {% for error in register_form.register_password.errors %}
+                        <span style="color:red;">[{{ error}}]</span>
+                        {% endfor %}
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-auto">                           
+                            <b>{{ register_form.password_confirm.label(class="form-label") }}</b>
+                        </div>
+                        <div class="col">
+                            {{ register_form.password_confirm(class="form-control w-50", id="password_confirm") }}
+                        </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        {% for error in register_form.password_confirm.errors %}
+                        <span style="color:red;">[{{ error}}]</span>
+                        {% endfor %}
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-auto">
+                            <b>{{ register_form.register_remember_me.label(class="form-label") }}</b>
+                        </div>
+                        <div class="col">
+                            {{ register_form.register_remember_me }}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-9"></div>
+                        <div class="col-3">
+                            {{ register_form.register_submit(class="details-btn p-2 rounded", id="register_submit") }}
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-    </body>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-5cmG4HDKDcrrk4cZWIRbXW1lgdPbH0osLOYTdSd5quN4dWQdvFeBk4MS7YjE4k0v" crossorigin="anonymous"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            function toggleSidebar() {
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('expanded');
+                
+                if (sidebar.classList.contains('collapsed')) {
+                    toggleIcon.classList.remove('bi-chevron-left');
+                    toggleIcon.classList.add('bi-chevron-right');
+                } else {
+                    toggleIcon.classList.remove('bi-chevron-right');
+                    toggleIcon.classList.add('bi-chevron-left');
+                }
+                
+                setTimeout(function() {
+                    window.dispatchEvent(new Event('resize'));
+                }, 300);
+            }
+            
+            toggleBtn.addEventListener('click', toggleSidebar);
+            
+            function checkWidth() {
+                if (window.innerWidth < 768) {
+                    sidebar.classList.add('collapsed');
+                    content.classList.add('expanded');
+                    toggleIcon.classList.remove('bi-chevron-left');
+                    toggleIcon.classList.add('bi-chevron-right');
+                }
+            }
+            
+            checkWidth();
+            window.addEventListener('resize', checkWidth);
+        });
+    </script>
+</body>
 </html>
