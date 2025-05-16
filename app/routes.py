@@ -137,7 +137,189 @@ def collection():
             print(f"Error processing card {card.name}: {str(e)}")
             continue
 
-    return render_template('visualize_data.html', cards=cards_with_images)
+    # Calculate statistics for the collection
+    type_stats = calculate_type_stats(cards_with_images)
+    color_stats = calculate_color_stats(cards_with_images)
+    rarity_stats = calculate_rarity_stats(cards_with_images)
+    
+    return render_template('visualize_data.html', 
+                          cards=cards_with_images,
+                          type_stats=type_stats,
+                          color_stats=color_stats,
+                          rarity_stats=rarity_stats)
+
+def calculate_type_stats(cards):
+    """Calculate statistics for card types."""
+    # Count card types
+    type_counts = {
+        'Creatures': 0,
+        'Instants': 0,
+        'Sorceries': 0,
+        'Lands': 0,
+        'Artifacts': 0,
+        'Enchantments': 0,
+        'Planeswalkers': 0,
+        'Other': 0
+    }
+    
+    # Icons and colors for each type
+    type_metadata = {
+        'Creatures': {'icon': 'fa-dragon', 'color': '#e74c3c'},
+        'Instants': {'icon': 'fa-bolt', 'color': '#3498db'},
+        'Sorceries': {'icon': 'fa-magic', 'color': '#9b59b6'},
+        'Lands': {'icon': 'fa-mountain', 'color': '#2ecc71'},
+        'Artifacts': {'icon': 'fa-cog', 'color': '#95a5a6'},
+        'Enchantments': {'icon': 'fa-scroll', 'color': '#f1c40f'},
+        'Planeswalkers': {'icon': 'fa-crown', 'color': '#e67e22'},
+        'Other': {'icon': 'fa-question-circle', 'color': '#7f8c8d'}
+    }
+    
+    total_cards = len(cards)
+    
+    # Count types based on type_line content
+    for card in cards:
+        type_line = card['type_line'].lower()
+        if 'creature' in type_line:
+            type_counts['Creatures'] += 1
+        elif 'instant' in type_line:
+            type_counts['Instants'] += 1
+        elif 'sorcery' in type_line:
+            type_counts['Sorceries'] += 1
+        elif 'land' in type_line:
+            type_counts['Lands'] += 1
+        elif 'artifact' in type_line:
+            type_counts['Artifacts'] += 1
+        elif 'enchantment' in type_line:
+            type_counts['Enchantments'] += 1
+        elif 'planeswalker' in type_line:
+            type_counts['Planeswalkers'] += 1
+        else:
+            type_counts['Other'] += 1
+    
+    # Calculate percentages and combine with metadata
+    result = {}
+    for type_name, count in type_counts.items():
+        if total_cards > 0:
+            percentage = (count / total_cards) * 100
+        else:
+            percentage = 0
+            
+        result[type_name] = {
+            'count': count,
+            'percentage': percentage,
+            'icon': type_metadata[type_name]['icon'],
+            'color': type_metadata[type_name]['color']
+        }
+    
+    return result
+
+def calculate_color_stats(cards):
+    """Calculate statistics for card colors."""
+    # Count card colors
+    color_counts = {
+        'White': 0,
+        'Blue': 0,
+        'Black': 0,
+        'Red': 0,
+        'Green': 0,
+        'Multicolor': 0,
+        'Colorless': 0
+    }
+    
+    # Icons and colors for each color
+    color_metadata = {
+        'White': {'icon': 'fa-sun', 'color': '#f0e6d2'},
+        'Blue': {'icon': 'fa-tint', 'color': '#0e6cbb'},
+        'Black': {'icon': 'fa-skull', 'color': '#393939'},
+        'Red': {'icon': 'fa-fire', 'color': '#d32f2f'},
+        'Green': {'icon': 'fa-leaf', 'color': '#4caf50'},
+        'Multicolor': {'icon': 'fa-palette', 'color': '#ffd700'},
+        'Colorless': {'icon': 'fa-cube', 'color': '#9e9e9e'}
+    }
+    
+    total_cards = len(cards)
+    
+    # Count colors based on the colors field
+    for card in cards:
+        colors = card['colors']
+        if not colors:
+            color_counts['Colorless'] += 1
+        elif len(colors) > 1:
+            color_counts['Multicolor'] += 1
+        elif 'W' in colors:
+            color_counts['White'] += 1
+        elif 'U' in colors:
+            color_counts['Blue'] += 1
+        elif 'B' in colors:
+            color_counts['Black'] += 1
+        elif 'R' in colors:
+            color_counts['Red'] += 1
+        elif 'G' in colors:
+            color_counts['Green'] += 1
+    
+    # Calculate percentages and combine with metadata
+    result = {}
+    for color_name, count in color_counts.items():
+        if total_cards > 0:
+            percentage = (count / total_cards) * 100
+        else:
+            percentage = 0
+            
+        result[color_name] = {
+            'count': count,
+            'percentage': percentage,
+            'icon': color_metadata[color_name]['icon'],
+            'color': color_metadata[color_name]['color']
+        }
+    
+    return result
+
+def calculate_rarity_stats(cards):
+    """Calculate statistics for card rarities."""
+    # Count card rarities
+    rarity_counts = {
+        'Common': 0,
+        'Uncommon': 0,
+        'Rare': 0,
+        'Mythic': 0,
+        'Special': 0
+    }
+    
+    # Icons and colors for each rarity
+    rarity_metadata = {
+        'Common': {'icon': 'fa-circle', 'color': '#bdc3c7'},
+        'Uncommon': {'icon': 'fa-circle', 'color': '#95a5a6'},
+        'Rare': {'icon': 'fa-star', 'color': '#f1c40f'},
+        'Mythic': {'icon': 'fa-gem', 'color': '#e74c3c'},
+        'Special': {'icon': 'fa-certificate', 'color': '#9b59b6'}
+    }
+    
+    total_cards = len(cards)
+    
+    # Count rarities
+    for card in cards:
+        rarity = card['rarity'].lower().capitalize()
+        if rarity in rarity_counts:
+            rarity_counts[rarity] += 1
+        else:
+            rarity_counts['Special'] += 1
+    
+    # Calculate percentages and combine with metadata
+    result = {}
+    for rarity_name, count in rarity_counts.items():
+        if total_cards > 0:
+            percentage = (count / total_cards) * 100
+        else:
+            percentage = 0
+            
+        result[rarity_name] = {
+            'count': count,
+            'percentage': percentage,
+            'icon': rarity_metadata[rarity_name]['icon'],
+            'color': rarity_metadata[rarity_name]['color']
+        }
+    
+    return result
 
 
 @login.user_loader
@@ -243,5 +425,39 @@ def update_prices():
     
     db.session.commit()
     return jsonify({"message": f"Updated prices for {updated_count} cards"}), 200
+
+
+# Add this new route to get just the statistics
+@app.route('/api/collection_stats')
+@login_required
+def collection_stats():
+    # Get user's cards from database
+    user_cards = Card.query.filter_by(user_ID=current_user.user_ID).all()
+    
+    # Convert stored data to template format (simplified for stats only)
+    cards_with_images = []
+    for card in user_cards:
+        try:
+            card_data = {
+                'type_line': card.type_line or 'Unknown',
+                'colors': card.color_identity.split(',') if card.color_identity else [],
+                'rarity': card.rarity or 'common',
+            }
+            cards_with_images.append(card_data)
+        except Exception as e:
+            print(f"Error processing card stats {card.name}: {str(e)}")
+            continue
+
+    # Calculate statistics for the collection
+    type_stats = calculate_type_stats(cards_with_images)
+    color_stats = calculate_color_stats(cards_with_images)
+    rarity_stats = calculate_rarity_stats(cards_with_images)
+    
+    # Return JSON with just the stats data
+    return jsonify({
+        'type_stats': type_stats,
+        'color_stats': color_stats,
+        'rarity_stats': rarity_stats
+    })
 
 
