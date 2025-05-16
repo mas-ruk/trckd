@@ -141,41 +141,66 @@
     // Slider logic
     function slideLeft() {
         const slider = document.getElementById('cardSlider');
-        slider.scrollBy({ left: -300, behavior: 'smooth' });  // Adjusted from -300
+        slider.scrollBy({ left: -300, behavior: 'smooth' });
     }
 
     function slideRight() {
         const slider = document.getElementById('cardSlider');
-        slider.scrollBy({ left: 300, behavior: 'smooth' });  // Adjusted from 300
+        slider.scrollBy({ left: 300, behavior: 'smooth' });
     }
 
     // Filter logic
-    document.getElementById("applyFilters").addEventListener("click", function () {
-        const search = document.getElementById("searchBox").value.toLowerCase();
-        const type = document.getElementById("typeFilter").value.toLowerCase();
-        const color = document.getElementById("colorFilter").value.toLowerCase();
-        const rarity = document.getElementById("rarityFilter").value.toLowerCase();
-
-        const cards = document.querySelectorAll(".card-slider .card");
-
-        cards.forEach(card => {
-            const name = card.getAttribute("data-name");
-            const cardType = card.getAttribute("data-type");
-            const cardColor = card.getAttribute("data-color");
-            const cardRarity = card.getAttribute("data-rarity");
-
-            const matchesSearch = !search || name.includes(search);
-            const matchesType = !type || cardType.includes(type);
-            const matchesColor = !color || cardColor.includes(color);
-            const matchesRarity = !rarity || cardRarity.includes(rarity);
-
-            card.style.display = (matchesSearch && matchesType && matchesColor && matchesRarity) ? "block" : "none";
-        });
-    });
-
-    // Card removal logic
     document.addEventListener('DOMContentLoaded', function() {
-        // Find all remove buttons
+        // Get filter elements
+        const searchBox = document.getElementById("searchBox");
+        const typeFilter = document.getElementById("typeFilter");
+        const colorFilter = document.getElementById("colorFilter");
+        const rarityFilter = document.getElementById("rarityFilter");
+        const applyBtn = document.getElementById("applyFilters");
+        const resetBtn = document.getElementById("resetFilters");
+
+        // Apply filters function
+        function applyFilters() {
+            const search = searchBox.value.toLowerCase();
+            const type = typeFilter.value.toLowerCase();
+            const color = colorFilter.value.toLowerCase();
+            const rarity = rarityFilter.value.toLowerCase();
+
+            const cards = document.querySelectorAll(".card-slider .card");
+
+            cards.forEach(card => {
+                const name = card.getAttribute("data-name");
+                const cardType = card.getAttribute("data-type");
+                const cardColor = card.getAttribute("data-color");
+                const cardRarity = card.getAttribute("data-rarity");
+
+                const matchesSearch = !search || name.includes(search);
+                const matchesType = !type || cardType.includes(type);
+                const matchesColor = !color || cardColor.includes(color);
+                const matchesRarity = !rarity || cardRarity.includes(rarity);
+
+                card.style.display = (matchesSearch && matchesType && matchesColor && matchesRarity) ? "block" : "none";
+            });
+        }
+
+        // Reset filters function
+        function resetFilters() {
+            searchBox.value = "";
+            typeFilter.value = "";
+            colorFilter.value = "";
+            rarityFilter.value = "";
+            
+            // Reset display for all cards
+            document.querySelectorAll(".card-slider .card").forEach(card => {
+                card.style.display = "block";
+            });
+        }
+
+        // Add event listeners
+        applyBtn.addEventListener("click", applyFilters);
+        resetBtn.addEventListener("click", resetFilters);
+
+        // Card removal logic
         document.querySelectorAll('.remove-card').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -223,6 +248,7 @@
         });
     });
 
+    // Update prices button
     document.getElementById('updatePricesBtn').addEventListener('click', function() {
         // Show loading indicator
         this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating Prices...';
@@ -252,9 +278,4 @@
         });
     });
 </script>
-
-<script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
 {% endblock %}
-
-
-
