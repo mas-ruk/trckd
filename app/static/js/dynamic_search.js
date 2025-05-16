@@ -294,6 +294,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const versionModalInstance = new bootstrap.Modal(versionModal);
         versionModalInstance.show();
         
+        // Add event listeners to close buttons
+        const closeButtons = versionModal.querySelectorAll('[data-bs-dismiss="modal"]');
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => versionModalInstance.hide());
+        });
+        
         // Use a more reliable search approach - search by exact name instead of ID
         const encodedName = encodeURIComponent(`!"${cardName}"`);
         fetch(`https://api.scryfall.com/cards/search?q=${encodedName}&unique=prints`)
