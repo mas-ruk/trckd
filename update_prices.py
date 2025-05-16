@@ -5,6 +5,9 @@ from app import app, db
 from app.models import Card
 from flask_login import current_user
 
+## USE THIS SCRIPT CAREFULLY IT WILL OVERRITE ALL YOUR ACQUISITION AND CURRENT PRICE COLUMNS TO TODAYS CONTENT
+## AS FETCHED FROM THE SCRYFALL API
+
 def migrate_price_data():
     """Migrate data from old price column to new acquisition_price and current_price columns"""
     with app.app_context():
