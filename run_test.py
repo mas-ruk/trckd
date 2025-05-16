@@ -10,7 +10,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from threading import Thread
 from app.models import User
 from werkzeug.security import generate_password_hash, check_password_hash
-import time
 
 # Setting the web address of our app
 localHost = "http://localhost:5000/"
@@ -87,7 +86,7 @@ class SeleniumTests(unittest.TestCase):
         self.app_context.pop()
 
     # Test the login form works (users are logged in correctly)
-    def test_login_form(self):
+    def test_login_form_success(self):
         self.driver.get(localHost)
         self.driver.find_element(By.ID, "login_link").click()
 
@@ -95,14 +94,44 @@ class SeleniumTests(unittest.TestCase):
         self.driver.find_element(By.ID, "login_password").send_keys("password")
         self.driver.find_element(By.ID, "submit").click()
 
-        # Ensures all page elements are loaded
+        # Ensures all required page elements are loaded
         self.wait.until(EC.visibility_of_element_located((By.ID, "current_username")))
 
         self.assertEqual(self.driver.current_url, "http://localhost:5000/home")
         self.assertEqual(self.driver.find_element(By.ID, "current_username").text, "test_user")
+
+    # Test the login form works (users cannot login with an unregistered email)
+    def test_login_form_bad_email(self):
+        self.driver.get(localHost)
+        self.driver.find_element(By.ID, "login_link").click()
+
+        self.driver.find_element(By.ID, "login_email").send_keys("wrongemail@gmail.com")
+        self.driver.find_element(By.ID, "login_password").send_keys("123456")
+        self.driver.find_element(By.ID, "submit").click()
+
+        # Ensures all required page elements are loaded
+        self.wait.until(EC.visibility_of_element_located((By.ID, "login_email_error")))
+
+        self.assertEqual(self.driver.current_url, "http://localhost:5000/")
+        self.assertEqual(self.driver.find_element(By.ID, "login_email_error").text, "[No user registered to that email address.]")
+
+    # Test the login form works (users cannot login with an unregistered email)
+    def test_login_form_bad_password(self):
+        self.driver.get(localHost)
+        self.driver.find_element(By.ID, "login_link").click()
+
+        self.driver.find_element(By.ID, "login_email").send_keys("test@gmail.com")
+        self.driver.find_element(By.ID, "login_password").send_keys("123456")
+        self.driver.find_element(By.ID, "submit").click()
+
+        # Ensures all required page elements are loaded
+        self.wait.until(EC.visibility_of_element_located((By.ID, "login_password_error")))
+
+        self.assertEqual(self.driver.current_url, "http://localhost:5000/")
+        self.assertEqual(self.driver.find_element(By.ID, "login_password_error").text, "[Incorrect password.]")
     
     # Test the register form works (user logged in correctly, user added to the database)
-    def test_register_form(self):
+    def test_register_form_success(self):
         self.driver.get(localHost)
         self.driver.find_element(By.ID, "register_link").click()
 
@@ -112,13 +141,52 @@ class SeleniumTests(unittest.TestCase):
         self.driver.find_element(By.ID, "password_confirm").send_keys("password2")
         self.driver.find_element(By.ID, "register_submit").click()
 
-        # Ensures all page elements are loaded
+        # Ensures all required page elements are loaded
         self.wait.until(EC.visibility_of_element_located((By.ID, "current_username")))
 
         self.assertEqual(self.driver.current_url, "http://localhost:5000/home")
         self.assertEqual(self.driver.find_element(By.ID, "current_username").text, "test_user2")
         user = User.query.filter_by(email="test2@gmail.com").first()
         self.assertIsNotNone(user)
+
+    # Test the register form works (user tries to register with taken email and username)
+    def test_register_form_taken_email_and_username(self):
+        self.driver.get(localHost)
+        self.driver.find_element(By.ID, "register_link").click()
+
+        self.driver.find_element(By.ID, "register_email").send_keys("test@gmail.com")
+        self.driver.find_element(By.ID, "username").send_keys("test_user")
+        self.driver.find_element(By.ID, "register_password").send_keys("password2")
+        self.driver.find_element(By.ID, "password_confirm").send_keys("password2")
+        self.driver.find_element(By.ID, "register_submit").click()
+
+        # Ensures all required page elements are loaded
+        self.wait.until(EC.visibility_of_element_located((By.ID, "register_email_error")))
+
+        self.assertEqual(self.driver.current_url, "http://localhost:5000/")
+        self.assertEqual(self.driver.find_element(By.ID, "register_email_error").text, "[Email already in use. Choose a different email.]")
+        self.assertEqual(self.driver.find_element(By.ID, "register_username_error").text, "[Username already in use. Choose a different username.]")
+        users = User.query.all()
+        self.assertEqual(len(users), 1)
+
+    # Test the register form works (user tries to register with different passwords in the 'password' and 'confirm password' fields)
+    def test_register_form_different_passwords(self):
+        self.driver.get(localHost)
+        self.driver.find_element(By.ID, "register_link").click()
+
+        self.driver.find_element(By.ID, "register_email").send_keys("test2@gmail.com")
+        self.driver.find_element(By.ID, "username").send_keys("test_user2")
+        self.driver.find_element(By.ID, "register_password").send_keys("password2")
+        self.driver.find_element(By.ID, "password_confirm").send_keys("password3")
+        self.driver.find_element(By.ID, "register_submit").click()
+
+        # Ensures all required page elements are loaded
+        self.wait.until(EC.visibility_of_element_located((By.ID, "register_password_error")))
+
+        self.assertEqual(self.driver.current_url, "http://localhost:5000/")
+        self.assertEqual(self.driver.find_element(By.ID, "register_password_error").text, "[Passwords must match.]")
+        users = User.query.all()
+        self.assertEqual(len(users), 1)
 
     # ADD YOUR SELENIUM TESTS HERE - all test functions must be defined like 'test_...(self):'
     
