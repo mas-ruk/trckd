@@ -294,10 +294,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const versionModalInstance = new bootstrap.Modal(versionModal);
         versionModalInstance.show();
         
-        // Fetch all printings of this card
-        fetch(`https://api.scryfall.com/cards/search?q=!"${cardName}" unique:prints`)
+        // Use a more reliable search approach - search by exact name instead of ID
+        const encodedName = encodeURIComponent(`!"${cardName}"`);
+        fetch(`https://api.scryfall.com/cards/search?q=${encodedName}&unique=prints`)
             .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
+                // Enhanced error handling
+                if (!response.ok) {
+                    console.error(`Error response: ${response.status} ${response.statusText}`);
+                    return response.text().then(text => {
+                        console.error(`Error body: ${text}`);
+                        throw new Error(`Network response was not ok: ${response.status}`);
+                    });
+                }
                 return response.json();
             })
             .then(data => {
@@ -305,7 +313,10 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error fetching card versions:', error);
-                versionModalBody.innerHTML = '<p class="text-danger">Error loading card versions. Please try again.</p>';
+                versionModalBody.innerHTML = `
+                    <p class="text-danger">Error loading card versions: ${error.message}</p>
+                    <p>Please try again or select a different version of this card.</p>
+                `;
             });
     }
 
@@ -395,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <button class="details-btn w-100 py-2 rounded-pill mt-2 add-version-btn"
                                         data-card-id="${version.id}"
                                         data-card-name="${version.name}"
-                                        data-oracle-text="${version.oracle_text.replace(/"/g,'&quot;')}"
+                                        data-oracle-text="${getOracleText(version).replace(/"/g,'&quot;')}"
                                         data-set-code="${setCode}"
                                         data-set-name="${version.set_name}"
                                         data-rarity="${rarity}"
@@ -487,15 +498,36 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(fullCardData => {
                 // Fill in the missing data from the API response
                 cardToAdd.type = fullCardData.type_line ? fullCardData.type_line.split('—')[0].trim() : "";
-                cardToAdd.color = fullCardData.colors ? fullCardData.colors.join('') : "";
-                cardToAdd.mana_cost = fullCardData.mana_cost || "";
+                
+                // Handle double-faced cards
+                if (fullCardData.card_faces && fullCardData.card_faces.length > 0) {
+                    // Get colors from the front face if not present on main card
+                    cardToAdd.color = fullCardData.colors ? fullCardData.colors.join('') : 
+                                     (fullCardData.card_faces[0].colors ? fullCardData.card_faces[0].colors.join('') : "");
+                    
+                    // Use front face mana cost if main card doesn't have it
+                    cardToAdd.mana_cost = fullCardData.mana_cost || fullCardData.card_faces[0].mana_cost || "";
+                    
+                    // Store both faces' oracle text
+                    const frontText = fullCardData.card_faces[0].oracle_text || "";
+                    const backText = fullCardData.card_faces[1].oracle_text || "";
+                    cardToAdd.oracle_text = frontText + "\n--\n" + backText;
+                    
+                    // Store both faces' types if needed
+                    cardToAdd.type_line = fullCardData.type_line || fullCardData.card_faces[0].type_line || "";
+                } else {
+                    // Original code for single-faced cards
+                    cardToAdd.color = fullCardData.colors ? fullCardData.colors.join('') : "";
+                    cardToAdd.mana_cost = fullCardData.mana_cost || "";
+                    cardToAdd.oracle_text = fullCardData.oracle_text || "";
+                }
+                
+                // Common properties for all cards
                 cardToAdd.cmc = fullCardData.cmc || 0;
-                cardToAdd.type_line = fullCardData.type_line || "";
-                cardToAdd.oracle_text = fullCardData.oracle_text || "";
                 cardToAdd.power = fullCardData.power || "";
                 cardToAdd.toughness = fullCardData.toughness || "";
                 cardToAdd.color_identity = fullCardData.color_identity ? fullCardData.color_identity.join('') : "";
-
+                
                 // Now send all the data to the backend
                 return fetch('/add_card', {
                     method: 'POST',
@@ -787,3 +819,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Add this function to your code
+function getOracleText(card) {
+    // If the card has oracle text directly, use it
+    if (card.oracle_text) {
+        return card.oracle_text;
+    }
+    
+    // For double-faced cards, combine the oracle text from both faces
+    if (card.card_faces && card.card_faces.length > 0) {
+        let combinedText = '';
+        
+        // Add front face text if available
+        if (card.card_faces[0] && card.card_faces[0].oracle_text) {
+            combinedText += card.card_faces[0].oracle_text;
+        }
+        
+        // Add separator if we're going to add back face text
+        if (card.card_faces[1] && card.card_faces[1].oracle_text) {
+            if (combinedText) {
+                combinedText += '\n--\n';
+            }
+            combinedText += card.card_faces[1].oracle_text;
+        }
+        
+        return combinedText;
+    }
+    
+    // If no oracle text is found, return empty string
+    return '';
+}
