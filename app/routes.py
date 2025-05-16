@@ -13,6 +13,8 @@ main_bp = Blueprint('main', __name__)
 # Landing page route - handles logging in and registering
 @main_bp.route('/', methods=['GET', 'POST'])
 def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.home'))
     login_form = LoginForm(prefix='login')
     register_form = RegisterForm(prefix='register')
     resubmit = False

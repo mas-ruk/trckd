@@ -3,10 +3,10 @@
 
 {% block content %}
     <div class="tab-pane container {% if active_tab == 'home' %}show active{% endif %}" id="home">
-        <h1 class="bg-dark text-white p-3 rounded">Welcome, <span id="current_username">{{current_user.username}}</span></h1>
+        <h1 class="bg-dark text-white p-3 rounded"><b>Welcome, <span id="current_username">{{current_user.username}}</span></b></h1>
         <p class="border bg-light p-3 rounded text-black" style="margin: 20px;"><b>trckd</b> is a web-based application that serves as a collecting tool for the popular trading card game <b>Magic: The Gathering</b>, published by Wizards of the Coast. It provides the ability to upload cards from your collection, sort them and then visualiase data about your entire library. Use the sidebar to access the card addition, collection and sharing functionalities.</p>
         <div class="text-center">
-            <img class="p-3 img-thumbnail" src="https://dnm.nflximg.net/api/v6/BvVbc2Wxr2w6QuoANoSpJKEIWjQ/AAAAQWCQSRUcuxcg36x-fAfduhyZgCN1mHUBMGq0OEDmIQM8NU-xKpoWNjs2QxnrzxDYjDlqqhl9ftxXCoYbruqQFFFhkvQd3eABBb-v2z9_FTNAxHVcY-oGgc58sqdUTMf5YrQUMdlRjZrtq7tDB5j6uVR6bFA.jpg?r=91f">
+            <img class="p-3 img-thumbnail w-75 h-auto" src="https://dnm.nflximg.net/api/v6/BvVbc2Wxr2w6QuoANoSpJKEIWjQ/AAAAQWCQSRUcuxcg36x-fAfduhyZgCN1mHUBMGq0OEDmIQM8NU-xKpoWNjs2QxnrzxDYjDlqqhl9ftxXCoYbruqQFFFhkvQd3eABBb-v2z9_FTNAxHVcY-oGgc58sqdUTMf5YrQUMdlRjZrtq7tDB5j6uVR6bFA.jpg?r=91f">
         </div>
     </div>
 {% endblock %}
