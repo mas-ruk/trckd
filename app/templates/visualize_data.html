@@ -150,6 +150,35 @@
             box-shadow: 0 0 15px rgba(255,255,255,0.2);
             transform: scale(1.05);
         }
+
+        .financial-stats-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .financial-stat-card {
+            background-color: #1e1e1e;
+            border-radius: 10px;
+            padding: 20px;
+            width: 220px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
+            animation: slideFadeUp 0.6s forwards;
+            opacity: 0;
+        }
+        
+        .financial-stats-grid .financial-stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .financial-stats-grid .financial-stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .financial-stats-grid .financial-stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .financial-stats-grid .financial-stat-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .financial-stat-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        }
     </style>
 {% endblock %}
 
@@ -325,6 +354,53 @@
                     </div>
                 </div>
             {% endfor %}
+        </div>
+    </section>
+
+    <!-- Financial Stats Box - Only show if cards exist -->
+    <section class="stats-box mt-4 mb-4" id="financial-stats">
+        <h2>Collection Value</h2>
+        <div class="financial-stats-container">
+            <div class="financial-stats-grid">
+                <div class="financial-stat-card">
+                    <div class="stat-icon" style="color: #f39c12;">
+                        <i class="fas fa-coins fa-2x"></i>
+                    </div>
+                    <div class="stat-value">${{ "%.2f"|format(financial_stats.total_current) }}</div>
+                    <div class="stat-label">Current Value</div>
+                </div>
+                
+                <div class="financial-stat-card">
+                    <div class="stat-icon" style="color: #3498db;">
+                        <i class="fas fa-receipt fa-2x"></i>
+                    </div>
+                    <div class="stat-value">${{ "%.2f"|format(financial_stats.total_acquisition) }}</div>
+                    <div class="stat-label">Acquisition Cost</div>
+                </div>
+                
+                <div class="financial-stat-card">
+                    <div class="stat-icon" style="color: {{ financial_stats.color }};">
+                        <i class="fas {{ financial_stats.icon }} fa-2x"></i>
+                    </div>
+                    <div class="stat-value" style="color: {{ financial_stats.color }};">
+                        {% if financial_stats.difference > 0 %}+{% endif %}${{ "%.2f"|format(financial_stats.difference) }}
+                    </div>
+                    <div class="stat-label">Total Growth</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: {{ financial_stats.progress_width }}%; background-color: {{ financial_stats.color }};"></div>
+                    </div>
+                </div>
+                
+                <div class="financial-stat-card">
+                    <div class="stat-icon" style="color: {{ financial_stats.color }};">
+                        <i class="fas fa-percentage fa-2x"></i>
+                    </div>
+                    <div class="stat-value" style="color: {{ financial_stats.color }};">
+                        {% if financial_stats.growth_percent > 0 %}+{% endif %}{{ "%.2f"|format(financial_stats.growth_percent) }}%
+                    </div>
+                    <div class="stat-label">Return on Investment</div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -514,6 +590,9 @@
             updateStatSection('Color Breakdown', data.color_stats);
             updateStatSection('Rarity Breakdown', data.rarity_stats);
             
+            // Update financial stats
+            updateFinancialStats(data.financial_stats);
+            
             // Re-animate progress bars
             document.querySelectorAll('.progress-bar').forEach(bar => {
                 const targetWidth = bar.style.width;
@@ -554,6 +633,53 @@
                 </div>
             `;
         }
+    }
+
+    // Add new function to update financial stats
+    function updateFinancialStats(stats) {
+        const financialStatsContainer = document.querySelector('#financial-stats .financial-stats-grid');
+        if (!financialStatsContainer) return;
+        
+        financialStatsContainer.innerHTML = `
+            <div class="financial-stat-card">
+                <div class="stat-icon" style="color: #f39c12;">
+                    <i class="fas fa-coins fa-2x"></i>
+                </div>
+                <div class="stat-value">$${stats.total_current.toFixed(2)}</div>
+                <div class="stat-label">Current Value</div>
+            </div>
+            
+            <div class="financial-stat-card">
+                <div class="stat-icon" style="color: #3498db;">
+                    <i class="fas fa-receipt fa-2x"></i>
+                </div>
+                <div class="stat-value">$${stats.total_acquisition.toFixed(2)}</div>
+                <div class="stat-label">Acquisition Cost</div>
+            </div>
+            
+            <div class="financial-stat-card">
+                <div class="stat-icon" style="color: ${stats.color};">
+                    <i class="fas ${stats.icon} fa-2x"></i>
+                </div>
+                <div class="stat-value" style="color: ${stats.color};">
+                    ${stats.difference > 0 ? '+' : ''}$${stats.difference.toFixed(2)}
+                </div>
+                <div class="stat-label">Total Growth</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${stats.progress_width}%; background-color: ${stats.color};"></div>
+                </div>
+            </div>
+            
+            <div class="financial-stat-card">
+                <div class="stat-icon" style="color: ${stats.color};">
+                    <i class="fas fa-percentage fa-2x"></i>
+                </div>
+                <div class="stat-value" style="color: ${stats.color};">
+                    ${stats.growth_percent > 0 ? '+' : ''}${stats.growth_percent.toFixed(2)}%
+                </div>
+                <div class="stat-label">Return on Investment</div>
+            </div>
+        `;
     }
 </script>
 {% endblock %}

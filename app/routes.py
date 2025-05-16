@@ -141,12 +141,14 @@ def collection():
     type_stats = calculate_type_stats(cards_with_images)
     color_stats = calculate_color_stats(cards_with_images)
     rarity_stats = calculate_rarity_stats(cards_with_images)
+    financial_stats = calculate_financial_stats(cards_with_images)
     
     return render_template('visualize_data.html', 
                           cards=cards_with_images,
                           type_stats=type_stats,
                           color_stats=color_stats,
-                          rarity_stats=rarity_stats)
+                          rarity_stats=rarity_stats,
+                          financial_stats=financial_stats)
 
 def calculate_type_stats(cards):
     """Calculate statistics for card types."""
@@ -321,6 +323,56 @@ def calculate_rarity_stats(cards):
     
     return result
 
+def calculate_financial_stats(cards):
+    """Calculate financial statistics for the collection."""
+    total_acquisition = 0.0
+    total_current = 0.0
+    valid_card_count = 0
+    
+    for card in cards:
+        try:
+            if card['acquisition_price'] != 'N/A' and card['current_price'] != 'N/A':
+                acquisition_price = float(card['acquisition_price'])
+                current_price = float(card['current_price'])
+                
+                total_acquisition += acquisition_price
+                total_current += current_price
+                valid_card_count += 1
+        except (ValueError, TypeError):
+            continue
+    
+    # Calculate growth metrics
+    difference = total_current - total_acquisition
+    if total_acquisition > 0:
+        growth_percent = (difference / total_acquisition) * 100
+    else:
+        growth_percent = 0
+    
+    # Add clamped percentage for progress bar
+    progress_width = min(max(growth_percent, 0), 100)
+    
+    # Determine color based on growth
+    if difference > 0:
+        color = '#4caf50'  # Green for positive growth
+        icon = 'fa-chart-line'
+    elif difference < 0:
+        color = '#d32f2f'  # Red for negative growth
+        icon = 'fa-chart-line'
+    else:
+        color = '#9e9e9e'  # Gray for no change
+        icon = 'fa-equals'
+    
+    return {
+        'total_acquisition': total_acquisition,
+        'total_current': total_current,
+        'difference': difference,
+        'growth_percent': growth_percent,
+        'progress_width': progress_width,  # Add this new field
+        'valid_card_count': valid_card_count,
+        'color': color,
+        'icon': icon
+    }
+
 
 @login.user_loader
 def load_user(id):
@@ -452,12 +504,14 @@ def collection_stats():
     type_stats = calculate_type_stats(cards_with_images)
     color_stats = calculate_color_stats(cards_with_images)
     rarity_stats = calculate_rarity_stats(cards_with_images)
+    financial_stats = calculate_financial_stats(cards_with_images)
     
     # Return JSON with just the stats data
     return jsonify({
         'type_stats': type_stats,
         'color_stats': color_stats,
-        'rarity_stats': rarity_stats
+        'rarity_stats': rarity_stats,
+        'financial_stats': financial_stats
     })
 
 
