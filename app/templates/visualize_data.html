@@ -23,6 +23,7 @@
         .stats-box h2 {
             color: white;
             margin-bottom: 20px;
+            text-align: center;
         }
         .stats-box canvas {
             background-color: #1e1e1e;
@@ -381,7 +382,7 @@
                     <div class="stat-icon" style="color: {{ financial_stats.color }};">
                         <i class="fas {{ financial_stats.icon }} fa-2x"></i>
                     </div>
-                    <div class="stat-value" style="color: {{ financial_stats.color }};">
+                    <div class="stat-value" style="color: {{ financial_stats.color|e }};">
                         {% if financial_stats.difference > 0 %}+{% endif %}${{ "%.2f"|format(financial_stats.difference) }}
                     </div>
                     <div class="stat-label">Total Growth</div>
