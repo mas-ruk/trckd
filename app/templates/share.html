@@ -53,14 +53,26 @@
         </a>
     </div>
 
+    <div class="mt-4">
+        <button id="uploadPromptBtn" class="btn btn-outline-info">
+            <i class="fas fa-upload"></i> Add New Cards
+        </button>
+    </div>
+
     <!-- Share Modal -->
     <div class="modal fade" id="shareOptionsModal">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-center">
                 <div class="modal-header">
                     <h5>Share Options</h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            id="closeModalBtn"
+                            aria-label="Close"
+                            data-bs-dismiss="modal"
+                        ></button>
+                    </div>
                 <div class="modal-body">
                     <a id="facebookShare" class="btn btn-primary m-2">Facebook</a>
                     <a id="whatsappShare" class="btn btn-success m-2">WhatsApp</a>
