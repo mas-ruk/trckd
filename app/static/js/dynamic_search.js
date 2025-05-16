@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // checks original face, if doesn't work (dual-sided cards) will print first face, and if all else fails, placeholder
             const imageUrl = card.image_uris?.normal || card.card_faces?.[0]?.image_uris?.normal || 'https://via.placeholder.com/223x310?text=No+Image';
             const setCode = (card.set || '').toUpperCase();
-            const isDoubleFaced = !!card.card_faces?.[1]; // checks if API card faces return more than 1 to check if card is double faced
+            const isDoubleFaced = !!card.card_faces?.[1] && card.layout !== 'adventure'; // Improved check for double-faced cards
 
             const flipButtonHTML = isDoubleFaced
                 ? `<button class="card-footer-btn rounded-pill px-4 py-2" id="flip-${card.id}">
