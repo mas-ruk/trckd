@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+
+{% block title %}trckd - My Collection{% endblock %}
+
+{% block extra_css %}
+<<<<<<< HEAD
+<link rel="stylesheet" href="{{ url_for('static', filename='css/visual.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/filters.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    .stats-box {
+        background-color: #2f243a !important;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        margin-bottom: 2rem;
+    }
+    .stats-box h2 {
+        color: white;
+        margin-bottom: 20px;
+    }
+    .stats-box canvas {
+        background-color: #1e1e1e;
+        border-radius: 10px;
+        padding: 10px;
+        width: 100%;
+        max-width: 600px;
+        margin: auto;
+        display: block;
+    }
+
+    .slider-container {
+        position: relative;
+        overflow-x: visible;
+        overflow-y: visible;
+        padding-top: 50px;  
+        padding-bottom: 50px; 
+    }
+
+    .card-slider {
+        display: flex;
+        gap: 30px;
+        overflow-x: auto;
+        overflow-y: visible;
+        padding: 0 20px;
+    }
+
+    .card-slider .card {
+        flex: 0 0 250px;
+        background-color: #2f243a;
+        border-radius: 10px;
+        padding: 20px;
+        color: white;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 0 0 rgba(0,0,0,0);
+        position: relative;
+        z-index: 1;
+    }
+
+    .card-slider::-webkit-scrollbar {
+    height: 6px;
+    }
+
+    .card-slider::-webkit-scrollbar-thumb {
+    background: rgba(129, 80, 225, 0.5);
+    border-radius: 5px;
+    }
+
+    .slide-btn {
+        display: none;
+    }
+
+    .stats-grid {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .stat-card {
+        background-color: #1e1e1e;
+        border-radius: 10px;
+        padding: 20px;
+        width: 180px;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: scale(1.03);
+    }
+
+    .stat-icon {
+        margin-bottom: 10px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: #ccc;
+        margin-bottom: 10px;
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        background: #333;
+        border-radius: 6px;
+        overflow: hidden;
+        height: 10px;
+    }
+
+    .progress-bar {
+        height: 10px;
+        border-radius: 6px;
+    }
+
+    @keyframes slideFadeUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .stats-grid .stat-card {
+    opacity: 0;
+    animation: slideFadeUp 0.6s forwards;
+    }
+
+    .stats-grid .stat-card:nth-child(1) { animation-delay: 0.2s; }
+    .stats-grid .stat-card:nth-child(2) { animation-delay: 0.4s; }
+    .stats-grid .stat-card:nth-child(3) { animation-delay: 0.6s; }
+    .stats-grid .stat-card:nth-child(4) { animation-delay: 0.8s; }
+
+    .progress-bar {
+        width: 0;
+        transition: width 1s ease-in-out;
+    }
+
+    .stats-grid .stat-card:hover {
+        box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        transform: scale(1.05);
+    }
+</style>
+=======
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="../static/css/visual.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/filters.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/cards.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/buttons.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!--Chart JS-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+>>>>>>> origin/main
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>My Magic: The Gathering Collection</h1>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar d-flex align-items-center justify-content-start p-3">
+        <input type="text" id="searchBox" placeholder="Search cards..." class="form-control mr-2" />
+
+        <select id="typeFilter" class="form-control mr-2">
+            <option value="">Types</option>
+            <option value="Creature">Creature</option>
+            <option value="Spell">Spell</option>
+        </select>
+
+        <select id="colorFilter" class="form-control mr-2">
+            <option value="">Colours</option>
+            <option value="Blue">Blue</option>
+            <option value="Red">Red</option>
+            <option value="Black">Black</option>
+            <option value="Green">Green</option>
+            <option value="White">White</option>
+        </select>
+
+        <select id="rarityFilter" class="form-control mr-2">
+            <option value="">Rarities</option>
+            <option value="Common">Common</option>
+            <option value="Rare">Rare</option>
+            <option value="Famous">Famous</option>
+        </select>
+
+        <button id="applyFilters" class="btn btn-primary">Apply</button>
+        <button id="resetFilters" class="btn btn-secondary">Reset Filters</button>
+    </div>
+
+    <!-- Featured Card Slider -->
+    <div class="card-slider-wrapper position-relative">
+        <button class="slide-btn left" onclick="slideLeft()">&#8249;</button>
+
+
+
+        <div class="card-slider d-flex" id="cardSlider">
+            {% for card in cards %}
+                <div class="card"
+                     data-name="{{ card.name | lower }}"
+                     data-type="{{ card.type_line | lower }}"
+                     data-color="{{ card.colors | join(',') | lower }}"
+                     data-rarity="{{ card.rarity | lower }}">
+                    <div class="card-image">
+                        {% if card.image_uris and card.image_uris.normal %}
+                            <img src="{{ card.image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
+                        {% elif card.card_faces and card.card_faces[0].image_uris %}
+                            {# Handle double-faced cards #}
+                            <img src="{{ card.card_faces[0].image_uris.normal }}" alt="{{ card.name }}" loading="lazy" />
+                        {% else %}
+                            <img src="{{ url_for('static', filename='images/card-back.jpg') }}" alt="Card Back" />
+                        {% endif %}
+                    </div>
+                    <h6>{{ card.name }}</h6>
+                    <p>Type: {{ card.type_line }}</p>
+                    <p>Colour: {{ card.colors | join(', ') }}</p>
+                    <p>Rarity: {{ card.rarity.title() }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+
+
+        <button class="filter-button rounded-pill slide-btn right" onclick="slideRight()">&#8250;</button>
+
+    </div>
+
+    <!-- Create Collection Form -->
+    <div class="mt-5">
+        <h2 class="mb-4">Create a New Collection</h2>
+
+        <div class="collection-form">
+            <form id="createCollectionForm" method="POST">
+                <div class="mb-3">
+                    <label for="collectionName" class="form-label">Collection Name</label>
+                    <input type="text" class="form-control" id="collectionName" name="collectionName" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="collectionDescription" class="form-label">Description</label>
+                    <textarea class="form-control" id="collectionDescription" name="collectionDescription" rows="4" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Collection</button>
+            </form>
+        </div>
+    </div>
+
+<<<<<<< HEAD
+<!-- Stats Section -->
+<section class="stats-box mt-4">
+    <h2>Type Breakdown</h2>
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon" style="color: #e74c3c;"><i class="fas fa-dice-d20 fa-2x"></i></div><div class="stat-value">50%</div><div class="stat-label">Creatures</div><div class="progress-bar-container"><div class="progress-bar" style="width: 50%; background-color: #e74c3c;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #3498db;"><i class="fas fa-magic fa-2x"></i></div><div class="stat-value">20%</div><div class="stat-label">Spells</div><div class="progress-bar-container"><div class="progress-bar" style="width: 20%; background-color: #3498db;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #2ecc71;"><i class="fas fa-tree fa-2x"></i></div><div class="stat-value">10%</div><div class="stat-label">Lands</div><div class="progress-bar-container"><div class="progress-bar" style="width: 10%; background-color: #2ecc71;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #f1c40f;"><i class="fas fa-cogs fa-2x"></i></div><div class="stat-value">10%</div><div class="stat-label">Artifacts</div><div class="progress-bar-container"><div class="progress-bar" style="width: 10%; background-color: #f1c40f;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #9b59b6;"><i class="fas fa-scroll fa-2x"></i></div><div class="stat-value">5%</div><div class="stat-label">Enchantments</div><div class="progress-bar-container"><div class="progress-bar" style="width: 5%; background-color: #9b59b6;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #e67e22;"><i class="fas fa-chess-king fa-2x"></i></div><div class="stat-value">3%</div><div class="stat-label">Planeswalkers</div><div class="progress-bar-container"><div class="progress-bar" style="width: 3%; background-color: #e67e22;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #95a5a6;"><i class="fas fa-question fa-2x"></i></div><div class="stat-value">2%</div><div class="stat-label">Other</div><div class="progress-bar-container"><div class="progress-bar" style="width: 2%; background-color: #95a5a6;"></div></div></div>
+    </div>
+</section>
+
+<section class="stats-box mt-4">
+    <h2>Color Breakdown</h2>
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon" style="color: #ffffff;"><i class="fas fa-sun fa-2x"></i></div><div class="stat-value">20%</div><div class="stat-label">White</div><div class="progress-bar-container"><div class="progress-bar" style="width: 20%; background-color: #ffffff;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #3498db;"><i class="fas fa-water fa-2x"></i></div><div class="stat-value">20%</div><div class="stat-label">Blue</div><div class="progress-bar-container"><div class="progress-bar" style="width: 20%; background-color: #3498db;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #2c3e50;"><i class="fas fa-skull fa-2x"></i></div><div class="stat-value">20%</div><div class="stat-label">Black</div><div class="progress-bar-container"><div class="progress-bar" style="width: 20%; background-color: #2c3e50;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #e74c3c;"><i class="fas fa-fire fa-2x"></i></div><div class="stat-value">20%</div><div class="stat-label">Red</div><div class="progress-bar-container"><div class="progress-bar" style="width: 20%; background-color: #e74c3c;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #27ae60;"><i class="fas fa-leaf fa-2x"></i></div><div class="stat-value">10%</div><div class="stat-label">Green</div><div class="progress-bar-container"><div class="progress-bar" style="width: 10%; background-color: #27ae60;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #f39c12;"><i class="fas fa-palette fa-2x"></i></div><div class="stat-value">5%</div><div class="stat-label">Multicolor</div><div class="progress-bar-container"><div class="progress-bar" style="width: 5%; background-color: #f39c12;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #7f8c8d;"><i class="fas fa-circle fa-2x"></i></div><div class="stat-value">5%</div><div class="stat-label">Colorless</div><div class="progress-bar-container"><div class="progress-bar" style="width: 5%; background-color: #7f8c8d;"></div></div></div>
+    </div>
+</section>
+
+<section class="stats-box mt-4">
+    <h2>Rarity Breakdown</h2>
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon" style="color: #bdc3c7;"><i class="fas fa-circle fa-2x"></i></div><div class="stat-value">50%</div><div class="stat-label">Common</div><div class="progress-bar-container"><div class="progress-bar" style="width: 50%; background-color: #bdc3c7;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #7f8c8d;"><i class="fas fa-circle fa-2x"></i></div><div class="stat-value">25%</div><div class="stat-label">Uncommon</div><div class="progress-bar-container"><div class="progress-bar" style="width: 25%; background-color: #7f8c8d;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #f39c12;"><i class="fas fa-circle fa-2x"></i></div><div class="stat-value">15%</div><div class="stat-label">Rare</div><div class="progress-bar-container"><div class="progress-bar" style="width: 15%; background-color: #f39c12;"></div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #e74c3c;"><i class="fas fa-star fa-2x"></i></div><div class="stat-value">10%</div><div class="stat-label">Mythic</div><div class="progress-bar-container"><div class="progress-bar" style="width: 10%; background-color: #e74c3c;"></div></div></div>
+    </div>
+</section>
+
+<script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
+=======
+    <!-- Stats Section -->
+    <section class="stats-box mt-5">
+        <h2>Collection Stats</h2>
+        <canvas id="chartCanvas"></canvas>
+    </section>
+</div>
+>>>>>>> origin/main
+{% endblock %}
+
+{% block scripts %}
+<script>
+<<<<<<< HEAD
+=======
+    // Slider logic
+>>>>>>> origin/main
+    function slideLeft() {
+        const slider = document.getElementById('cardSlider');
+        slider.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+
+    function slideRight() {
+        const slider = document.getElementById('cardSlider');
+        slider.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+<<<<<<< HEAD
+
+    // Animate progress bars after cards appear
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.progress-bar').forEach(bar => {
+            const targetWidth = bar.style.width;
+            bar.style.width = '0'; // Reset to 0 first
+            setTimeout(() => {
+                bar.style.width = targetWidth; // Animate to final width
+            }, 600); // Delay to sync with stat-card fade-in
+        });
+    });
+</script>
+{% endblock %}
+=======
+
+    // Filter logic
+    document.getElementById("applyFilters").addEventListener("click", function () {
+        const search = document.getElementById("searchBox").value.toLowerCase();
+        const type = document.getElementById("typeFilter").value.toLowerCase();
+        const color = document.getElementById("colorFilter").value.toLowerCase();
+        const rarity = document.getElementById("rarityFilter").value.toLowerCase();
+
+        const cards = document.querySelectorAll(".card-slider .card");
+
+        cards.forEach(card => {
+            const name = card.getAttribute("data-name");
+            const cardType = card.getAttribute("data-type");
+            const cardColor = card.getAttribute("data-color");
+            const cardRarity = card.getAttribute("data-rarity");
+
+            const matchesSearch = !search || name.includes(search);
+            const matchesType = !type || cardType.includes(type);
+            const matchesColor = !color || cardColor.includes(color);
+            const matchesRarity = !rarity || cardRarity.includes(rarity);
+
+            if (matchesSearch && matchesType && matchesColor && matchesRarity) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+</script>
+
+<script src="{{ url_for('static', filename='js/visualize.js') }}"></script>
+{% endblock %}
+
+
+>>>>>>> origin/main

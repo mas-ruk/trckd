@@ -1,5 +1,6 @@
 import uuid
 import time
+import json
 
 from flask import (
     Blueprint,
@@ -110,6 +111,40 @@ def upload_data_view():
 def upload_search():
     return render_template('search.html')
 
+# ────────────────────────────────────────────────────────────────
+# NEW: API endpoint to add a card for the logged-in user
+@main_bp.route('/api/add_card', methods=['POST'])
+@login_required
+def api_add_card():
+    data = request.get_json() or {}
+    name = data.get('name')
+    if not name:
+        return jsonify(success=False, message="Missing card name"), 400
+
+    # Build and save the Card linked to current_user
+    card = Card(
+        name             = name,
+        type_line        = data.get('type_line'),
+        color_identity   = ','.join(data.get('color_identity', [])),
+        rarity           = data.get('rarity'),
+        set_code         = data.get('set_code'),
+        set_name         = data.get('set_name'),
+        collector_number = data.get('collector_number'),
+        mana_cost        = data.get('mana_cost'),
+        cmc              = data.get('cmc'),
+        oracle_text      = data.get('oracle_text'),
+        power            = data.get('power'),
+        toughness        = data.get('toughness'),
+        image_uris       = json.dumps(data.get('image_uris', {})),
+        lang             = data.get('lang'),
+        user_ID          = current_user.user_ID   # ← link to the user
+    )
+
+    db.session.add(card)
+    db.session.commit()
+    return jsonify(success=True, card_id=card.card_ID)
+# ────────────────────────────────────────────────────────────────
+
 @main_bp.route('/upload_csv')
 @login_required
 def upload_csv():
@@ -165,8 +200,21 @@ def home():
 @main_bp.route('/share')
 @login_required
 def share():
-    # grab all of the current user’s cards
-    user_cards = Card.query.filter_by(user_ID=current_user.user_ID).all()
+    user_cards = []
+    for c in Card.query.filter_by(user_ID=current_user.user_ID):
+        url = ''
+        if c.image_uris:
+            try:
+                data = json.loads(c.image_uris)
+                url = data.get('normal', '')
+            except:
+                pass
+        user_cards.append({
+            'id':        c.card_ID,
+            'name':      c.name,
+            'rarity':    c.rarity,
+            'image_url': url
+        })
     return render_template('share.html', user_cards=user_cards)
 
 @main_bp.route('/generate_share_link', methods=['POST'])
@@ -197,15 +245,58 @@ def generate_share_link():
 @main_bp.route('/shared/<link_id>')
 def shared_cards(link_id):
     link = SharedLink.query.filter_by(link_id=link_id).first_or_404()
-    return render_template('shared_cards.html', cards=link.cards)
+
+    cards_to_show = []
+    for c in link.cards:
+        # default fallback if nothing parses
+        image_url = None
+        if c.image_uris:
+            try:
+                data = json.loads(c.image_uris)
+                # prefer the 'normal' size, then any other
+                image_url = data.get('normal') or next(iter(data.values()))
+            except Exception:
+                pass
+
+        cards_to_show.append({
+            'name':       c.name,
+            'type_line':  c.type_line or '',
+            'oracle_text': c.oracle_text or 'No description available.',
+            'image_url':  image_url or url_for('static', filename='images/placeholder.jpg')
+        })
+
+    return render_template('shared_cards.html', cards=cards_to_show)
 
 @main_bp.route('/download_shared/<link_id>')
 def download_shared(link_id):
     link = SharedLink.query.filter_by(link_id=link_id).first_or_404()
-    cards = link.cards
-    html  = render_template('shared_cards.html', cards=cards)
+
+    cards_to_show = []
+    for c in link.cards:
+        # parse the JSON you originally stored in image_uris
+        try:
+            image_data = json.loads(c.image_uris or '{}')
+        except ValueError:
+            image_data = {}
+
+        # pick the highest-res Scryfall URL you like:
+        # for example, art_crop or png if you stored it
+        image_url = (
+            image_data.get('png') or
+            image_data.get('art_crop') or
+            image_data.get('normal') or
+            url_for('static', filename='images/placeholder.jpg')
+        )
+
+        cards_to_show.append({
+            'name':        c.name,
+            'oracle_text': c.oracle_text or 'No description available.',
+            'image_url':   image_url
+        })
+
+    html = render_template('shared_cards.html', cards=cards_to_show)
     return Response(
         html,
         mimetype='text/html',
-        headers={'Content-Disposition':f'attachment; filename=shared-{link_id}.html'}
+        headers={ 'Content-Disposition': f'attachment; filename=shared-{link_id}.html' }
     )

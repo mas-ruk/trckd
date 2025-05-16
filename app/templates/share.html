@@ -1,29 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %}trckd - Share Cards{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/share.css') }}">
+{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <h1>Share Your Cards</h1>
 
-    <!-- Scryfall API Search -->
-    <div class="input-group mb-3">
-        <input type="text" class="form-control add-cards-search" placeholder="Search for cards...">
-        <button class="btn btn-secondary filter-button">Filters</button>
-    </div>
-
-    <!-- Scryfall API Cards Grid -->
-    <div id="card-grid" class="d-flex flex-wrap justify-content-center mt-3"></div>
-
     <hr class="my-4">
 
     <!-- User Uploaded Cards -->
     <h3>Your Uploaded Cards</h3>
+   
+    <!-- Filter input for uploaded cards -->
+    <input 
+    type="text" 
+    id="uploadedSearch" 
+    class="form-control mb-3" 
+    placeholder="Filter your cards…"
+    />
+
     <div class="cards-grid">
         {% for card in user_cards %}
-        <div class="card-item" data-card="{{ card.id }}">
+        <div class="card-item" data-card-id="{{ card.id }}">
             <input type="checkbox" class="form-check-input">
-            <img src="{{ card.image or 'https://via.placeholder.com/250x350?text=No+Image' }}">
+            <img 
+              src="{{ card.image_url or url_for('static','images/placeholder.jpg') }}" 
+              alt="{{ card.name }}" 
+              width="120"
+            >
             <label>{{ card.name }} ({{ card.rarity or 'Unknown' }})</label>
         </div>
         {% endfor %}
@@ -68,7 +74,6 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/dynamic_search.js') }}"></script>
 <script src="{{ url_for('static', filename='js/share.js') }}"></script>
 
 

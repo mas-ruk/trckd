@@ -395,6 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <button class="details-btn w-100 py-2 rounded-pill mt-2 add-version-btn"
                                         data-card-id="${version.id}"
                                         data-card-name="${version.name}"
+                                        data-oracle-text="${version.oracle_text.replace(/"/g,'&quot;')}"
                                         data-set-code="${setCode}"
                                         data-set-name="${version.set_name}"
                                         data-rarity="${rarity}"
@@ -415,13 +416,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add event listeners for the version selection buttons
         modalBody.querySelectorAll('.add-version-btn').forEach(button => {
             button.addEventListener('click', function() {
-                const index = this.getAttribute('data-index');
+                const index      = this.getAttribute('data-index');
                 const language = document.getElementById(`language-${index}`).value;
                 const condition = document.getElementById(`condition-${index}`).value;
                 const isFoil = document.getElementById(`foil-${index}`).checked;
                 const quantityInput = document.getElementById(`quantity-${index}`);
                 const quantity = parseInt(quantityInput.value);
                 
+                // pull the description straight off the button
+                const description = this.getAttribute('data-oracle-text') || '';
+
                 // Validate quantity
                 if (!quantity || quantity < 1) {
                     quantityInput.classList.add('is-invalid');
@@ -442,7 +446,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     language,
                     condition,
                     foil: isFoil,
-                    quantity
+                    quantity,
+                    oracle_text:    description
                 };
                 
                 addCardToCollection(cardData);
@@ -451,39 +456,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function addCardToCollection(cardData) {
-        // This is where you would add the card to your collection
-        console.log('Adding card to collection:', cardData);
-        
-        // Show a success message to the user with quantity information
-        const quantityText = cardData.quantity > 1 ? `${cardData.quantity}x ` : '';
-        showToast(`Added ${quantityText}${cardData.name} (${cardData.setCode}) to your collection!`);
-        
-        // Here you would typically make an AJAX call to your backend
-        // to save this card to the user's collection
-        // For example:
-        /*
-        fetch('/api/collection/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(cardData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showToast(`Added ${quantityText}${cardData.name} (${cardData.setCode}) to your collection!`);
-            } else {
-                showToast('Failed to add card to collection.', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error adding card to collection:', error);
-            showToast('Error adding card to collection.', 'error');
-        });
-        */
-    }
+function addCardToCollection(cardData) {
+  // 1) Build only the fields your API expects:
+    const payload = {
+        name:             cardData.name,
+        type_line:        cardData.type_line || '',
+        color_identity:   cardData.language ? [cardData.language] : [], 
+        rarity:           cardData.rarity,
+        set_code:         cardData.setCode,
+        set_name:         cardData.setName,
+        collector_number: cardData.collectorNumber,
+        mana_cost:        '',    // if you don’t have it, leave blank
+        cmc:              0,     // same here
+        power:            '',    
+        toughness:        '',
+        oracle_text:      cardData.oracle_text,
+        image_uris:       { normal: cardData.image },
+        lang:             cardData.language
+    };
+
+    // 2) Send it to your new endpoint
+    fetch('/api/add_card', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+        // 3) Show confirmation toast
+        const qtyText = cardData.quantity > 1 ? `${cardData.quantity}× ` : '';
+        showToast(`Added ${qtyText}${cardData.name} to your collection!`);
+        // 4) Optionally disable the button so it can’t be re-added
+        // e.g. thisBtn.disabled = true;
+        } else {
+        showToast(`Failed to add: ${data.message}`, 'danger');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        showToast('Network error adding card.', 'danger');
+    });
+}
 
     function showToast(message, type = 'success') {
         // Create toast container if it doesn't exist
