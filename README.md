@@ -33,7 +33,8 @@ A Magic the Gathering collection tracking and analysis tool. A CITS3403 - Agile 
 ## 🧪 Running the Tests
 1. Ensure you are in the top-level directory of the repository (i.e. you can see the `app` directory when you run the `ls` command).
 2. Ensure you have installed the required packages by running `pip install -r requirements.txt` in your terminal.
-3. Run the tests using the command `python -m unittest run_test.py` - test results will be printed to the terminal.
+3. Ensure you have Google Chrome installed.
+4. Run the tests using the command `python -m unittest run_test.py` - test results will be printed to the terminal.
 
 ## 🗓️ Sprint Logs
 - [Sprint 1](docs/sprints/sprint1.md)
