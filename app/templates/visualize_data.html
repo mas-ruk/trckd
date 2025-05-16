@@ -495,7 +495,7 @@
                 const cardElement = this.closest('.card');
                 
                 // Send deletion request
-                fetch(`/remove_card/${cardId}`, {
+                fetch(`/main/remove_card/${cardId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -540,7 +540,7 @@
         this.disabled = true;
         
         // Send request to update prices
-        fetch('/update_prices', {
+        fetch('/main/update_prices', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

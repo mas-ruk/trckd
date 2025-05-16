@@ -497,6 +497,9 @@ def collection_stats():
                 'type_line': card.type_line or 'Unknown',
                 'colors': card.color_identity.split(',') if card.color_identity else [],
                 'rarity': card.rarity or 'common',
+                # Add these two properties for financial calculations
+                'acquisition_price': card.acquisition_price or 'N/A',
+                'current_price': card.current_price or 'N/A'
             }
             cards_with_images.append(card_data)
         except Exception as e:
