@@ -396,7 +396,7 @@ def home():
 
 
 # New route to add a card for the logged-in user
-@main_bp.route('/add_card', methods=['POST'])  # Currently @app.route
+@main_bp.route('/add_card', methods=['POST'])  
 @login_required
 def add_card():
     print("Received request to /add_card") 
@@ -404,6 +404,12 @@ def add_card():
     
     # Get quantity from the request, default to 1 if not provided
     quantity = data.get('quantity', 1)
+    
+    # Process color_identity to ensure it's stored as comma-separated
+    color_identity = data.get('color_identity')
+    if color_identity and isinstance(color_identity, str) and ',' not in color_identity and len(color_identity) > 1:
+        # Convert from 'GRW' to 'G,R,W'
+        color_identity = ','.join(list(color_identity))
     
     # Create cards based on quantity
     for _ in range(int(quantity)):
@@ -423,7 +429,7 @@ def add_card():
             power=data.get('power'),
             toughness=data.get('toughness'),
             image_uris=data.get('image_uris'),
-            color_identity=data.get('color_identity'),
+            color_identity=color_identity,
             lang=data.get('lang'),
             acquisition_price=data.get('price'),  # Store as acquisition price
             current_price=data.get('price')       # Initialize current price to match acquisition price
@@ -519,3 +525,27 @@ def collection_stats():
         'rarity_stats': rarity_stats,
         'financial_stats': financial_stats
     })
+
+@main_bp.route('/clean_color_identity', methods=['GET'])
+@login_required
+def clean_color_identity():
+    """
+    Utility route to clean up color_identity formatting in the database.
+    Converts formats like 'GRW' to 'G,R,W'.
+    """
+    # Get all cards belonging to the current user
+    user_cards = Card.query.filter_by(user_ID=current_user.user_ID).all()
+    
+    updated_count = 0
+    
+    for card in user_cards:
+        if card.color_identity and ',' not in card.color_identity and len(card.color_identity) > 1:
+            # Convert from 'GRW' to 'G,R,W'
+            card.color_identity = ','.join(list(card.color_identity))
+            updated_count += 1
+    
+    if updated_count > 0:
+        db.session.commit()
+        return jsonify({"message": f"Updated color_identity format for {updated_count} cards."}), 200
+    else:
+        return jsonify({"message": "No cards needed updating."}), 200
