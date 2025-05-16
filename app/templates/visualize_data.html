@@ -543,7 +543,7 @@
                 const cardElement = this.closest('.card');
                 
                 // Send deletion request
-                fetch(`/main/remove_card/${cardId}`, {
+                fetch(`/remove_card/${cardId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
