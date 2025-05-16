@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         } else if (currFlip === '1') {
                             img.src = card.card_faces[0].image_uris.normal || img.src;
-                            img.setAttribute('data-flip', '1');
+                            img.setAttribute('data-flip', '0'); // Change from '1' to '0'
                         }
 
                         // Remove the flipping class after animation completes
