@@ -170,18 +170,270 @@ def collection():
                     print(f"Error parsing image URIs for card {card.name}")
 
             card_data = {
+                'card_ID': card.card_ID,
                 'name': card.name,
                 'type_line': card.type_line or 'Unknown',
                 'colors': card.color_identity.split(',') if card.color_identity else [],
                 'rarity': card.rarity or 'common',
-                'image_uris': image_uris
+                'image_uris': image_uris,
+                'acquisition_price': card.acquisition_price or 'N/A',
+                'current_price': card.current_price or 'N/A'
             }
+            
+            # Calculate price difference for display
+            if card.acquisition_price and card.current_price:
+                try:
+                    acq_price = float(card.acquisition_price)
+                    curr_price = float(card.current_price)
+                    diff = curr_price - acq_price
+                    percent = (diff / acq_price) * 100 if acq_price else 0
+                    
+                    card_data['price_difference'] = diff
+                    card_data['price_percent'] = percent
+                except ValueError:
+                    card_data['price_difference'] = None
+                    card_data['price_percent'] = None
+            
             cards_with_images.append(card_data)
         except Exception as e:
             print(f"Error processing card {card.name}: {str(e)}")
             continue
 
-    return render_template('visualize_data.html', cards=cards_with_images)
+    # Calculate statistics for the collection
+    type_stats = calculate_type_stats(cards_with_images)
+    color_stats = calculate_color_stats(cards_with_images)
+    rarity_stats = calculate_rarity_stats(cards_with_images)
+    financial_stats = calculate_financial_stats(cards_with_images)
+    
+    return render_template('visualize_data.html', 
+                          cards=cards_with_images,
+                          type_stats=type_stats,
+                          color_stats=color_stats,
+                          rarity_stats=rarity_stats,
+                          financial_stats=financial_stats)
+
+def calculate_type_stats(cards):
+    """Calculate statistics for card types."""
+    # Count card types
+    type_counts = {
+        'Creatures': 0,
+        'Instants': 0,
+        'Sorceries': 0,
+        'Lands': 0,
+        'Artifacts': 0,
+        'Enchantments': 0,
+        'Planeswalkers': 0,
+        'Other': 0
+    }
+    
+    # Icons and colors for each type
+    type_metadata = {
+        'Creatures': {'icon': 'fa-dragon', 'color': '#e74c3c'},
+        'Instants': {'icon': 'fa-bolt', 'color': '#3498db'},
+        'Sorceries': {'icon': 'fa-magic', 'color': '#9b59b6'},
+        'Lands': {'icon': 'fa-mountain', 'color': '#2ecc71'},
+        'Artifacts': {'icon': 'fa-cog', 'color': '#95a5a6'},
+        'Enchantments': {'icon': 'fa-scroll', 'color': '#f1c40f'},
+        'Planeswalkers': {'icon': 'fa-crown', 'color': '#e67e22'},
+        'Other': {'icon': 'fa-question-circle', 'color': '#7f8c8d'}
+    }
+    
+    total_cards = len(cards)
+    
+    # Count types based on type_line content
+    for card in cards:
+        type_line = card['type_line'].lower()
+        if 'creature' in type_line:
+            type_counts['Creatures'] += 1
+        elif 'instant' in type_line:
+            type_counts['Instants'] += 1
+        elif 'sorcery' in type_line:
+            type_counts['Sorceries'] += 1
+        elif 'land' in type_line:
+            type_counts['Lands'] += 1
+        elif 'artifact' in type_line:
+            type_counts['Artifacts'] += 1
+        elif 'enchantment' in type_line:
+            type_counts['Enchantments'] += 1
+        elif 'planeswalker' in type_line:
+            type_counts['Planeswalkers'] += 1
+        else:
+            type_counts['Other'] += 1
+    
+    # Calculate percentages and combine with metadata
+    result = {}
+    for type_name, count in type_counts.items():
+        if total_cards > 0:
+            percentage = (count / total_cards) * 100
+        else:
+            percentage = 0
+            
+        result[type_name] = {
+            'count': count,
+            'percentage': percentage,
+            'icon': type_metadata[type_name]['icon'],
+            'color': type_metadata[type_name]['color']
+        }
+    
+    return result
+
+def calculate_color_stats(cards):
+    """Calculate statistics for card colors."""
+    # Count card colors
+    color_counts = {
+        'White': 0,
+        'Blue': 0,
+        'Black': 0,
+        'Red': 0,
+        'Green': 0,
+        'Multicolor': 0,
+        'Colorless': 0
+    }
+    
+    # Icons and colors for each color
+    color_metadata = {
+        'White': {'icon': 'fa-sun', 'color': '#f0e6d2'},
+        'Blue': {'icon': 'fa-tint', 'color': '#0e6cbb'},
+        'Black': {'icon': 'fa-skull', 'color': '#393939'},
+        'Red': {'icon': 'fa-fire', 'color': '#d32f2f'},
+        'Green': {'icon': 'fa-leaf', 'color': '#4caf50'},
+        'Multicolor': {'icon': 'fa-palette', 'color': '#ffd700'},
+        'Colorless': {'icon': 'fa-cube', 'color': '#9e9e9e'}
+    }
+    
+    total_cards = len(cards)
+    
+    # Count colors based on the colors field
+    for card in cards:
+        colors = card['colors']
+        if not colors:
+            color_counts['Colorless'] += 1
+        elif len(colors) > 1:
+            color_counts['Multicolor'] += 1
+        elif 'W' in colors:
+            color_counts['White'] += 1
+        elif 'U' in colors:
+            color_counts['Blue'] += 1
+        elif 'B' in colors:
+            color_counts['Black'] += 1
+        elif 'R' in colors:
+            color_counts['Red'] += 1
+        elif 'G' in colors:
+            color_counts['Green'] += 1
+    
+    # Calculate percentages and combine with metadata
+    result = {}
+    for color_name, count in color_counts.items():
+        if total_cards > 0:
+            percentage = (count / total_cards) * 100
+        else:
+            percentage = 0
+            
+        result[color_name] = {
+            'count': count,
+            'percentage': percentage,
+            'icon': color_metadata[color_name]['icon'],
+            'color': color_metadata[color_name]['color']
+        }
+    
+    return result
+
+def calculate_rarity_stats(cards):
+    """Calculate statistics for card rarities."""
+    # Count card rarities
+    rarity_counts = {
+        'Common': 0,
+        'Uncommon': 0,
+        'Rare': 0,
+        'Mythic': 0,
+        'Special': 0
+    }
+    
+    # Icons and colors for each rarity
+    rarity_metadata = {
+        'Common': {'icon': 'fa-circle', 'color': '#bdc3c7'},
+        'Uncommon': {'icon': 'fa-circle', 'color': '#95a5a6'},
+        'Rare': {'icon': 'fa-star', 'color': '#f1c40f'},
+        'Mythic': {'icon': 'fa-gem', 'color': '#e74c3c'},
+        'Special': {'icon': 'fa-certificate', 'color': '#9b59b6'}
+    }
+    
+    total_cards = len(cards)
+    
+    # Count rarities
+    for card in cards:
+        rarity = card['rarity'].lower().capitalize()
+        if rarity in rarity_counts:
+            rarity_counts[rarity] += 1
+        else:
+            rarity_counts['Special'] += 1
+    
+    # Calculate percentages and combine with metadata
+    result = {}
+    for rarity_name, count in rarity_counts.items():
+        if total_cards > 0:
+            percentage = (count / total_cards) * 100
+        else:
+            percentage = 0
+            
+        result[rarity_name] = {
+            'count': count,
+            'percentage': percentage,
+            'icon': rarity_metadata[rarity_name]['icon'],
+            'color': rarity_metadata[rarity_name]['color']
+        }
+    
+    return result
+
+def calculate_financial_stats(cards):
+    """Calculate financial statistics for the collection."""
+    total_acquisition = 0.0
+    total_current = 0.0
+    valid_card_count = 0
+    
+    for card in cards:
+        try:
+            if card['acquisition_price'] != 'N/A' and card['current_price'] != 'N/A':
+                acquisition_price = float(card['acquisition_price'])
+                current_price = float(card['current_price'])
+                
+                total_acquisition += acquisition_price
+                total_current += current_price
+                valid_card_count += 1
+        except (ValueError, TypeError):
+            continue
+    
+    # Calculate growth metrics
+    difference = total_current - total_acquisition
+    if total_acquisition > 0:
+        growth_percent = (difference / total_acquisition) * 100
+    else:
+        growth_percent = 0
+    
+    # Add clamped percentage for progress bar
+    progress_width = min(max(growth_percent, 0), 100)
+    
+    # Determine color based on growth
+    if difference > 0:
+        color = '#4caf50'  # Green for positive growth
+        icon = 'fa-chart-line'
+    elif difference < 0:
+        color = '#d32f2f'  # Red for negative growth
+        icon = 'fa-chart-line'
+    else:
+        color = '#9e9e9e'  # Gray for no change
+        icon = 'fa-equals'
+    
+    return {
+        'total_acquisition': total_acquisition,
+        'total_current': total_current,
+        'difference': difference,
+        'growth_percent': growth_percent,
+        'progress_width': progress_width,  # Add this new field
+        'valid_card_count': valid_card_count,
+        'color': color,
+        'icon': icon
+    }
 
 # Route for handling logout
 @main_bp.route('/logout')

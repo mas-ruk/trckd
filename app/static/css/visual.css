@@ -123,9 +123,10 @@ h1, h2, p {
     margin: 4px 0;
 }
 
+/* Card Actions */
 .card-actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 10px;
 }
 
@@ -133,9 +134,25 @@ h1, h2, p {
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 0.8rem;
-    border: 1px solid #ccc;
-    background-color: #f9f9f9;
     cursor: pointer;
+}
+
+.btn-danger {
+    background-color: #d64161;
+    border-color: #d64161;
+}
+
+.btn-danger:hover {
+    background-color: #ff5a5f;
+    border-color: #ff5a5f;
+}
+
+.remove-card {
+    transition: all 0.2s ease;
+}
+
+.remove-card:hover {
+    transform: scale(1.05);
 }
 
 /* Stats Section */
@@ -173,17 +190,160 @@ h1, h2, p {
     margin-bottom: 30px;
 }
 
+/* Card Slider - Consolidated, more compact styling */
 .card-slider {
     display: flex;
     overflow: hidden;
-    gap: 20px;
+    gap: 15px; /* Reduced from 20px */
     scroll-behavior: smooth;
+    padding: 10px 5px; /* Reduced padding */
+    min-height: auto; /* Remove fixed minimum height */
 }
 
+/* Card sizing - more compact */
 .card-slider .card {
     flex-shrink: 0;
-    width: 220px;
-    transition: transform 0.3s ease;
+    width: 220px; /* Reduced from 280px to make more compact */
+    min-height: auto; /* Let content determine height */
+    max-height: none !important;
+    overflow: visible !important;
+    
+    /* Reset any conflicting styles from cards.css */
+    display: flex;
+    flex-direction: column;
+    background-color: #2f243a;
+    color: white;
+    border: 1px solid #513a69;
+    border-radius: 10px;
+    padding: 10px; /* Reduced from 15px */
+    margin-bottom: 15px; /* Reduced from 20px */
+    text-align: left;  /* Left-align text for better readability */
+}
+
+.card-slider .card:hover {
+    box-shadow: 0 0 15px #513a69, 0 0 30px #513a69, 0 0 45px #513a69;
+    transform: scale(1.03);
+}
+
+/* Compact image container */
+.card-slider .card .card-image {
+    width: 100%;
+    height: auto;  /* Auto height based on image */
+    max-width: 180px; /* Reduced from 240px */
+    margin: 0 auto; /* Center the image container */
+    background-color: transparent;  /* Remove background color */
+    border-radius: 6px;
+    margin-bottom: 10px; /* Reduced from 15px */
+    overflow: hidden;
+    padding: 5px; /* Reduced from 10px */
+    /* Fixed aspect ratio for consistent card appearance */
+    aspect-ratio: 5/7;  /* Standard Magic card ratio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-slider .card .card-image img {
+    max-width: 100%;
+    max-height: 200px; /* Reduced from 240px */
+    width: auto;  /* Auto width for original proportions */
+    height: auto;  /* Auto height for original proportions */
+    object-fit: contain;  /* Maintain aspect ratio without cropping */
+    border-radius: 5px;
+}
+
+.card h6 {
+    font-size: 18px;  /* Slightly larger */
+    font-weight: 600;
+    margin: 15px 0 10px 0;  /* Add top margin */
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-slider .card h6 {
+    font-size: 16px; /* Reduced from 18px */
+    font-weight: 600;
+    margin-top: 8px; /* Reduced from 12px */
+    margin-bottom: 8px; /* Reduced from 12px */
+    color: #fff;
+}
+
+.card p {
+    margin: 8px 0;  /* Increased margins */
+    font-size: 14px;
+    color: #ccc;
+}
+
+.card-slider .card p {
+    margin: 5px 0; /* Reduced from 8px */
+    font-size: 12px; /* Reduced from 14px */
+    color: #ccc;
+}
+
+.card-actions {
+    margin-top: auto;  /* Push to bottom */
+    padding-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.card-slider .card .card-actions {
+    margin-top: auto;
+    padding-top: 10px; /* Reduced from 15px */
+}
+
+/* Center all text content in the cards */
+.card-slider .card .card-content {
+    text-align: center;
+    margin-bottom: 10px; /* Reduced from 15px */
+}
+
+.card-slider .card h6 {
+    font-size: 16px; /* Reduced from 18px */
+    font-weight: 600;
+    margin-top: 8px; /* Reduced from 12px */
+    margin-bottom: 8px; /* Reduced from 12px */
+    color: #fff;
+    text-align: center;
+}
+
+.card-slider .card p {
+    margin: 5px 0; /* Reduced from 8px */
+    font-size: 12px; /* Reduced from 14px */
+    color: #ccc;
+    text-align: center;
+}
+
+/* Fix image sizing to original resolution */
+.card-slider .card .card-image {
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border-radius: 6px;
+    margin-bottom: 10px; /* Reduced from 15px */
+    overflow: hidden;
+    padding: 5px; /* Reduced from 10px */
+}
+
+.card-slider .card .card-image img {
+    max-width: 100%;
+    max-height: 200px; /* Reduced from 240px */
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+/* Ensure action button is centered too */
+.card-slider .card .card-actions {
+    margin-top: auto;
+    padding-top: 10px; /* Reduced from 15px */
+    display: flex;
+    justify-content: center;
 }
 
 .slide-btn {
@@ -244,6 +404,68 @@ h1, h2, p {
 .collection-form .btn-primary:hover {
     background-color: #7c5ed1;
     border-color: #7c5ed1;
+}
+
+/* Empty Collection State */
+.empty-collection-state {
+    background-color: #2f243a;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    padding: 3rem !important;
+    max-width: 600px;
+    margin: 2rem auto !important;
+    transition: transform 0.3s ease;
+}
+
+.empty-collection-state:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(106, 77, 173, 0.3);
+}
+
+.empty-icon {
+    background-color: rgba(106, 77, 173, 0.2);
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+
+.empty-icon i {
+    color: #7c5ed1;
+    font-size: 2.5rem;
+}
+
+.empty-collection-state h3 {
+    color: #ffffff;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.empty-collection-state p {
+    color: #b8b8b8;
+    font-size: 1.1rem;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.empty-collection-state .search-link {
+    display: inline-block;
+    background-color: #6a4dad;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.empty-collection-state .search-link:hover {
+    background-color: #7c5ed1;
+    transform: scale(1.05);
 }
 
 

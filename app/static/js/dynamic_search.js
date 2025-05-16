@@ -456,6 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+<<<<<<< HEAD
 function addCardToCollection(cardData) {
   // 1) Build only the fields your API expects:
     const payload = {
@@ -498,6 +499,73 @@ function addCardToCollection(cardData) {
         showToast('Network error adding card.', 'danger');
     });
 }
+=======
+    function addCardToCollection(cardData) {
+        // Prepare the data in the format expected by the backend
+        const cardToAdd = {
+            name: cardData.name,
+            type: "", // Will be populated from API if needed
+            color: "", // Will be populated from API if needed
+            rarity: cardData.rarity,
+            set_code: cardData.setCode,
+            set_name: cardData.setName,
+            collector_number: cardData.collectorNumber,
+            mana_cost: "", // Will be populated from API if needed
+            cmc: null, // Will be populated from API if needed
+            type_line: "", // Will be populated from API if needed 
+            oracle_text: "", // Will be populated from API if needed
+            power: "", // Will be populated from API if needed
+            toughness: "", // Will be populated from API if needed
+            image_uris: JSON.stringify({normal: cardData.image}),
+            color_identity: "", // Will be populated from API if needed
+            lang: cardData.language,
+            price: cardData.price.replace('A$', '').trim() // Extract the price without currency symbol
+        };
+
+        // Get additional card details from Scryfall API
+        fetch(`https://api.scryfall.com/cards/${cardData.id}`)
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(fullCardData => {
+                // Fill in the missing data from the API response
+                cardToAdd.type = fullCardData.type_line ? fullCardData.type_line.split('—')[0].trim() : "";
+                cardToAdd.color = fullCardData.colors ? fullCardData.colors.join('') : "";
+                cardToAdd.mana_cost = fullCardData.mana_cost || "";
+                cardToAdd.cmc = fullCardData.cmc || 0;
+                cardToAdd.type_line = fullCardData.type_line || "";
+                cardToAdd.oracle_text = fullCardData.oracle_text || "";
+                cardToAdd.power = fullCardData.power || "";
+                cardToAdd.toughness = fullCardData.toughness || "";
+                cardToAdd.color_identity = fullCardData.color_identity ? fullCardData.color_identity.join('') : "";
+
+                // Now send all the data to the backend
+                return fetch('/add_card', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(cardToAdd)
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add card');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Show success message
+                const quantityText = cardData.quantity > 1 ? `${cardData.quantity}x ` : '';
+                showToast(`Added ${quantityText}${cardData.name} (${cardData.setCode}) to your collection!`);
+            })
+            .catch(error => {
+                console.error('Error adding card to collection:', error);
+                showToast('Error adding card to collection. Please try again.', 'error');
+            });
+    }
+>>>>>>> main
 
     function showToast(message, type = 'success') {
         // Create toast container if it doesn't exist
