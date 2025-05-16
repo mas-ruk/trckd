@@ -81,13 +81,6 @@ def upload_data_view():
 def upload_search():
     return render_template('search.html')
 
-
-@app.route('/upload_csv')
-@login_required
-def upload_csv():
-    return render_template('upload_csv.html')
-
-
 @app.route('/collection')
 @login_required
 def collection():
